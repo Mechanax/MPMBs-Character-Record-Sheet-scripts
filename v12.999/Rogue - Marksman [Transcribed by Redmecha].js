@@ -35,6 +35,7 @@ AddSubClass("rogue", "marksman", {
 		"subclassfeature3.1" : {
 			name : "Archery Fighting Style",
 			source : ["HB", 0],
+			minlevel : 3,
 			description : "\n   " + "+2 bonus to attack rolls I make with ranged weapons",
 			calcChanges : {
 				atkCalc : ["if (isRangedWeapon) {output.extraHit += 2; }; ", "My ranged weapons get a +2 bonus on the To Hit."]
