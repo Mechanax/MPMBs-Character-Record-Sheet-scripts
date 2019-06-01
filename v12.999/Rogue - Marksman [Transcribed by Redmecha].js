@@ -33,13 +33,11 @@ AddSubClass("rogue", "marksman", {
 			])
 		},
 		"subclassfeature3.1" : {
-			name : "Archery Fighting Style",
+			name : "Extra Proficiencies",
 			source : ["HB", 0],
 			minlevel : 3,
-			description : "\n   " + "+2 bonus to attack rolls I make with ranged weapons",
-			calcChanges : {
-				atkCalc : ["if (isRangedWeapon) {output.extraHit += 2; }; ", "My ranged weapons get a +2 bonus on the To Hit."]
-			}
+			description : "\n   " + "I get Proficiency with all ranged weapons",
+			weapons : [true,false,["firearm","ranged"]]
 		},
 		"subclassfeature9" : {
 			name : "Eagle Eye",
