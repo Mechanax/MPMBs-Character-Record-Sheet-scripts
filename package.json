@@ -1,0 +1,19 @@
+{
+  "name": "mpmbs-character-record-sheet-scripts",
+  "version": "1.0.0",
+  "description": "A repo for my scripts for MPMB's Character Sheet",
+  "main": "",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Redmecha/MPMBs-Character-Record-Sheet-scripts.git"
+  },
+  "author": "Redmecha",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Redmecha/MPMBs-Character-Record-Sheet-scripts/issues"
+  },
+  "homepage": "https://github.com/Redmecha/MPMBs-Character-Record-Sheet-scripts#readme"
+}
