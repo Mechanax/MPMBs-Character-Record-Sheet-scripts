@@ -10,16 +10,16 @@
 /*  
     !INFORMATION!
     Subject:    Class
-    Effect:     This script adds a class called the "Revised Artificer" and will add its 7 subclasses once completed.
+    Effect:     This script adds a class called the "alternate Artificer" and will add its 7 subclasses once completed.
 
                 This class has been made by /u/KibblesTasty on the subreddit r/UnearthedArcana
-                It can be found here: http://redd.it/adbpdg
-                This code is based on v1.6.1 of /u/KibblesTasty's work (2019-07-14)
+                It can be found here: http://redd.it/bc0osd
+                This code is based on v1.7 of /u/KibblesTasty's work (2019-04-11)
 
                 This script was based upon most of MPMB's scripts.
 
     Code by:    Apocalypsa, TacitusZephyr, LividLindy, Redmecha
-    Date:       2019-01-08 (sheet v12.999)
+    Date:       2019-06-17 (sheet v13)
 */
 
 /*  
@@ -43,10 +43,10 @@
  */
 /**
  * TODO: Changes and automation
- * > Rewrite the Cannonsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.6.1
- * > Rewrite the Gadgetsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.6.1
- * > Rewrite the Warsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.6.1 (The easiest)
- * > Move Specialization Upgrade to each subclass rather then having It in the main class
+ * | Rewrite the Cannonsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.7
+ * | Rewrite the Gadgetsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.7
+ * | Rewrite the Warsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.7
+ * | (Undo this) Move Specialization Upgrade to each subclass rather then having It in the main class
  * | Automate the Cannonsmith's Thundermonger dice calculation (This is more difficult then I thought)
  * | Automate the Gadgetsmith's Mechanical Familiar upgrade
  * | Write the code for Golemsmith
@@ -55,15 +55,15 @@
  * | Write the code for Wandsmith
  */
 
-var iFileName = "Revised Artificer v1.6.1 [KibblesTasty's work, transcribed by Apocalypsa, TacitusZephyr, LividLindy, Redmecha].js";
-RequiredSheetVersion(12.999);
+var iFileName = "Kibbles Alternate Artificer v1.7 [KibblesTasty's work, transcribed by Redmecha].js";
+RequiredSheetVersion(13);
 
-SourceList["KT:RA"] = {
-    name : "/u/KibblesTasty: Revised Artificer (v1.6.1)",
-    abbreviation : "KT:RA",
+SourceList["KT:AA"] = {
+    name : "/u/KibblesTasty: Alternate Artificer (v1.7)",
+    abbreviation : "KT:AA",
     group : "Reddit/r/UnearthedArcana",
-    url : "http://redd.it/adbpdg",
-    date : "2019/01/12"
+    url : "http://redd.it/bc0osd",
+    date : "2019/04/11"
 };
 
 //first make the sheet know which spells are artificer spells
@@ -151,18 +151,18 @@ SourceList["KT:RA"] = {
     "transmute rock",
     "wall of stone"
 ].forEach( function (s) {
-    if(SpellsList[s] && SpellsList[s].classes && SpellsList[s].classes.indexOf("revised artificer") === -1) SpellsList[s].classes.push("revised artificer");
+    if(SpellsList[s] && SpellsList[s].classes && SpellsList[s].classes.indexOf("alternate artificer") === -1) SpellsList[s].classes.push("alternate artificer");
 });
 
 //*****************************************************-Class-********************************************************\\
 
-ClassList["revised artificer"] = {
+ClassList["alternate artificer"] = {
     regExpSearch : /^(?=.*artificer)(?!.*wizard).*$/i,
     name : "Artificer",
-    source : ["KT:RA", 1],
+    source : ["KT:AA", 1],
     primaryAbility : "\n \u2022 Artificer: Cannon/Gadget: Dexterity\n\t Golem/Infusion/Potion/Wand: Intelligence\n\t War: Strength",
     abilitySave : 4,
-    prereqs : "\n \u2022 Artificer: Intelligence 13;",
+    prereqs : "Intelligence 13",
     improvements :  [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5],
     die : 8,
     saves : ["Con", "Int"],
@@ -181,13 +181,13 @@ ClassList["revised artificer"] = {
         "\n \u2022 Thieves' tools and a dungeoneer's pack." + 
         "\n\nAlternatively, choose 5d4 \xD7 10 gp worth of starting equipment instead of both the class' and the background's starting equipment.",
     subclasses : ["Artificer Specialization", [
-        "revised artificer-cannonsmith",
-        "revised artificer-gadgetsmith",
-        ////"revised artificer-golemsmith",
-        ////"revised artificer-infusionsmith",
-        "revised artificer-potionsmith",
-        "revised artificer-warsmith"//,
-        ////"revised artificer-wandsmith"
+        ////"alternate artificer-cannonsmith",
+        ////"alternate artificer-gadgetsmith",
+        ////"alternate artificer-golemsmith",
+        ////"alternate artificer-infusionsmith",
+        ////"alternate artificer-potionsmith",
+        ////"alternate artificer-warsmith"//,
+        ////"alternate artificer-wandsmith"
     ]],
     attacks : [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     spellcastingFactor : 2,
@@ -197,7 +197,7 @@ ClassList["revised artificer"] = {
     features : {
         "subclassfeature1" : {
             name : "Artificer Specialization",
-            source : ["KT:RA", 4],
+            source : ["KT:AA", 3],
             minlevel : 1,
             description : desc([
                 "Choose the Specialization you focus your craft on and put it in the \"Class\" field"
@@ -205,7 +205,7 @@ ClassList["revised artificer"] = {
         },
         "magic item analysis" : {
             name : "Magic Item Analysis",
-            source : ["KT:RA", 2],
+            source : ["KT:AA", 3],
             minlevel : 1,
             description : desc([
                 "I learn Detect Magic and Identify, I can cast them as rituals, or 'at will' at lv. 11"
@@ -221,11 +221,11 @@ ClassList["revised artificer"] = {
                 selection : ["identify"],
                 atwill : false
             }],
-            changeeval : "if (classes.known['revised artificer'].level >= 11) {ClassList['revised artificer'].features['magic item analysis'].spellcastingBonus[0].atwill = true; ClassList['revised artificer'].features['magic item analysis'].spellcastingBonus[1].atwill = true;};",
+            changeeval : "if (classes.known['alternate artificer'].level >= 11) {ClassList['alternate artificer'].features['magic item analysis'].spellcastingBonus[0].atwill = true; ClassList['alternate artificer'].features['magic item analysis'].spellcastingBonus[1].atwill = true;};",
         },
         "tool expertise" : {
             name : "Tool Expertise",
-            source : ["KT:RA", 2],
+            source : ["KT:AA", 3],
             minlevel : 2,
             description : desc([
                 "I have expertise with any tool proficiencies I gain from the artificer class"
@@ -234,7 +234,7 @@ ClassList["revised artificer"] = {
         },
         "spellcasting" : {
             name : "Spellcasting",
-            source : ["KT:RA", 2],
+            source : ["KT:AA", 3],
             minlevel : 2,
             description : desc([
                 "I can cast any artificer spells I know, using Int as my spellcasting ability",
@@ -246,7 +246,7 @@ ClassList["revised artificer"] = {
         },
         "arcane reconstruction" : {
             name : "Arcane Reconstruction",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 6,
             description : desc([
                 "I learn Mending and Cure Wounds (which can also heal constructs) as artificer spells",
@@ -264,7 +264,7 @@ ClassList["revised artificer"] = {
         },
         "superior attunement" : {
             name : "Superior Attunement",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 6,
             description : "",
             additional : levels.map(function (n) {
@@ -273,7 +273,7 @@ ClassList["revised artificer"] = {
         },
         "wondrous items proficiency" : {
             name : "Wondrous Items Proficiency",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 7,
             description : desc([
                 "I can ignore class based restrictions on attuning to magical items"
@@ -281,7 +281,7 @@ ClassList["revised artificer"] = {
         },
         "improved magical crafting" : {
             name : "Improved Magical Crafting",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 10,
             description : desc([
                 "I can make a magic item in half the normal time. I can use 1 hr of a LR to:",
@@ -290,7 +290,7 @@ ClassList["revised artificer"] = {
         },
         "wondrous item recharge" : {
             name : "Wondrous Item Recharge",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 10,
             description : desc([
                 "I can refill a magic item's charges needed to use it once, if they are used to cast spells",
@@ -299,7 +299,7 @@ ClassList["revised artificer"] = {
         },
         "study of magic" : {
             name : "Study of Magic",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 11,
             description : desc([
                 "I have adv on all Int(Arcana) checks about magical traps, effects, or runes"
@@ -308,7 +308,7 @@ ClassList["revised artificer"] = {
         },
         "wondrous item mastery" : {
             name : "Wondrous Item Mastery",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 18,
             description : desc([
                 "I can activate a magic item that would normally take an action as a bonus action"
@@ -316,7 +316,7 @@ ClassList["revised artificer"] = {
         },
         "soul of artifice" : {
             name : "Soul of Artifice",
-            source : ["KT:RA", 3],
+            source : ["KT:AA", 4],
             minlevel : 20,
             description : "",
             additional : "+1 to all saves per attuned magic item",
@@ -327,15 +327,15 @@ ClassList["revised artificer"] = {
 };
 
 //***************************************************-Subclasses-*****************************************************\\
-
-ClassSubList["revised artificer-cannonsmith"] = {
+/*
+ClassSubList["alternate artificer-cannonsmith"] = {
     regExpSearch : /cannonsmith/i,
     subname : "Cannonsmith",
-    source : ["KT:RA", 5],
+    source : ["KT:AA", 5],
     features : {
         "subclassfeature1" : {
             name : "Cannonsmith's Proficiency",
-            source : ["KT:RA", 5],
+            source : ["KT:AA", 5],
             minlevel : 1,
             description : desc([
                 "I gain proficiency with tinker's tools and smith's tools",
@@ -345,7 +345,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
         },
         "subclassfeature1.1" : {
             name : "Thunder Cannon",
-            source : ["KT:RA", 5],
+            source : ["KT:AA", 5],
             minlevel : 1,
             description : desc([
                 "At 1st level, I forge a deadly firearm called the Thunder Cannon"
@@ -360,7 +360,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                 "Use the \"Choose Features\" button to add a Specialization Upgrade to the third page",
                 "(Make sure to see the notes sheet for more info on choosing and swapping upgrades)"
             ]),
-            source : ["KT:RA", 2],
+            source : ["KT:AA", 2],
             additional : levels.map(function (n, idx) {
                     return n < 3 ? "" : [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9][idx] + " upgrades";
             }),
@@ -376,8 +376,8 @@ ClassSubList["revised artificer-cannonsmith"] = {
                 "I could select 1 3rd level upgrade and 1 5th level upgrade,",
                 "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
             ]),
-            eval : "notesPage('Thunder Cannon Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassSubList['revised artificer-cannonsmith'].features['subclassfeature3'].noteDesc);",
-            removeeval : "notesPage('Thunder Cannon Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassList['revised artificer-cannonsmith'].features['subclassfeature3'].noteDesc, true);",
+            eval : "notesPage('Thunder Cannon Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassSubList['alternate artificer-cannonsmith'].features['subclassfeature3'].noteDesc);",
+            removeeval : "notesPage('Thunder Cannon Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassList['alternate artificer-cannonsmith'].features['subclassfeature3'].noteDesc, true);",
             extraname : "Cannonsmith Upgrades",
             extrachoices : [
                 "Autoloading Magazine (prereq: Integrated Magazine)",
@@ -406,7 +406,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                 description : desc([
                     "I automatically reload, I no longer require my bonus action"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 calcChanges : {
                     atkAdd : [
                         "if (WeaponName == 'thunder cannon') {fields.Description = fields.Description.replace('Reload(2)', 'Auto-Reload');};",
@@ -421,8 +421,8 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "My Thunder Cannon gains a +1 to Attack and Damage, It now counts as magical",
                     "I can take this upgrade 2 more times"
                 ]),
-                source : ["KT:RA", 6],
-                prereqeval : "classes.known['revised artificer'].level >= 5",
+                source : ["KT:AA", 6],
+                prereqeval : "classes.known['alternate artificer'].level >= 5",
                 calcChanges : {
                     atkAdd : [
                         "if (WeaponName == 'thunder cannon') {fields.Description += '; Counts as magical';}",
@@ -440,7 +440,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "My Thunder Cannon gains another +1 to Attack and Damage",
                     "I can take this upgrade 1 more time"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('cannon improvement') != -1", //TODO(v13): Do this with getFeatureChoice
                 calcChanges : {
                     atkCalc : [
@@ -454,7 +454,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                 description : desc([
                     "My Thunder Cannon gains another +1 to Attack and Damage"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('cannon improvement lv2') != -1", //TODO(v13): Do this with getFeatureChoice
                 calcChanges : {
                     atkCalc : [
@@ -469,8 +469,8 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "As a bonus action I can use 1 charge to cast Hunter's Mark",
                     "As an action I can use 2 charges to cast See Invisibility or 3 charges to cast Clairvoyance"
                 ]),
-                source : ["KT:RA", 6],
-                prereqeval : "classes.known['revised artificer'].level >= 5",
+                source : ["KT:AA", 6],
+                prereqeval : "classes.known['alternate artificer'].level >= 5",
                 usages : 3,
                 recovery : "long rest" //TODO: Add the spells to this
             },
@@ -479,7 +479,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                 description : desc([
                     "I pack extra power into my Thundermonger, increasing the damage it deals by 1d6"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('silencer') == -1" //TODO(v13): Do this with getFeatureChoice
                 //TODO: Find out how to add full automation of this upgrade
             },
@@ -489,7 +489,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "The range of my Thunder Cannon increases by 30/90 feet",
                     "I can take this upgrade 1 more time"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 calcChanges : {
                     atkAdd : [
                         "if (WeaponName == 'thunder cannon') {fields.Range = '90/270 ft'};",
@@ -504,7 +504,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "The range of my Thunder Cannon increases by another 30/90 feet",
                     "If I have the Bayonet upgrade, it gains the Reach property",
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('extended barrel') != -1", //TODO(v13): Do this with getFeatureChoice
                 calcChanges : {
                     atkAdd : [
@@ -528,18 +528,18 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "If the target is Small or smaller I pull it to me. I can also just disconnect the cord"
                     //TODO(v13): Wanted to put this in the weapon description tooltip but that doesn't work in this version of the sheet
                 ]), 
-                source : ["KT:RA", 6],
-                eval : "AddWeapon('harpoon reel'); notesPage('Harpoon Reel', ['Upgrade-Harpoon Reel', 'KT:RA', 6], ClassSubList['revised artificer-cannonsmith'].features['subclassfeature3']['harpoon reel (prereq: level 5 artificer)'].noteDesc);",
-                removeeval : "RemoveWeapon('harpoon reel'); notesPage('Harpoon Reel', ['Upgrade-Harpoon Reel', 'KT:RA', 6], ClassSubList['revised artificer-cannonsmith'].features['subclassfeature3']['harpoon reel (prereq: level 5 artificer)'].noteDesc, true);",
+                source : ["KT:AA", 6],
+                eval : "AddWeapon('harpoon reel'); notesPage('Harpoon Reel', ['Upgrade-Harpoon Reel', 'KT:AA', 6], ClassSubList['alternate artificer-cannonsmith'].features['subclassfeature3']['harpoon reel (prereq: level 5 artificer)'].noteDesc);",
+                removeeval : "RemoveWeapon('harpoon reel'); notesPage('Harpoon Reel', ['Upgrade-Harpoon Reel', 'KT:AA', 6], ClassSubList['alternate artificer-cannonsmith'].features['subclassfeature3']['harpoon reel (prereq: level 5 artificer)'].noteDesc, true);",
                 action : ["bonus action", "[Reel]"],
-                prereqeval : "classes.known['revised artificer'].level >= 5"
+                prereqeval : "classes.known['alternate artificer'].level >= 5"
             },
             "integrated magazine" : {
                 name : "Integrated Magazine",
                 description : desc([
                     "My Thunder Cannon can be fired twice before reloading"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 calcChanges : {
                     atkAdd : [ //TODO: Find a better way to do this as a RegExp
                         "if (WeaponName == 'thunder cannon') {fields.Description = fields.Description.replace('Reload(1)', 'Reload(2)');};",
@@ -554,7 +554,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "Creatures hit make a Dex save, on a failed save they take:",
                     "\u25C6 Thundermonger's damage (using it) as lightning damage, half on a successful save"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 action : ["action", ""]
             },
             "lightning charged bayonet" : {
@@ -564,7 +564,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "It deals 1d6 Piercing damage and I can use Thundermonger with it,",
                     "but the damage type is lightning and counts as using Thundermonger for the turn"
                 ]),
-                source : ["KT:RA", 6],
+                source : ["KT:AA", 6],
                 eval : "AddWeapon('lightning bayonet');",
                 removeeval : "RemoveWeapon('lightning bayonet');",
             },
@@ -575,8 +575,8 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "Creatures hit take weapon damage plus half of Thundermonger's damage (using it)",
                     "Creatures do not benefit from cover against this unless they have overhead cover as well"
                 ]),
-                source : ["KT:RA", 7],
-                prereqeval : "classes.known['revised artificer'].level >= 15",
+                source : ["KT:AA", 7],
+                prereqeval : "classes.known['alternate artificer'].level >= 15",
                 action : ["action", ""]
             },
             "terrifying thunder (prereq: echoing boom)" : {
@@ -586,7 +586,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "It must also make a Wis save against my spell save DC or become frightened for 1 minute",
                     "It can repeat the save at the end it's turn; on success, it is immune to the effects for 24hrs"
                 ]),
-                source : ["KT:RA", 7],
+                source : ["KT:AA", 7],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('echoing boom') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "silencer (prereq: incompatible with echoing boom)" : {
@@ -594,7 +594,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                 description : desc([
                     "My Thunder Cannon loses the Loud property"
                 ]),
-                source : ["KT:RA", 7],
+                source : ["KT:AA", 7],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('echoing boom') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "shock absorber" : {
@@ -603,7 +603,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "If I take Lightning/Thunder Damage, I can cast Absorb Elements without using a spell slot",
                     "I can apply this damage to my next cannon attack even if its a ranged attack."
                 ]),
-                source : ["KT:RA", 7],
+                source : ["KT:AA", 7],
                 action : ["reaction", "[Lightning/Thunder Dmg]"]
             },
             "shock harpoon (prereq: level 9 artificer, harpoon reel)" : {
@@ -613,9 +613,9 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "I can do it's damage as lightning damage to the target and it is stunned unless:",
                     "It succeeds on a Con save against my spell save DC. To use this again, I have to reel it in"
                 ]),
-                source : ["KT:RA", 7],
+                source : ["KT:AA", 7],
                 action : ["bonus action", "[Harpoon Reel]"],
-                prereqeval : "classes.known['revised artificer'].level >= 9 && What('Extra.Notes').toLowerCase().indexOf('harpoon reel') != -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 9 && What('Extra.Notes').toLowerCase().indexOf('harpoon reel') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "storm blast (prereq: level 5 artificer)" : {
                 name : "Storm Blast",
@@ -624,8 +624,8 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "or take 1d6 plus half the damage of Thundermonger and is knocked prone",
                     "Using this counts as applying Thundermonger damage. Does not consume ammo."
                 ]),
-                source : ["KT:RA", 7],
-                prereqeval : "classes.known['revised artificer'].level >= 5",
+                source : ["KT:AA", 7],
+                prereqeval : "classes.known['alternate artificer'].level >= 5",
                 action : ["action", " (1d6 + half of thundermonger)"]
             },
             "synaptic feedback (prereq: level 9 artificer)" : {
@@ -635,8 +635,8 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "\u25C6 and I can take the Dash or Disengage actions as a bonus action.",
                     "This boost lasts until the start of my next turn."
                 ]),
-                source : ["KT:RA", 7],
-                prereqeval : "classes.known['revised artificer'].level >= 9"
+                source : ["KT:AA", 7],
+                prereqeval : "classes.known['alternate artificer'].level >= 9"
             },
             "thunder jump (prereq: level 9 artificer)" : {
                 name : "Thunder Jump",
@@ -644,15 +644,15 @@ ClassSubList["revised artificer-cannonsmith"] = {
                     "As an action I can cast thunder step. This counts as applying my Thundermonger damage",
                     "I cannot use this ability again until I complete a short or long rest."
                 ]),
-                source : ["KT:RA", 7],
-                prereqeval : "classes.known['revised artificer'].level >= 9",
+                source : ["KT:AA", 7],
+                prereqeval : "classes.known['alternate artificer'].level >= 9",
                 usages : 1,
                 recovery : "short rest"
             }
         },
         "subclassfeature3.1" : {
             name : "Thundermonger",
-            source : ["KT:RA", 6],
+            source : ["KT:AA", 6],
             minlevel : 3,
             description : desc([
                 "Once per turn, I can deal an extra 1d6 thunder dmg to a creature shoot", 
@@ -666,7 +666,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
         },
         "subclassfeature5" : {
             name : "Devastating Blasts",
-            source : ["KT:RA", 6],
+            source : ["KT:AA", 6],
             minlevel : 5,
             description : desc([
                 "When I miss a shot, I can still apply Thundermonger damage, but it only deals half"
@@ -674,7 +674,7 @@ ClassSubList["revised artificer-cannonsmith"] = {
         },
         "subclassfeature14" : {
             name : "Elemental Swapping",
-            source : ["KT:RA", 6],
+            source : ["KT:AA", 6],
             minlevel : 14,
             description : desc([
                 "I can cause Thundermonger to deal Fire/Cold/Acid/Lightning damage instead of Thunder",
@@ -684,16 +684,16 @@ ClassSubList["revised artificer-cannonsmith"] = {
     }
 };
 
-ClassSubList["revised artificer-gadgetsmith"] = {
+ClassSubList["alternate artificer-gadgetsmith"] = {
 
     regExpSearch : /gadgetsmith/i,
     subname : "Gadgetsmith",
-    source : ["KT:RA", 7],
+    source : ["KT:AA", 7],
     attacks : [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     features : {
         "subclassfeature1" : {
             name : "Gadgetsmith's Proficiency",
-            source : ["KT:RA", 7],
+            source : ["KT:AA", 7],
             minlevel : 1,
             description : desc([
                 "I gain proficiency with nets, rapiers, whips, and tinker's tools."
@@ -703,7 +703,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
         },
         "subclassfeature1.1" : {
             name : "Essential Tools: Grappling Hook/Smoke Bomb",
-            source : ["KT:RA", 7],
+            source : ["KT:AA", 7],
             minlevel : 1,
             description : "",
             additional : "See Notes",
@@ -716,12 +716,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 "I can use my action to cast Fog Cloud without using a spell slot",
                 "It does not require concentration and lasts my Int Mod in rounds"
             ]),
-            eval : "notesPage('Grappling Hook', ['Essential Tools', 'KT:RA', 7], ClassSubList['revised artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc1); notesPage('Smoke Bomb', ['Essential Tools', 'KT:RA', 7], ClassSubList['revised artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc2);",
-            removeeval : "notesPage('Grappling Hook', ['Essential Tools', 'KT:RA', 7], ClassSubList['revised artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc1, true); notesPage('Smoke Bomb', ['Essential Tools', 'KT:RA', 7], ClassSubList['revised artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc2, true);"
+            eval : "notesPage('Grappling Hook', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc1); notesPage('Smoke Bomb', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc2);",
+            removeeval : "notesPage('Grappling Hook', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc1, true); notesPage('Smoke Bomb', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc2, true);"
         }, //TODO(v13): Make these magic items
         "subclassfeature1.2" : {
             name : "Essential Tools: Gadgetsmith Weapon",
-            source : ["KT:RA", 7],
+            source : ["KT:AA", 7],
             minlevel : 1,
             description : desc([
                 "Gadgetsmith Weapon: Use the \"Choose Features\" button to add a Gadgetsmith Weapon"
@@ -733,12 +733,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a magical boomerang, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
                     "When Thrown, I can make separate attacks at 2 creatures within 10 ft of each other"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 eval : "AddWeapon('boomerang of hitting');",
                 removeeval : "RemoveWeapon('boomerang of hitting');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'boomerang of hitting' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'boomerang of hitting' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Boomerang of Hitting gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 }
@@ -749,12 +749,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a magical gauntlet, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
                     "Before I attack, I can forgo my Prof mod for the attack, but If it hits I get double"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('impact gauntlet');",
                 removeeval : "RemoveWeapon('impact gauntlet');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'impact gauntlet' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'impact gauntlet' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Impact Gauntlet gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 }
@@ -765,12 +765,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a magical hand crossbow, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
                     "If I have Adv, once per turn I can forgo it on an attack to make an additional attack"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('repeating hand crossbow');",
                 removeeval : "RemoveWeapon('repeating hand crossbow');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'repeating hand crossbow' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'repeating hand crossbow' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Repeating Hand Crossbow gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 }
@@ -781,7 +781,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a device that lets me cast Shocking Grasp",
                     "I can add my Dex or Int mod (sheet automatically chooses the highest) to the attack"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('shocking grasp');",
                 removeeval : "RemoveWeapon('shocking grasp');",
                 calcChanges : {
@@ -796,12 +796,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 description : desc([
                     "I get a lightning baton, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('lightning baton');",
                 removeeval : "RemoveWeapon('lightning baton');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'lightning baton' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'lightning baton' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Lightning Baton gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 }
@@ -815,7 +815,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 "As a Gadgetsmith I get one extra upgrade for my class, two at Lv. 5",
                 "(Make sure to see the notes sheet for more info on choosing and swapping upgrades)"
             ]),
-            source : [["KT:RA", 2],["KT:RA", 7]],
+            source : [["KT:AA", 2],["KT:AA", 7]],
             additional : levels.map(function (n, idx) {
                     return n < 3 ? "" : [0, 0, 2, 2, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11][idx] + " upgrades";
             }),
@@ -831,8 +831,8 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 "I could select 1 3rd level upgrade and 1 5th level upgrade,",
                 "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
             ]),
-            eval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassSubList['revised artificer-gadgetsmith'].features['subclassfeature3'].noteDesc);",
-            removeeval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassList['revised artificer-gadgetsmith'].features['subclassfeature3'].noteDesc, true);",
+            eval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3'].noteDesc);",
+            removeeval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassList['alternate artificer-gadgetsmith'].features['subclassfeature3'].noteDesc, true);",
             extraname : "Gadgetsmith Upgrades",
             extrachoices : [
                 "Airburst Mine",
@@ -876,7 +876,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I can use this device to cast shatter without using a spell slot or I can place it",
                     "To be triggered by my reaction within 1 min; I cannot use it again until after a SR"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 usages : 1,
                 recovery : "short rest",
                 spellcastingBonus : [{
@@ -892,7 +892,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "As an action, I can use this device to cast dispel magic",
                     "I cannot use it again until I complete a short or long rest"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 usages : 1,
                 recovery : "short rest",
                 spellcastingBonus : [{
@@ -901,7 +901,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     selection : ["dispel magic"],
                     oncesr : true
                 }],
-                prereqeval : "classes.known['revised artificer'].level >= 9"
+                prereqeval : "classes.known['alternate artificer'].level >= 9"
             },
             "boomerang of hitting (incompatible with essential tools: boomerang of hitting)" : {
                 name : "Boomerang of Hitting",
@@ -909,12 +909,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a magical boomerang, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
                     "When Thrown, I can make separate attacks at 2 creatures within 10 ft of each other"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 eval : "AddWeapon('boomerang of hitting');",
                 removeeval : "RemoveWeapon('boomerang of hitting');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'boomerang of hitting' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'boomerang of hitting' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Boomerang of Hitting gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 },
@@ -926,7 +926,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "While wearing the belt, I can use an action to cast Enlarge/Reduce on myself",
                     "I cannot use it again until I complete a short or long rest"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 usages : 1,
                 recovery : "short rest",
                 spellcastingBonus : [{
@@ -942,9 +942,9 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "As an action, I restrain a creature (30 ft, dex save vs. spell DC) till the end of my next turn",
                     "Disadvantage If I'm already grappling it. I can only restrain one target a time"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 action : ["action","[30 ft, dex save vs. spell DC]"],
-                prereqeval : "classes.known['revised artificer'].level >= 5"
+                prereqeval : "classes.known['alternate artificer'].level >= 5"
             },
             "bracers of empowerment (prereq: level 11 artificer)" : {
                 name : "Bracers of Empowerment",
@@ -952,7 +952,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I can use these to cast Tenser's Transformation without using a spell slot.",
                     "I cannot use it again until I complete a long rest"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 usages : 1,
                 recovery : "long rest",
                 spellcastingBonus : [{
@@ -961,21 +961,21 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     selection : ["tenser's transformation"],
                     oncelr : true
                 }],
-                prereqeval : "classes.known['revised artificer'].level >= 11"
+                prereqeval : "classes.known['alternate artificer'].level >= 11"
             },
             "deployable wings (prereq: level 11 artificer)" : {
                 name : "Deployable Wings",
                 description : desc([
                     "I can deploy wings as a bonus action/reaction to falling, I get a flying speed of 30 ft"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 action : ["bonus action",""], //TODO(v13): add a reaction to this to replace the eval and removeeval
                 speed : { 
                     fly : { spd : 30, enc : 20 }
                 },
                 eval : "AddAction('reaction', 'Deployable Wings (falling)', 'Artificer (Gadgetsmith)');",
                 removeeval : "RemoveAction('reaction', 'Deployable Wings (falling)');",
-                prereqeval : "classes.known['revised artificer'].level >= 9"
+                prereqeval : "classes.known['alternate artificer'].level >= 9"
             },
             "disintegration ray (prereq: level 15 artificer)" : {
                 name : "Disintegration Ray",
@@ -983,7 +983,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I can use this to cast Disintegration without expending a Spell Slot.",
                     "I cannot use it again until I complete a long rest"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 usages : 1,
                 recovery : "long rest",
                 spellcastingBonus : [{
@@ -992,7 +992,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     selection : ["disintegration"],
                     oncelr : true
                 }],
-                prereqeval : "classes.known['revised artificer'].level >= 15"
+                prereqeval : "classes.known['alternate artificer'].level >= 15"
             },
             "gripping gloves (prereq: level 11 artificer, incompatible with nimble gloves)" : {
                 name : "Gripping Gloves",
@@ -1000,9 +1000,9 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "While wearing the gloves, My Str and maximum Str increases by 2", //TODO(v13): add automation for this
                     "And I gain adv on Str(Athletics) checks involving manipulating things with my hands"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 skillstxt : "\n\n" + toUni("Gadgetsmith: Gripping Gloves") + ": Adv on Str(Athletics) checks involving manipulating things with my hands",
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('nimble gloves') == -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('nimble gloves') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "element eater" : {
                 name : "Element Eater",
@@ -1010,7 +1010,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "As a reaction to taking elemental damage, I can cast Absorb Elements",
                     "Without using a spell slot. I cannot use it again until I complete a short or long rest"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 usages : 1,
                 recovery : "short rest",
                 spellcastingBonus : [{
@@ -1026,7 +1026,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I enhance my grappling hook, increasing its range to 40 feet",
                     "And lets me drag something with me when pulling myself to something"
                 ]),
-                source : ["KT:RA", 8],
+                source : ["KT:AA", 8],
                 additional : "See Notes sheet",
                 noteDesc : desc([
                     "I can attack a surface, object, or creature within 40 feet and hook on to it",
@@ -1035,8 +1035,8 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "While pulling myself, I can drag a medium or smaller",
                     "willing/grappled creature within 5 ft of me with me"
                 ]),
-                eval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:RA', 8], ClassSubList['revised artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc);",
-                removeeval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:RA', 8], ClassSubList['revised artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc, true);"
+                eval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:AA', 8], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc);",
+                removeeval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:AA', 8], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc, true);"
             }, //TODO(v13): Make this a magic item
             "fire spitter" : {
                 name : "Fire Spitter",
@@ -1044,7 +1044,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "As an action, I can cast Aganazzar's Scorcher without using a spell slot",
                     "I cannot use it again until I complete a short or long rest"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 usages : 1,
                 recovery : "short rest",
                 spellcastingBonus : [{
@@ -1060,7 +1060,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "As an action, you can target a point in 30 ft. Any creature within a 20 ft radius makes:",
                     "A dex save or is blinded until the end of its next turn It cannot used again until after a SR"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 usages : 1,
                 recovery : "short rest"
             },
@@ -1070,12 +1070,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a magical gauntlet, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
                     "Before I attack, I can forgo my Prof mod for the attack, but If it hits I get double"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('impact gauntlet');",
                 removeeval : "RemoveWeapon('impact gauntlet');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'impact gauntlet' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'impact gauntlet' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Impact Gauntlet gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 },
@@ -1086,7 +1086,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 description : desc([
                     "I get another magical gauntlet, letting me dual weld them"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: impact gauntlet') != -1 || What('Extra.Notes').toLowerCase().indexOf('impact gauntlet') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "lightning baton (incompatible with essential tools: lightning baton)" : {
@@ -1094,12 +1094,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 description : desc([
                     "I get a lightning baton, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('lightning baton');",
                 removeeval : "RemoveWeapon('lightning baton');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'lightning baton' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'lightning baton' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Lightning Baton gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 },
@@ -1110,7 +1110,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 description : desc([
                     "I get another lightning baton, letting me dual weld them)"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: lightning baton') != -1 || What('Extra.Notes').toLowerCase().indexOf('lightning baton') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "lightning generator (prereq: level 11 artificer, shock generator)" : {
@@ -1119,7 +1119,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "You can cast lightning lure at-will using it, can overload it to cast lightning bolt",
                     "Once I overload it, I cannot use lightning bolt again until I complete a short or long rest"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('lightning lure');",
                 removeeval : "RemoveWeapon('lightning lure');",
                 usages : 1,
@@ -1135,7 +1135,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     selection : ["lightning bolt"],
                     oncesr : true
                 }],
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('shock generator') != -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('shock generator') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "mechanical arm" : {
                 name : "Mechanical Arm",
@@ -1143,7 +1143,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "The arm only works while it is mounted to my gear, but can be controlled mentally",
                     "It can do anything a normal hand could, but does not give you additional actions"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
             },
             "mechanical familiar" : {
                 name : "Mechanical Familiar",
@@ -1151,7 +1151,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "At the end of a long rest, I can cast Find Familiar with the following modifications:",
                     "Type: Construct, cannot fly, stays active until deactivated/destroyed, reactivated after LR"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 //TODO: I'm sure this is automatable, but i'll come back to it later...
                 //| Probably after I do the Golemsmith (which I'm sure is going be a BITCH to do...)
             },
@@ -1162,7 +1162,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "And I gain Adv on Dex(Slight of Hand) checks involving manipulating things with my hands"
                 ]),
                 skillstxt : "\n\n" + toUni("Gadgetsmith: Nimble Gloves") + ": Adv on Dex(Slight of Hand) checks involving manipulating things with my hands",
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('gripping gloves') == -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('gripping gloves') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "phase trinket (prereq: level 9 artificer)" : {
                 name : "Phase Trinket",
@@ -1183,7 +1183,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     selection : ["dimension door"],
                     oncelr : true
                 }],
-                prereqeval : "classes.known['revised artificer'].level >= 9"
+                prereqeval : "classes.known['alternate artificer'].level >= 9"
             },
             "jumping boots" : {
                 name : "Jumping Boots",
@@ -1197,12 +1197,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a magical hand crossbow, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
                     "If I have Adv, once per turn I can forgo it on an attack to make an additional attack"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('repeating hand crossbow');",
                 removeeval : "RemoveWeapon('repeating hand crossbow');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'repeating hand crossbow' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'repeating hand crossbow' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Repeating Hand Crossbow gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 },
@@ -1215,11 +1215,11 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "Each targets a point I can see in 40 ft. Creatures in 10 ft of a point makes a dex save",
                     "On fail take 2d6 fire damage per rocket, half on success. I refill my stock during a LR"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 usages : "Artificer level per ",
                 usagescalc : "event.value = What('Character Level');",
                 recovery : "long rest",
-                prereqeval : "classes.known['revised artificer'].level >= 15"
+                prereqeval : "classes.known['alternate artificer'].level >= 15"
             },
             "shock generator (incompatible with essential tools: shock generator)" : {
                 name : "Shock Generator",
@@ -1227,7 +1227,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "I get a device that lets me cast Shocking Grasp",
                     "I can add my Dex or Int mod (sheet automatically chooses the highest) to the attack"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 eval : "AddWeapon('shocking grasp');",
                 removeeval : "RemoveWeapon('shocking grasp');",
                 calcChanges : {
@@ -1244,7 +1244,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "If the target of my Grappling Hook is a creature, I can cast Shocking Grasp on it",
                     "As a bonus action when pulling it to me or being pulled to it"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: shock generator') != -1 || What('Extra.Notes').toLowerCase().indexOf('shock generator') != -1;" //TODO(v13): Do this with getFeatureChoice
             },
             "sight lenses" : {
@@ -1252,7 +1252,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                 description : desc([
                     "I can see through fog, mist, smoke, clouds, and non-magical darkness, up to 15 ft"
                 ]),
-                source : ["KT:RA", 9],
+                source : ["KT:AA", 9],
                 vision : ["Sight Lenses", 15]
             },
             "smoke cloak" : {
@@ -1261,26 +1261,26 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "When I start my turn lightly or heavily obscured by smoke, I am invisible until:",
                     "My turn ends, I cast a spell, make an attack, or damage an enemy"
                 ]),
-                source : ["KT:RA", 10]
+                source : ["KT:AA", 10]
             },
             "stinking gas (prereq: level 9 artificer)" : {
                 name : "Stinking Gas",
                 description : desc([
                     "When I use a smoke bomb, I can also choose to use stinking cloud (follows the same rules)"
                 ]),
-                source : ["KT:RA", 10],
-                prereqeval : "classes.known['revised artificer'].level >= 9"
+                source : ["KT:AA", 10],
+                prereqeval : "classes.known['alternate artificer'].level >= 9"
             },
             "striding boots" : {
                 name : "Striding Boots",
                 description : desc([
                     "While earing these boots, I am under the effects of Longstrider spell"
                 ]),
-                source : ["KT:RA", 10],
+                source : ["KT:AA", 10],
                 speed : { 
                     allModes : "+10"
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 1"
+                prereqeval : "classes.known['alternate artificer'].level >= 1"
             },
             "stopwatch trinket (prereq: level 9 artificer)" : {
                 name : "Stopwatch Trinket",
@@ -1288,7 +1288,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "As an action, I can cast Haste or Slow without expending a Spell Slot",
                     "I cannot use it again until I complete a long rest"
                 ]),
-                source : ["KT:RA", 10],
+                source : ["KT:AA", 10],
                 usages : 1,
                 recovery : "long rest",
                 spellcastingBonus : [{
@@ -1302,16 +1302,16 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     selection : ["slow"],
                     oncelr : true
                 }],
-                prereqeval : "classes.known['revised artificer'].level >= 9"
+                prereqeval : "classes.known['alternate artificer'].level >= 9"
             },
             "truesight lenses (prereq: level 11 artificer, sight lenses)" : {
                 name : "Truesight Lenses",
                 description : desc([
                     "I get Truesight up to 30 feet"
                 ]),
-                source : ["KT:RA", 10],
+                source : ["KT:AA", 10],
                 vision : ["Truesight", 30],
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('sight lenses') != -1;" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('sight lenses') != -1;" //TODO(v13): Do this with getFeatureChoice
             },
             "useful universal key (prereq: level 11 artificer)" : {
                 name : "Useful Universal Key",
@@ -1319,7 +1319,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     "As an action, I can  cast passwall without expending a spell slot",
                     "I cannot use it again until I complete a long rest"
                 ]),
-                source : ["KT:RA", 10],
+                source : ["KT:AA", 10],
                 usages : 1,
                 recovery : "long rest",
                 spellcastingBonus : [{
@@ -1328,12 +1328,12 @@ ClassSubList["revised artificer-gadgetsmith"] = {
                     selection : ["passwall"],
                     oncelr : true
                 }],
-                prereqeval : "classes.known['revised artificer'].level >= 11"
+                prereqeval : "classes.known['alternate artificer'].level >= 11"
             }
         },
         "subclassfeature3.1" : {
             name : "Recycle Gadgets",
-            source : ["KT:RA", 7],
+            source : ["KT:AA", 7],
             minlevel : 3,
             description : desc([
                 "During a long rest and taking effect when I complete it",
@@ -1342,7 +1342,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
         },
         "subclassfeature5" : {
             name : "Extra Attack",
-            source : ["KT:RA", 8],
+            source : ["KT:AA", 8],
             minlevel : 5,
             description : desc([
                 "I can attack twice whenever I take the Attack action on my turn"
@@ -1350,7 +1350,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
         },
         "subclassfeature14" : {
             name : "Combat Gadgets",
-            source : ["KT:RA", 8],
+            source : ["KT:AA", 8],
             minlevel : 14,
             description : desc([
                 "If I make an attack, I can replace an attack with a gadget that needs an action to use",
@@ -1360,7 +1360,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
     }
 };
 
-// ClassSubList["revised artificer-golemsmith"] = {
+// ClassSubList["alternate artificer-golemsmith"] = {
 //     regExpSearch : /golemsmith/i,
 //     subname : "Golemsmith",
 //     features : {
@@ -1368,7 +1368,7 @@ ClassSubList["revised artificer-gadgetsmith"] = {
 //     }
 // };
 
-// ClassSubList["revised artificer-infusionsmith"] = {
+// ClassSubList["alternate artificer-infusionsmith"] = {
 //     regExpSearch : /infusionsmith/i,
 //     subname : "Infusionsmith",
 //     features : {
@@ -1376,10 +1376,10 @@ ClassSubList["revised artificer-gadgetsmith"] = {
 //     }
 // };
 
-ClassSubList["revised artificer-potionsmith"] = {
+ClassSubList["alternate artificer-potionsmith"] = {
     regExpSearch : /potionsmith/i,
     subname : "Potionsmith",
-    source : ["KT:RA", 16],
+    source : ["KT:AA", 16],
     features : {
         "subclassfeature1" : {
             name : "Potionsmith's Proficiency",
@@ -1388,7 +1388,7 @@ ClassSubList["revised artificer-potionsmith"] = {
                 "I gain proficiency with blowguns, alchemist’s supplies and herbalism kit",
                 "Creating a potion through crafting takes half the normal time and cost"
             ]),
-            source : ["KT:RA", 16],
+            source : ["KT:AA", 16],
             weapons : [true, false, ["blowgun"]],
             toolProfs : [["Alchemist's Supplies", "Dex"],["Herbalism Kit", "Dex"]]
         },
@@ -1399,7 +1399,7 @@ ClassSubList["revised artificer-potionsmith"] = {
                 "I have a pouch of basic reagents and can retrieve things from it if an ability needs them",
                 "It counts as alchemy supplies and if lost, I can spend 50g or 1 hr gathering to remake it"
             ]),
-            source : ["KT:RA", 16],
+            source : ["KT:AA", 16],
         },
         "subclassfeature1.2" : {
             name : "Instant Reactions",
@@ -1407,7 +1407,7 @@ ClassSubList["revised artificer-potionsmith"] = {
             description : desc([
                 "I get the Instant Reactions Feat"
             ]),
-            source : ["KT:RA", 16],
+            source : ["KT:AA", 16],
             eval : "PickDropdown('Feat Name 5', 'Instant Reactions');",
             removeeval : "PickDropdown('Feat Name 5', '');"
         },
@@ -1417,7 +1417,7 @@ ClassSubList["revised artificer-potionsmith"] = {
             description : desc([
                 ""
             ]),
-            source : ["KT:RA", 17],
+            source : ["KT:AA", 17],
         },
         "subclassfeature3.1" : {
             name : "Alchemist Upgrades",
@@ -1426,7 +1426,7 @@ ClassSubList["revised artificer-potionsmith"] = {
                 "Use the \"Choose Features\" button to add a Specialization Upgrade to the third page",
                 "(Make sure to see the notes sheet for more info on choosing and swapping upgrades)"
             ]),
-            source : ["KT:RA", 2],
+            source : ["KT:AA", 2],
             additional : levels.map(function (n, idx) {
                     return n < 3 ? "" : [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9][idx] + " upgrades";
             }),
@@ -1442,8 +1442,8 @@ ClassSubList["revised artificer-potionsmith"] = {
                 "I could select 1 3rd level upgrade and 1 5th level upgrade,",
                 "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
             ]),
-            eval : "notesPage('Alchemist Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassSubList['revised artificer-potionsmith'].features['subclassfeature3.1'].noteDesc);",
-            removeeval : "notesPage('Alchemist Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassList['revised artificer-potionsmith'].features['subclassfeature3.1'].noteDesc, true);",
+            eval : "notesPage('Alchemist Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassSubList['alternate artificer-potionsmith'].features['subclassfeature3.1'].noteDesc);",
+            removeeval : "notesPage('Alchemist Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassList['alternate artificer-potionsmith'].features['subclassfeature3.1'].noteDesc, true);",
             extraname : "Alchemist Upgrades",
             extrachoices : [
                 "Alchemical Acid",
@@ -1473,7 +1473,7 @@ ClassSubList["revised artificer-potionsmith"] = {
                 description : desc([
                     "See the Instant Reactions section on your spell sheet"
                 ]),
-                source : ["KT:RA", 17]
+                source : ["KT:AA", 17]
             },
             "adrenaline serum (prereq: level 9 artificer)" : {
                 name : "Adrenaline Serum",
@@ -1482,21 +1482,21 @@ ClassSubList["revised artificer-potionsmith"] = {
                     "gaining haste and heroism for Int mod(min 1) rounds, I still get the effects of haste ending",
                     "Another can take this, but must pass a Con save vs. my spell DC, poisoned on a fail"
                 ]),
-                source : ["KT:RA", 17]
+                source : ["KT:AA", 17]
             },
             "" : {
                 name : "",
                 description : desc([
                     ""
                 ]),
-                source : ["KT:RA", 17]
+                source : ["KT:AA", 17]
             }//,
             // "" : {
             //     name : "",
             //     description : desc([
             //         ""
             //     ]),
-            //     source : ["KT:RA", 17]
+            //     source : ["KT:AA", 17]
             // }
         },
         "subclassfeature5" : {
@@ -1505,7 +1505,7 @@ ClassSubList["revised artificer-potionsmith"] = {
             description : desc([
                 ""
             ]),
-            source : ["KT:RA", 17],
+            source : ["KT:AA", 17],
         },
         "subclassfeature14" : {
             name : "",
@@ -1513,15 +1513,15 @@ ClassSubList["revised artificer-potionsmith"] = {
             description : desc([
                 ""
             ]),
-            source : ["KT:RA", 17],
+            source : ["KT:AA", 17],
         },
     }
 };
 
-ClassSubList["revised artificer-warsmith"] = {
+ClassSubList["alternate artificer-warsmith"] = {
     regExpSearch : /warsmith/i,
     subname : "Warsmith",
-    source : ["KT:RA", 20],
+    source : ["KT:AA", 20],
     attacks : [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     features : {
         "subclassfeature1" : {
@@ -1530,7 +1530,7 @@ ClassSubList["revised artificer-warsmith"] = {
             description : desc([
                 "I gain proficiency with Heavy Armor and Smith's Tools"
             ]),
-            source : ["KT:RA", 20],
+            source : ["KT:AA", 20],
             toolProfs : [["Smith's Tools", "Dex"]]
         },
         "subclassfeature1.1" : {
@@ -1540,7 +1540,7 @@ ClassSubList["revised artificer-warsmith"] = {
                 "If I lose it, I can remake it during a long rest with 25 gold worth of materials",
                 "I can find the materials and forge it over 2 days of work (8 hr/day) without the expense"
             ]), //TODO(v13): Make this a magic item
-            source : ["KT:RA", 20],
+            source : ["KT:AA", 20],
             weapons : [true, true],
             eval : "AddWeapon('mechplate gauntlet'); AddWeapon('shocking grasp');",
             removeeval : "RemoveWeapon('mechplate gauntlet'); RemoveWeapon('shocking grasp');",
@@ -1555,7 +1555,7 @@ ClassSubList["revised artificer-warsmith"] = {
             name : "Mechplate",
             minlevel : 3,
             description : "",
-            source : ["KT:RA", 20],
+            source : ["KT:AA", 20],
             additional : "See Notes sheet",
             noteDesc : desc([
                 "I create a set of Mechplate from standard heavy armor using resources I've gathered",
@@ -1568,8 +1568,8 @@ ClassSubList["revised artificer-warsmith"] = {
                 "If I'm a small creature, my size is now medium"
             ]), //TODO(v13): Make this a magic item
             armor : [true, true, true, false],
-            eval : "AddArmor('Mechplate'); notesPage('Mechplate', ['Mechplate', 'KT:RA', 20], ClassSubList['revised artificer-warsmith'].features['subclassfeature3'].noteDesc);",
-            removeeval : "RemoveArmor('Mechplate'); notesPage('Mechplate', ['Mechplate', 'KT:RA', 20], ClassSubList['revised artificer-warsmith'].features['subclassfeature3'].noteDesc, true);",
+            eval : "AddArmor('Mechplate'); notesPage('Mechplate', ['Mechplate', 'KT:AA', 20], ClassSubList['alternate artificer-warsmith'].features['subclassfeature3'].noteDesc);",
+            removeeval : "RemoveArmor('Mechplate'); notesPage('Mechplate', ['Mechplate', 'KT:AA', 20], ClassSubList['alternate artificer-warsmith'].features['subclassfeature3'].noteDesc, true);",
         },
         "subclassfeature3.1" : {
             name : "Warsmith Upgrades",
@@ -1578,7 +1578,7 @@ ClassSubList["revised artificer-warsmith"] = {
                 "Use the \"Choose Features\" button to add a Specialization Upgrade to the third page",
                 "(Make sure to see the notes sheet for more info on choosing and swapping upgrades)"
             ]),
-            source : ["KT:RA", 2],
+            source : ["KT:AA", 2],
             additional : levels.map(function (n, idx) {
                     return n < 3 ? "" : [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 8, 9, 9, 10, 10, 11, 11][idx] + " upgrades";
             }),
@@ -1594,8 +1594,8 @@ ClassSubList["revised artificer-warsmith"] = {
                 "I could select 1 3rd level upgrade and 1 5th level upgrade,",
                 "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
             ]),
-            eval : "notesPage('Warsmith Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassSubList['revised artificer-warsmith'].features['subclassfeature3.1'].noteDesc);",
-            removeeval : "notesPage('Warsmith Upgrades', ['Specialization Upgrade', 'KT:RA', 2], ClassList['revised artificer-warsmith'].features['subclassfeature3.1'].noteDesc, true);",
+            eval : "notesPage('Warsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassSubList['alternate artificer-warsmith'].features['subclassfeature3.1'].noteDesc);",
+            removeeval : "notesPage('Warsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassList['alternate artificer-warsmith'].features['subclassfeature3.1'].noteDesc, true);",
             extraname : "Mechplate Upgrades",
             extrachoices : [
                 "Accelerated Movement",
@@ -1639,7 +1639,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "The Mechplate's weight is reduced by 15 lbs, while wearing it all speeds increase by 10 ft",
                     "I can apply this upgrade 1 more time"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 speed : { allModes : "+10" } 
             },
             "accelerated movement lv2 (prereq: accelerated movement)": {
@@ -1647,7 +1647,7 @@ ClassSubList["revised artificer-warsmith"] = {
                 description : desc([
                     "The Mechplate's weight is reduced by 15 lbs, while wearing it all speeds increase by 10 ft"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 speed : { allModes : "+10" }, 
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('accelerated movement') != -1" //TODO(v13): Do this with getFeatureChoice
             },
@@ -1657,9 +1657,9 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As an action, I can activate this, lasts until deactivated, I'm lightly obscured",
                     "Can hide even if something can see me, and Disadvantage on Wis(Perc) checks to find me"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 action : ["action", ""],
-                prereqeval : "classes.known['revised artificer'].level >= 5"
+                prereqeval : "classes.known['alternate artificer'].level >= 5"
             },
             "arcane visor (prereq: level 11 artificer, darkvision visor)": {
                 name : "Arcane Visor",
@@ -1667,7 +1667,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "The Visor has 6 Charges. As an action, I can use 1 or more charges to cast the spells:",
                     "See Invisibility (2) or True Seeing (4), it regains all charges on a LR"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 usages : 6,
                 recovery : "long rest",
                 action : ["action", ""],
@@ -1678,7 +1678,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     firstCol: "AV",
                     times : 2
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('darkvision visor') != -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('darkvision visor') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "armor class": {
                 name : "Armor Class",
@@ -1686,7 +1686,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "My Mechplate's Armor Class (AC) increases by 1",
                     "I can apply this upgrade 2 more times"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 eval : "if (CurrentArmour.field == 'mechplate') {ArmourList.mechplate.ac += 1; ArmourList.mechsuit.ac += 1; ApplyArmor('Mechplate');} else if (CurrentArmour.field == 'mechsuit') {ArmourList.mechsuit.ac += 1; ArmourList.mechplate.ac += 1; ApplyArmor('Mechsuit');};",
                 removeeval : "if (CurrentArmour.field == 'mechplate') {ArmourList.mechplate.ac += -1; ArmourList.mechsuit.ac += -1; ApplyArmor('Mechplate');} else if (CurrentArmour.field == 'mechsuit') {ArmourList.mechsuit.ac += -1; ArmourList.mechplate.ac += -1; ApplyArmor('Mechsuit');};"
             },
@@ -1696,7 +1696,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "My Mechplate's Armor Class (AC) increases by another 1",
                     "I can apply this upgrade 1 more time"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 eval : "if (CurrentArmour.field == 'mechplate') {ArmourList.mechplate.ac += 1; ArmourList.mechsuit.ac += 1; ApplyArmor('Mechplate');} else if (CurrentArmour.field == 'mechsuit') {ArmourList.mechsuit.ac += 1; ArmourList.mechplate.ac += 1; ApplyArmor('Mechsuit');};",
                 removeeval : "if (CurrentArmour.field == 'mechplate') {ArmourList.mechplate.ac += -1; ArmourList.mechsuit.ac += -1; ApplyArmor('Mechplate');} else if (CurrentArmour.field == 'mechsuit') {ArmourList.mechsuit.ac += -1; ArmourList.mechplate.ac += -1; ApplyArmor('Mechsuit');};",
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('armor class') != -1" //TODO(v13): Do this with getFeatureChoice
@@ -1706,7 +1706,7 @@ ClassSubList["revised artificer-warsmith"] = {
                 description : desc([
                     "My Mechplate's Armor Class (AC) increases by another 1"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 eval : "if (CurrentArmour.field == 'mechplate') {ArmourList.mechplate.ac += 1; ArmourList.mechsuit.ac += 1; ApplyArmor('Mechplate');} else if (CurrentArmour.field == 'mechsuit') {ArmourList.mechsuit.ac += 1; ArmourList.mechplate.ac += -1; ApplyArmor('Mechsuit');};",
                 removeeval : "if (CurrentArmour.field == 'mechplate') {ArmourList.mechplate.ac += -1; ArmourList.mechsuit.ac += -1; ApplyArmor('Mechplate');} else if (CurrentArmour.field == 'mechsuit') {ArmourList.mechsuit.ac += -1; ArmourList.mechplate.ac += -1; ApplyArmor('Mechsuit');};",
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('armor class lv2') != -1" //TODO(v13): Do this with getFeatureChoice
@@ -1717,7 +1717,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "This device has 4 Charges. As an action, I can use 1 or more charges to cast the spells:",
                     "Invisibility (2), Greater Invisibility (4), it regains all charges on a LR"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 usages : 4,
                 recovery : "long rest",
                 action : ["action", ""],
@@ -1735,7 +1735,7 @@ ClassSubList["revised artificer-warsmith"] = {
                 description : desc([
                     "While wearing my Mechplate, I have an additional 60 ft of darkvision"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 vision : [["Darkvision", "+60"]]
             },
             "collapsible (prereq: level 5 artificer, incompatible with piloted golem)": {
@@ -1743,9 +1743,9 @@ ClassSubList["revised artificer-warsmith"] = {
                 description : desc([
                     "As an action, I can don/doff the armor, letting it compact into a case 1/3 it's weight"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 action : ["action", " (don/doff Mechplate)"],
-                prereqeval : "classes.known['revised artificer'].level >= 5 && What('Extra.Notes').toLowerCase().indexOf('piloted golem') == -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 5 && What('Extra.Notes').toLowerCase().indexOf('piloted golem') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "energy surge": {
                 name : "Energy Surge",
@@ -1753,7 +1753,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As a bonus action, the next shocking grasp or force blast I hit",
                     "Deals +1d8 lightning damage and knocks a Large or smaller target 10 ft away from me"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 usages : "Intelligence mod per ",
                 usagescalc : "event.value = Math.max(1, What('Int Mod'));",
                 recovery : "long rest",
@@ -1765,7 +1765,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "The Projector has 6 Charges. As an action, I can use 1 or more charges to cast the spells:",
                     "Burning Hands (1)/Fireball (3)/Wall of Fire (4), it regains all charges on a LR"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 usages : 6,
                 recovery : "long rest",
                 action : ["action", ""],
@@ -1776,7 +1776,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     firstCol : "FP",
                     times : 3
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 9 && What('Extra.Notes').toLowerCase().indexOf('lightning projector') == -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 9 && What('Extra.Notes').toLowerCase().indexOf('lightning projector') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "flash freeze capacitor (prereq: level 11 artificer, incompatible with power slam capacitor)": {
                 name : "Flash Freeze Capacitor",
@@ -1784,7 +1784,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As an action, I can cast Cone of Cold, and the area effected becomes",
                     "Difficult terrain until my next turn. I cannot use it again until I complete a LR"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 usages : 1,
                 recovery : "long rest",
                 action : ["action", ""],
@@ -1794,16 +1794,16 @@ ClassSubList["revised artificer-warsmith"] = {
                     selection : ["cone of cold"],
                     oncelr : true
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('power slam capacitor') == -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('power slam capacitor') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "flight (prereq: level 11 artificer, incompatible with piloted golem)": {
                 name : "Flight",
                 description : desc([
                     "While wearing my Mechplate I have a Magical flying speed of 30 ft"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 speed : { fly : { spd : 30 }},
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('piloted golem') == -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('piloted golem') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "force blast": {
                 name : "Force Blast",
@@ -1811,12 +1811,12 @@ ClassSubList["revised artificer-warsmith"] = {
                     "My gauntlet can fire blasts of force, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14",
                     "I am proficient in this weapon. Counts as a ranged spell attack"
                 ]),
-                source : ["KT:RA", 21],
+                source : ["KT:AA", 21],
                 eval : "AddWeapon('force blast');",
                 removeeval : "RemoveWeapon('force blast');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'force blast' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'force blast' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'force blast' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'force blast' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "Force Blast gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 }
@@ -1827,7 +1827,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As 1 attack, I may target a surface, object or creature within 40 ft. If Large or smaller,",
                     "I can make a Grapple check to pull it and Grapple it, If Large or larger, I can pull to it"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 action : ["action", " (attack/action)"]
             },
             //! A lot of this upgrade can't be automated with the sheet (Well it can be but I'd have to write a whole function for only it and thats not worth it)
@@ -1835,7 +1835,7 @@ ClassSubList["revised artificer-warsmith"] = {
             "integrated attack (prereq: level 11 artificer)": {
                 name : "Integrated Attack",
                 description : "",
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 additional : "See Notes sheet",
                 noteDesc : desc([
                     "I Integrate a weapon into my mechplate, it can't be Heavy, I am proficient with it",
@@ -1845,10 +1845,10 @@ ClassSubList["revised artificer-warsmith"] = {
                     "This upgrade can be taken multiple times, adding a new weapon each time"
                     //! I can't add any way to account for this without adding 5 more of the same upgrade and I'm not doing that
                 ]),
-                eval : "AddAction('bonus action', 'Integrated Attack (attack)', 'Artificer (Warsmith)'); notesPage('Integrated Attack', ['Upgrade-Integrated Attack', 'KT:RA', 22], ClassSubList['revised artificer-warsmith'].features['subclassfeature3.1']['integrated attack (prereq: level 11 artificer)'].noteDesc);",
-                removeeval : "RemoveAction('bonus action', 'Integrated Attack (attack)'); notesPage('Integrated Attack', ['Upgrade-Integrated Attack', 'KT:RA', 22], ClassSubList['revised artificer-warsmith'].features['subclassfeature3.1']['integrated attack (prereq: level 11 artificer)'].noteDesc, true);",
+                eval : "AddAction('bonus action', 'Integrated Attack (attack)', 'Artificer (Warsmith)'); notesPage('Integrated Attack', ['Upgrade-Integrated Attack', 'KT:AA', 22], ClassSubList['alternate artificer-warsmith'].features['subclassfeature3.1']['integrated attack (prereq: level 11 artificer)'].noteDesc);",
+                removeeval : "RemoveAction('bonus action', 'Integrated Attack (attack)'); notesPage('Integrated Attack', ['Upgrade-Integrated Attack', 'KT:AA', 22], ClassSubList['alternate artificer-warsmith'].features['subclassfeature3.1']['integrated attack (prereq: level 11 artificer)'].noteDesc, true);",
                 action : ["bonus action", " (activate)"], //TODO(v13): Add another bonus action to this to replace the stuff above
-                prereqeval : "classes.known['revised artificer'].level >= 11"
+                prereqeval : "classes.known['alternate artificer'].level >= 11"
             },
             "lightning projector (prereq: level 9 artificer, incompatible with flame projector)": {
                 name : "Lightning Projector",
@@ -1856,7 +1856,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "The Projector has 6 Charges. As an action, I can use 1 or more charges to cast the spells:",
                     "Thunderwave (1)/Lightning Bolt (3)/Storm Sphere (4); it regains all charges on a LR"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 recovery : "long rest",
                 usages : 6,
                 action : ["action", ""],
@@ -1867,7 +1867,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     firstCol : "LP",
                     times : 3
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 9 && What('Extra.Notes').toLowerCase().indexOf('flame projector') == -1" //TODO(v13): Do this with getFeatureChoice
+                prereqeval : "classes.known['alternate artificer'].level >= 9 && What('Extra.Notes').toLowerCase().indexOf('flame projector') == -1" //TODO(v13): Do this with getFeatureChoice
             },
             "mechsuit (incompatible with piloted golem and sealed suit)": {
                 name : "Mechsuit",
@@ -1875,7 +1875,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "I retain all benefits and upgrades of my Mechplate, but now counts as Medium armor",
                     "Providing a base of 15 + Dex Mod AC, and its weight is reduced to 40 lbs"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 eval : "RemoveArmor('MechPlate'); AddArmor('Mechsuit');",
                 removeeval : "RemoveArmor('Mechsuit'); AddArmor('Mechplate');",
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('piloted golem') == -1 && What('Extra.Notes').toLowerCase().indexOf('sealed suit') == -1" //TODO(v13): Do this with getFeatureChoice
@@ -1885,7 +1885,7 @@ ClassSubList["revised artificer-warsmith"] = {
                 description : desc([
                     "My size increases by 1 when wearing my armor, and I have adv on Str checks/saves"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 savetxt : {
                     text : ["Adv. on Str. checks and saves when wearing my armor"]
                 },
@@ -1897,8 +1897,8 @@ ClassSubList["revised artificer-warsmith"] = {
                     "While wearing my Mechplate My Str and max Str increase by 1 more", //TODO(v13): add automation for this
                     "I can apply this upgrade 1 time"
                 ]),
-                source : ["KT:RA", 22],
-                prereqeval : "classes.known['revised artificer'].level >= 5"
+                source : ["KT:AA", 22],
+                prereqeval : "classes.known['alternate artificer'].level >= 5"
             },
             "powered limbs lv2 (prereq: powered limbs)": {
                 name : "Powered Limbs Lv2",
@@ -1913,7 +1913,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As an Action, I can leap my MS, casting Destructive Wave upon landing",
                     "I cannot use it again until I complete a LR"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 usages : 1,
                 recovery : "long rest",
                 action : ["action", " (Jump my MS)"],
@@ -1923,7 +1923,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     selection : ["destructive wave"],
                     oncelr : true
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('flash freeze capacitor') == -1"
+                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('flash freeze capacitor') == -1"
             },
             "power fist": {
                 name : "Power Fist",
@@ -1931,12 +1931,12 @@ ClassSubList["revised artificer-warsmith"] = {
                     "I upgrade my gauntlet, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
                     "Before I attack, I can forgo my Prof mod for the attack, but If it hits I get double"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 eval : "RemoveWeapon('Mechplate Gauntlet'); AddWeapon('Power Gauntlet');",
                 removeeval : "RemoveWeapon('Power Gauntlet'); AddWeapon('Mechplate Gauntlet');",
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'power gauntlet' && classes.known['revised artificer'].level >= 5 && classes.known['revised artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'power gauntlet' && classes.known['revised artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        "if (WeaponName == 'power gauntlet' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'power gauntlet' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
                         "The Power Gauntlet gains a +1 to Attack and Damage at level 5, a +2 at level 14"
                     ]
                 }
@@ -1946,7 +1946,7 @@ ClassSubList["revised artificer-warsmith"] = {
                 description : desc([
                     "I create another power gauntlet, letting me dual weld them"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('power fist') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "reactive plating (prereq: level 15 artificer)": {
@@ -1955,10 +1955,10 @@ ClassSubList["revised artificer-warsmith"] = {
                     "While waring, I get resistance to: bludgeoning, piercing, and slashing damage (non-magical)",
                     "As a reaction when hit, I can reduce the damage by my proficiency bonus"
                 ]),
-                source : ["KT:RA", 22],
+                source : ["KT:AA", 22],
                 dmgres : [["Bludgeoning", "Bludg. (nonmagical)"], ["Piercing", "Pierc. (nonmagical)"], ["Slashing", "Slash. (nonmagical)"]],
                 action : ["reaction", " (If hit)"],
-                prereqeval : "classes.known['revised artificer'].level >= 15"
+                prereqeval : "classes.known['alternate artificer'].level >= 15"
             },
             "recall (prereq: level 15 artificer)": {
                 name : "Recall",
@@ -1966,11 +1966,11 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As a bonus action, I can send my Mechplate to a pocket dimension. While in it, it can't",
                     "Be Interacted with in any way, and as an action, I can summon my Mechplate and don it"
                 ]),
-                source : ["KT:RA", 23],
+                source : ["KT:AA", 23],
                 eval : "AddAction('bonus action', 'Recall (doff Mechplate)', 'Artificer (Warsmith)');",
                 removeeval : "RemoveAction('bonus action', 'Recall (doff Mechplate)');",
                 action : ["action", " (don Mechplate)"],
-                prereqeval : "classes.known['revised artificer'].level >= 15"
+                prereqeval : "classes.known['alternate artificer'].level >= 15"
             },
             "resistance": {
                 name : "Resistance",
@@ -1979,7 +1979,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "While wearing my Mechplate. I can take this upgrade more than once"
                     //! I can't add any way to automate any of this without 7 more of the same upgrade and I'm not doing that
                 ]),
-                source : ["KT:RA", 23]
+                source : ["KT:AA", 23]
             },
             "relocation matrix (prereq: level 11 artificer)": {
                 name : "Relocation Matrix",
@@ -1987,7 +1987,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As an action, I can cast Dimension Door without using a spell slot",
                     "I cannot use it again until I complete a LR"
                 ]),
-                source : ["KT:RA", 23],
+                source : ["KT:AA", 23],
                 usages : 1,
                 recovery : "long rest",
                 action : ["action", ""],
@@ -1997,7 +1997,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     selection : ["dimension door"],
                     oncelr : true
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 11"
+                prereqeval : "classes.known['alternate artificer'].level >= 11"
             },
             "sealed suit (prereq: level 5 artificer)": {
                 name : "Sealed Suit",
@@ -2006,13 +2006,13 @@ ClassSubList["revised artificer-warsmith"] = {
                     "I get 1 min of air for every min that I'm not submerged and the armor is not sealed",
                     "While in my armor, I am adapted to cold/hot climates, and acclimated to high altitude"
                 ]),
-                source : ["KT:RA", 23],
+                source : ["KT:AA", 23],
                 action : ["bonus action", " (air 1 hr, poison immune)"],
                 vision : [["Adapted to cold/hot", 0], ["Acclimated to high altitude", 0]],
                 savetxt : {
                     immune : ["poison (in Mechplate)"]
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 5"
+                prereqeval : "classes.known['alternate artificer'].level >= 5"
             },
             "sentient armor": {
                 name : "Sentient Armor",
@@ -2020,7 +2020,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "My Mechplate is a sentient item. My Int and max Int increase by 1 while wearing it", //TODO(v13): add automation for this
                     "I can take this upgrade 1 more time"
                 ]),
-                source : ["KT:RA", 23]
+                source : ["KT:AA", 23]
             },
             "sentient armor lv2 (prereq: sentient armor)": {
                 name : "Sentient Armor Lv2",
@@ -2029,7 +2029,7 @@ ClassSubList["revised artificer-warsmith"] = {
                     "I cannot be surprised while wearing my Mechplate"
                 ]),
                 vision : ["Can't be surprised", 0],
-                source : ["KT:RA", 23],
+                source : ["KT:AA", 23],
                 prereqeval : "What('Extra.Notes').toLowerCase().indexOf('sentient armor') != -1" //TODO(v13): Do this with getFeatureChoice
             },
             "sun cannon (prereq: level 15 artificer)": {
@@ -2038,22 +2038,22 @@ ClassSubList["revised artificer-warsmith"] = {
                     "As an action, I can cast Sunbeam without using a spell slot",
                     "I cannot use it again until I complete a LR"
                 ]),
-                source : ["KT:RA", 23],
+                source : ["KT:AA", 23],
                 spellcastingBonus : {
                     name : "Sun Cannon",
                     spells : ["sunbeam"],
                     selection : ["sunbeam"],
                     oncelr : true
                 },
-                prereqeval : "classes.known['revised artificer'].level >= 15"
+                prereqeval : "classes.known['alternate artificer'].level >= 15"
             },
             "virtual wizard (prereq: level 15 artificer, sentient armor lv2)": {
                 name : "Virtual Wizard",
                 description : desc([
                     "While wearing my Mechplate, my spell save DC and spell attack are increased by 2" //TODO(v13): Add automation with spellCalc attribute
                 ]),
-                source : ["KT:RA", 23],
-                prereqeval : "classes.known['revised artificer'].level >= 15 && What('Extra.Notes').toLowerCase().indexOf('sentient armor lv2') != -1"
+                source : ["KT:AA", 23],
+                prereqeval : "classes.known['alternate artificer'].level >= 15 && What('Extra.Notes').toLowerCase().indexOf('sentient armor lv2') != -1"
             }
         },
         "subclassfeature5" : {
@@ -2062,7 +2062,7 @@ ClassSubList["revised artificer-warsmith"] = {
             description : desc([
                 "I can attack twice whenever I take the Attack action on my turn"
             ]),
-            source : ["KT:RA", 20],
+            source : ["KT:AA", 20],
         },
         "subclassfeature14" : {
             name : "Fully Customized Gear",
@@ -2070,20 +2070,20 @@ ClassSubList["revised artificer-warsmith"] = {
             description : desc([
                 "I get 2 extra upgrades, and during a LR, I can swap any upgrade for another"
             ]),
-            source : ["KT:RA", 21],
+            source : ["KT:AA", 21],
         }
     }
 };
 
-// ClassSubList["revised artificer-wandsmith"] = {
+// ClassSubList["alternate artificer-wandsmith"] = {
 //     regExpSearch : /wandsmith/i,
 //     subname : "Wandsmith",
 //     features : {
 
 //     }
 // };
-
-//***********************************************-Extra Subclass Stuff-***********************************************\\
+*/
+//***********************************************-Extra Class/Subclass Stuff-***********************************************\\
 
 /** 
  * notesPage
@@ -2091,131 +2091,172 @@ ClassSubList["revised artificer-warsmith"] = {
  * @param {string} name The title of the thing,
  *  ex."Integrated Attack"
  * @param {[string,string,number]} source The source of the info,
- *  ex.["Upgrade-Integrated Attack", "KT:RA", 22]
+ *  ex.["Upgrade-Integrated Attack", "KT:AA", 22]
  * @param {string} desc The description of the thing,
  *  ex."It does the thing"
  * @param {boolean=} remove Should the thing be removed,
  *  ex. true, removes everything from the Notes
  */
-notesPage = function(name, source, desc, remove) {
+// notesPage = function(name, source, desc, remove) {
 
-    var fullSource = " (" + source[0] + ", " + source[1] + " " + source[2] + ") -";
+//     var fullSource = " (" + source[0] + ", " + source[1] + " " + source[2] + ") -";
 
-    var notes = "P5.ASnotes.Notes.Left";
-    var inputString = "\n\n" + name + fullSource + desc;
-    if (remove === true) {
-        RemoveString(notes, inputString);
-    } else {
-        AddString(notes, inputString);
-    }
+//     var notes = "P5.ASnotes.Notes.Left";
+//     var inputString = "\n\n" + name + fullSource + desc;
+//     if (remove === true) {
+//         RemoveString(notes, inputString);
+//     } else {
+//         AddString(notes, inputString);
+//     }
+// };
+
+SpellsList["arcane ablation"] = {
+    name : "Arcane Ablation",
+	source : ["KT:AA", 29],
+	classes : ["alternate artificer"],
+    level : 1,
+    school : "Trans",
+	time : "1 a",
+    range : "touch",
+	components : "V,S",
+	duration : "1 h",
+	description : "Imbue armor/clothing, crea wearing n(4+1/SL) temp hp, after exhausted +(n-1) temp hp, repeat",
+	descriptionFull : "You touch a piece of worn armor or clothing and imbue it with magic. The creature wearing this the imbued item gains 4 temporary hit points for the duration. When these temporary hit points are exhausted, at the start of the creatures next turn it will gain 3 temporary hit points. This repeats when those temporary hit points are exhausted as the previous total minus one, until no temporary hit points would be gained and the spell ends." + "\n   " + "At Higher Levels: The initial temporary hit points increases by 1 for each slot level above 1st."
+};
+SpellsList["arcane weapon"] = {
+    name : "Arcane Weapon",
+	source : ["KT:AA", 29],
+	classes : ["alternate artificer"],
+    level : 1,
+    school : "Trans",
+	time : "1 a",
+    range : "touch",
+	components : "V,S",
+	duration : "Conc, 1 h",
+	description : "Imbue weapon, counts as magical, dmg is Force",
+	descriptionFull : "You touch a weapon and imbue it with magic. For the duration the weapon counts as a magical weapon, any damage dealt by it is Force damage."
+};
+SpellsList["bond item"] = {
+    name : "Bond Item",
+	source : ["KT:AA", 29],
+	classes : ["alternate artificer"],
+    level : 1,
+    school : "Conj",
+	time : "1 min",
+    range : "touch",
+	components : "V,S",
+    duration : "8 h",
+    save : "Cha",
+	description : "Link >=100 lb item, recall as bns; If crea hold/wear save, Adv if >1 min",
+	descriptionFull : "You touch a item weighing no more than 100 pounds and form a link between you and it. Until the spell ends, you can recall it to your hand as a bonus action." + "\n   " + "If another creature is holding or wearing the item when you try to recall it, they make a Charisma saving throw, and if they succeed, the spell fails. They make this save with Advantage if they have had possession of the item for more than 1 minute."
 };
 
 //*****************************************************\\
 //*                   -Cannonsmith-                   *\\
 //*****************************************************\\
 
-AmmoList["thunder rounds"] = {
-    name : "Thunder Rounds",
-    source : ["KT:RA", 5],
-    weight : 0.2, // based on the weight of renaissance bullets from the DMG
-    icon : "Bullets",
-    checks : [".Bullet"],
-    display : 50,
-    invName : "Thunder Rounds",
-    alternatives : [/^((?=.*thunder)|(?=.*rounds?)).*$/i]
-};
-WeaponsList["thunder cannon"] = {
-    regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
-    name : "Thunder Cannon",
-    source : ["KT:RA", 5],
-    weight : 15,
-    list : "revised artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [2, 6, "piercing"],
-    range : "60/180 ft",
-    description : "Ammunition, Two-handed, Loud, Reload(1)",
-    abilitytodamage : false,
-    ammo : "Thunder Rounds"
-};
-WeaponsList["lightning bayonet"] = {
-    regExpSearch : /^(?=.*lightning)(?=.*bayonet).*$/i,
-    name : "TC: Lightning Bayonet",
-    source : ["KT:RA", 6],
-    list : "revised artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 6, "piercing"],
-    range : "Melee",
-    description : "Finesse",
-    abilitytodamage : true
-};
-WeaponsList["harpoon reel"] = {
-    regExpSearch : /^(?=.*harpoon)(?=.*reel).*$/i,
-    name : "TC: Harpoon Reel",
-    source : ["KT:RA", 6],
-    list : "revised artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 6, "piercing"],
-    range : "30/60 ft",
-    description : "60 ft cord, Must be Reeled in, See notes sheet",
-    abilitytodamage : false
-};
+// AmmoList["thunder rounds"] = {
+//     name : "Thunder Rounds",
+//     source : ["KT:AA", 5],
+//     weight : 0.2, // based on the weight of renaissance bullets from the DMG
+//     icon : "Bullets",
+//     checks : [".Bullet"],
+//     display : 50,
+//     invName : "Thunder Rounds",
+//     alternatives : [/^((?=.*thunder)|(?=.*rounds?)).*$/i]
+// };
+// WeaponsList["thunder cannon"] = {
+//     regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
+//     name : "Thunder Cannon",
+//     source : ["KT:AA", 5],
+//     weight : 15,
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [2, 6, "piercing"],
+//     range : "60/180 ft",
+//     description : "Ammunition, Two-handed, Loud, Reload(1)",
+//     abilitytodamage : false,
+//     ammo : "Thunder Rounds"
+// };
+// WeaponsList["lightning bayonet"] = {
+//     regExpSearch : /^(?=.*lightning)(?=.*bayonet).*$/i,
+//     name : "TC: Lightning Bayonet",
+//     source : ["KT:AA", 6],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 6, "piercing"],
+//     range : "Melee",
+//     description : "Finesse",
+//     abilitytodamage : true
+// };
+// WeaponsList["harpoon reel"] = {
+//     regExpSearch : /^(?=.*harpoon)(?=.*reel).*$/i,
+//     name : "TC: Harpoon Reel",
+//     source : ["KT:AA", 6],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 6, "piercing"],
+//     range : "30/60 ft",
+//     description : "60 ft cord, Must be Reeled in, See notes sheet",
+//     abilitytodamage : false
+// };
 
 //*****************************************************\\
 //*                   -Gadgetsmith-                   *\\
 //*****************************************************\\
 
-WeaponsList["boomerang of hitting"] = {
-    regExpSearch : /^(?=.*boomerang)(?=.*hitting).*$/i,
-    name : "Boomerang of Hitting",
-    source : ["KT:RA", 8],
-    list : "revised artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 4, "bludgeoning"],
-    range : "Melee, 30/90 ft",
-    description : "Finesse; Thrown, Returns; Special",
-    abilitytodamage : true
-};
-WeaponsList["impact gauntlet"] = {
-    regExpSearch : /^(?=.*impact)(?=.*gauntlet).*$/i,
-    name : "Impact Gauntlet",
-    source : ["KT:RA", 9],
-    list : "revised artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 8, "bludgeoning"],
-    range : "Melee",
-    description : "Finesse, Light, Special",
-    abilitytodamage : true
-};
-WeaponsList["repeating hand crossbow"] = {
-    regExpSearch : /^(?=.*repeating)(?=.*crossbow).*$/i,
-    name : "Repeating Hand Crossbow",
-    source : ["KT:RA", 9],
-    list : "revised artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 6, "piercing"],
-    range : "30/120 ft",
-    description : "Ammunition, Light, Special, Auto-loading",
-    abilitytodamage : true,
-    ammo : "Bolts"
-};
-WeaponsList["lightning baton"] = {
-    regExpSearch : /^(?=.*lightning)(?=.*baton).*$/i,
-    name : "Lightning Baton",
-    source : ["KT:RA", 9],
-    list : "revised artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : ["1d4/1d4", "", "bludgeoning"],
-    range : "30/120 ft",
-    description : "Finesse, Light, 1d4 is lightning, Con save vs. spell save DC on crit; fail - is stunned until my next turn",
-    abilitytodamage : true
-};
+// WeaponsList["boomerang of hitting"] = {
+//     regExpSearch : /^(?=.*boomerang)(?=.*hitting).*$/i,
+//     name : "Boomerang of Hitting",
+//     source : ["KT:AA", 8],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 4, "bludgeoning"],
+//     range : "Melee, 30/90 ft",
+//     description : "Finesse; Thrown, Returns; Special",
+//     abilitytodamage : true
+// };
+// WeaponsList["impact gauntlet"] = {
+//     regExpSearch : /^(?=.*impact)(?=.*gauntlet).*$/i,
+//     name : "Impact Gauntlet",
+//     source : ["KT:AA", 9],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 8, "bludgeoning"],
+//     range : "Melee",
+//     description : "Finesse, Light, Special",
+//     abilitytodamage : true
+// };
+// WeaponsList["repeating hand crossbow"] = {
+//     regExpSearch : /^(?=.*repeating)(?=.*crossbow).*$/i,
+//     name : "Repeating Hand Crossbow",
+//     source : ["KT:AA", 9],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 6, "piercing"],
+//     range : "30/120 ft",
+//     description : "Ammunition, Light, Special, Auto-loading",
+//     abilitytodamage : true,
+//     ammo : "Bolts"
+// };
+// WeaponsList["lightning baton"] = {
+//     regExpSearch : /^(?=.*lightning)(?=.*baton).*$/i,
+//     name : "Lightning Baton",
+//     source : ["KT:AA", 9],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : ["1d4/1d4", "", "bludgeoning"],
+//     range : "30/120 ft",
+//     description : "Finesse, Light, 1d4 is lightning, Con save vs. spell save DC on crit; fail - is stunned until my next turn",
+//     abilitytodamage : true
+// };
 
 //*****************************************************\\
 //*                    -Golemsmith-                   *\\
@@ -2232,269 +2273,268 @@ WeaponsList["lightning baton"] = {
 
 
 //Did this as a feat to separate the reactions from normal spells
-FeatsList["instant reactions"] = {
-    name : "Instant Reactions",
-	source : ["KT:RA", 16],
-	prerequisite : "Being a Potionsmith",
-	prereqeval : "classes.known['revised artificer'].subclass == 'revised artificer-potionsmith'",
-	description : "I know how to get instant reactions to occur without the niceties for more refined concoctions. I know the instant reactions Alchemical Fire, Poisonous Gas, and Healing Draught now. I can learn additional reactions through my upgrades",
-	spellcastingBonus : [{
-		name : "Starting Instant Reactions",
-		spellcastingAbility : 4,
-		spells : ["alchemical fire", "poisonous gas", "healing draught"],
-		selection : ["alchemical fire", "poisonous gas", "healing draught"],
-        firstCol : "St",
-        times : 3
-	}, {
-        name : "Upgrade Instant Reactions",
-		spells : ["alchemical acid", "explosive reaction", "fortifying fumes reaction", "frostbloom reaction"],
-		selection : ["alchemical acid", "explosive reaction", "fortifying fumes reaction", "frostbloom reaction"],
-        firstCol : "Up",
-        times : 4
-    }]
-};
+// FeatsList["instant reactions"] = {
+//     name : "Instant Reactions",
+// 	source : ["KT:AA", 16],
+// 	prerequisite : "Being a Potionsmith",
+// 	prereqeval : "classes.known['alternate artificer'].subclass == 'alternate artificer-potionsmith'",
+// 	description : "I know how to get instant reactions to occur without the niceties for more refined concoctions. I know the instant reactions Alchemical Fire, Poisonous Gas, and Healing Draught now. I can learn additional reactions through my upgrades",
+// 	spellcastingBonus : [{
+// 		name : "Starting Instant Reactions",
+// 		spellcastingAbility : 4,
+// 		spells : ["alchemical fire", "poisonous gas", "healing draught"],
+// 		selection : ["alchemical fire", "poisonous gas", "healing draught"],
+//         firstCol : "St",
+//         times : 3
+// 	}, {
+//         name : "Upgrade Instant Reactions",
+// 		spells : ["alchemical acid", "explosive reaction", "fortifying fumes reaction", "frostbloom reaction"],
+// 		selection : ["alchemical acid", "explosive reaction", "fortifying fumes reaction", "frostbloom reaction"],
+//         firstCol : "Up",
+//         times : 4
+//     }]
+// };
 
-//Add Instant Reactions
-SpellsList["alchemical fire"] = {
-    name : "Alchemical Fire",
-	classes : [],
-	source : ["KT:RA", 16],
-    level : 0,
-    school : "Trans",
-	time : "1 a",
-    range : "15 ft",
-	components : "S,M",
-	duration : "Instantaneous",
-	save : "Dex",
-	description : "5-ft rad all save or 1d8 Fire dmg; +1d8 at CL 5/11/17",
-	descriptionFull : "As an action you can produce a reaction causing a searing flame. At a point within 15 feet, you can a toss quick combination of reagents that will cause searing fire to flare up in a 5 foot radius. Creatures in that area have to make a dexterity saving throw, or take 1d8 fire damage." + "\n   " + "The damage damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
-};
-SpellsList["poisonous gas"] = {
-    name : "Poisonous Gas",
-    classes : [],
-    source : ["KT:RA", 16],
-    level : 0,
-    school : "Trans",
-    time : "1 a",
-    range : "15 ft",
-    components : "S,M",
-    duration : "Instantaneous",
-    save : "Con",
-    description : "5-ft rad all save or 1d4 Poison dmg and poisoned until end of next turn; +1d4 at CL 5/11/17",
-    descriptionFull : "As an action you can produce a reaction causing noxious fumes. At a point within 15 feet, you can toss a quick combination of reagents that will cause a whiff of poisonous gas to erupt spreading to a radius of 5 feet. Creatures in that area have to make a constitution saving throw, or take 1d4 poison damage and become poisoned until the end of their next turn." + "\n   " + "The damage damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
-};
-SpellsList["healing draught"] = {
-    name : "Healing Draught",
-    classes : [],
-    source : ["KT:RA", 17],
-    level : 0,
-    school : "Trans",
-    time : "1 bns",
-    range : "Touch",
-    components : "S,M",
-    duration : "Instantaneous",
-    description : "Crate draught; 1 a administer; Heals 1d8 hp; Only works per Con mod per LR; +1d8 at CL 5/11/17",
-    descriptionFull : "As a bonus action, you can produce a combination that will provide potent magical healing. Immediately after creating the draught, you can use your action to consume it or administer it to a creature within 5 feet. A creature who drinks this draught regains 1d8 health. A creature can benefit from a number of these healing draughts equal to their constitution modifier (minimum 1), after which they provide no additional benefit until they complete a long rest. A Healing Draught that is not consumed by the end of your turn loses its potency." + "\n   " + "The healing increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
-};
-SpellsList["alchemical acid"] = {
-    name : "Alchemical Acid",
-    classes : [],
-    source : ["KT:RA", 17],
-    level : 0,
-    school : "Trans",
-    time : "1 a",
-    range : "15 ft",
-    components : "S,M",
-    duration : "Instantaneous",
-    save : "Dex",
-    description : "5-ft rad all save or 2d4 Acid dmg; Double dmg to obj; +2d4 at CL 5/11/17",
-    descriptionFull : "As an action you can produce a reaction causing a caustic acid to form. At a creature within 15 feet, you can a toss quick combination of reagents that will cause a splatter of acid in a 5 foot radius. Creatures in that area have to make a dexterity saving throw, or take 2d4 acid damage. Deals double damage against structures." + "\n   " + "The damage damage increases by 2d4 when you reach 5th level (4d4), 11th level (6d4), and 17th level (8d4)."
-};
-SpellsList["explosive reaction"] = {
-    name : "Explosive Reaction",
-    classes : [],
-    source : ["KT:RA", 18],
-    level : 0,
-    school : "Trans",
-    time : "1 a",
-    range : "15 ft",
-    components : "S,M",
-    duration : "Instantaneous",
-    save : "Con",
-    description : "10-ft rad all save or 1d10 Thunder dmg; +1d10 at CL 5/11/17",
-    descriptionFull : "Targeting a point within 15 feet, as an action, you cause an explosion. Creatures within 10 feet of the target point must make a constitution saving throw, or take 1d10 thunder damage from the shockwave of the explosion." + "\n   " + "The damage damage increases by 1d10 when you reach 5th level (2d10), 11th level (3d10), and 17th level (4d10)."
-};
-SpellsList["fortifying fumes reaction"] = {
-    name : "Fortifying Fumes Reaction",
-    classes : [],
-    source : ["KT:RA", 18],
-    level : 0,
-    school : "Trans",
-    time : "1 a",
-    range : "15 ft",
-    components : "S,M",
-    duration : "Instantaneous",
-    description : "10-ft rad all 1d4 temp hp, next atk does +1d4, and adv. on next Con save; +1d4 at CL 5/11/17",
-    descriptionFull : "Targeting a point within 15 feet, as an action, you cause fumes to erupt. Creatures within 10 feet of the target point can choose to hold their breath and not inhale, but creatures that inhale the fumes gain 1d4 temporary hit points, deal 1d4 additional damage on their next melee weapon attack, and have advantage on their next Constitution saving throw. Any remaining benefits fade at the end of your next turn." + "\n   " + "Both the temporary hit points and damage bonus increase by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4)"
-};
-SpellsList["frostbloom reaction"] = {
-    name : "Frostbloom Reaction",
-    classes : [],
-    source : ["KT:RA", 18],
-    level : 0,
-    school : "Trans",
-    time : "1 a",
-    range : "15 ft",
-    components : "S,M",
-    duration : "Instantaneous",
-    save : "Dex",
-    description : "5-ft rad all save or 1d6 Cold dmg and restrained; dif. ter. end of next turn; +1d6 at CL 5/11/17",
-    descriptionFull : "Targeting a point within 15 feet, as an action, you cause an the area to erupt in frost. The area within 5 feet of the target point becomes difficult terrain until the end of your next turn, and any creature in the area must make a dexterity saving throw, or be caught by the ice taking 1d6 cold damage; a creature entirely in the area of effect that fails also becoming restrained until the end of their next turn. They can use their action to make a Strength saving throw to break free of the ice early." + "\n   " + "The damage damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6)."
-};
+// //Add Instant Reactions
+// SpellsList["alchemical fire"] = {
+//     name : "Alchemical Fire",
+// 	classes : [],
+// 	source : ["KT:AA", 16],
+//     level : 0,
+//     school : "Trans",
+// 	time : "1 a",
+//     range : "15 ft",
+// 	components : "S,M",
+// 	duration : "Instantaneous",
+// 	save : "Dex",
+// 	description : "5-ft rad all save or 1d8 Fire dmg; +1d8 at CL 5/11/17",
+// 	descriptionFull : "As an action you can produce a reaction causing a searing flame. At a point within 15 feet, you can a toss quick combination of reagents that will cause searing fire to flare up in a 5 foot radius. Creatures in that area have to make a dexterity saving throw, or take 1d8 fire damage." + "\n   " + "The damage damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+// };
+// SpellsList["poisonous gas"] = {
+//     name : "Poisonous Gas",
+//     classes : [],
+//     source : ["KT:AA", 16],
+//     level : 0,
+//     school : "Trans",
+//     time : "1 a",
+//     range : "15 ft",
+//     components : "S,M",
+//     duration : "Instantaneous",
+//     save : "Con",
+//     description : "5-ft rad all save or 1d4 Poison dmg and poisoned until end of next turn; +1d4 at CL 5/11/17",
+//     descriptionFull : "As an action you can produce a reaction causing noxious fumes. At a point within 15 feet, you can toss a quick combination of reagents that will cause a whiff of poisonous gas to erupt spreading to a radius of 5 feet. Creatures in that area have to make a constitution saving throw, or take 1d4 poison damage and become poisoned until the end of their next turn." + "\n   " + "The damage damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+// };
+// SpellsList["healing draught"] = {
+//     name : "Healing Draught",
+//     classes : [],
+//     source : ["KT:AA", 17],
+//     level : 0,
+//     school : "Trans",
+//     time : "1 bns",
+//     range : "Touch",
+//     components : "S,M",
+//     duration : "Instantaneous",
+//     description : "Crate draught; 1 a administer; Heals 1d8 hp; Only works per Con mod per LR; +1d8 at CL 5/11/17",
+//     descriptionFull : "As a bonus action, you can produce a combination that will provide potent magical healing. Immediately after creating the draught, you can use your action to consume it or administer it to a creature within 5 feet. A creature who drinks this draught regains 1d8 health. A creature can benefit from a number of these healing draughts equal to their constitution modifier (minimum 1), after which they provide no additional benefit until they complete a long rest. A Healing Draught that is not consumed by the end of your turn loses its potency." + "\n   " + "The healing increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+// };
+// SpellsList["alchemical acid"] = {
+//     name : "Alchemical Acid",
+//     classes : [],
+//     source : ["KT:AA", 17],
+//     level : 0,
+//     school : "Trans",
+//     time : "1 a",
+//     range : "15 ft",
+//     components : "S,M",
+//     duration : "Instantaneous",
+//     save : "Dex",
+//     description : "5-ft rad all save or 2d4 Acid dmg; Double dmg to obj; +2d4 at CL 5/11/17",
+//     descriptionFull : "As an action you can produce a reaction causing a caustic acid to form. At a creature within 15 feet, you can a toss quick combination of reagents that will cause a splatter of acid in a 5 foot radius. Creatures in that area have to make a dexterity saving throw, or take 2d4 acid damage. Deals double damage against structures." + "\n   " + "The damage damage increases by 2d4 when you reach 5th level (4d4), 11th level (6d4), and 17th level (8d4)."
+// };
+// SpellsList["explosive reaction"] = {
+//     name : "Explosive Reaction",
+//     classes : [],
+//     source : ["KT:AA", 18],
+//     level : 0,
+//     school : "Trans",
+//     time : "1 a",
+//     range : "15 ft",
+//     components : "S,M",
+//     duration : "Instantaneous",
+//     save : "Con",
+//     description : "10-ft rad all save or 1d10 Thunder dmg; +1d10 at CL 5/11/17",
+//     descriptionFull : "Targeting a point within 15 feet, as an action, you cause an explosion. Creatures within 10 feet of the target point must make a constitution saving throw, or take 1d10 thunder damage from the shockwave of the explosion." + "\n   " + "The damage damage increases by 1d10 when you reach 5th level (2d10), 11th level (3d10), and 17th level (4d10)."
+// };
+// SpellsList["fortifying fumes reaction"] = {
+//     name : "Fortifying Fumes Reaction",
+//     classes : [],
+//     source : ["KT:AA", 18],
+//     level : 0,
+//     school : "Trans",
+//     time : "1 a",
+//     range : "15 ft",
+//     components : "S,M",
+//     duration : "Instantaneous",
+//     description : "10-ft rad all 1d4 temp hp, next atk does +1d4, and adv. on next Con save; +1d4 at CL 5/11/17",
+//     descriptionFull : "Targeting a point within 15 feet, as an action, you cause fumes to erupt. Creatures within 10 feet of the target point can choose to hold their breath and not inhale, but creatures that inhale the fumes gain 1d4 temporary hit points, deal 1d4 additional damage on their next melee weapon attack, and have advantage on their next Constitution saving throw. Any remaining benefits fade at the end of your next turn." + "\n   " + "Both the temporary hit points and damage bonus increase by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4)"
+// };
+// SpellsList["frostbloom reaction"] = {
+//     name : "Frostbloom Reaction",
+//     classes : [],
+//     source : ["KT:AA", 18],
+//     level : 0,
+//     school : "Trans",
+//     time : "1 a",
+//     range : "15 ft",
+//     components : "S,M",
+//     duration : "Instantaneous",
+//     save : "Dex",
+//     description : "5-ft rad all save or 1d6 Cold dmg and restrained; dif. ter. end of next turn; +1d6 at CL 5/11/17",
+//     descriptionFull : "Targeting a point within 15 feet, as an action, you cause an the area to erupt in frost. The area within 5 feet of the target point becomes difficult terrain until the end of your next turn, and any creature in the area must make a dexterity saving throw, or be caught by the ice taking 1d6 cold damage; a creature entirely in the area of effect that fails also becoming restrained until the end of their next turn. They can use their action to make a Strength saving throw to break free of the ice early." + "\n   " + "The damage damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6)."
+// };
 
-//Add Weapons for Instant Reactions
-WeaponsList["alchemical fire"] = {
-	regExpSearch : /^(?=.*alchemical)(?=.*fire).*$/i,
-	name : "Alchemical Fire",
-	source : ["KT:RA", 16],
-	list : "instant reactions",
-	ability : 2,
-	type : "Cantrip",
-	damage : ["C", 8, "fire"],
-	range : "15 ft",
-	description : "5-ft rad; Dex save, success - no damage;",
-	abilitytodamage : false,
-    dc : true
-};
-WeaponsList["poisonous gas"] = {
-	regExpSearch : /^(?=.*poisonous)(?=.*gas).*$/i,
-	name : "Poisonous Gas",
-	source : ["KT:RA", 16],
-	list : "instant reactions",
-	ability : 3,
-	type : "Cantrip",
-	damage : ["C", 4, "poison"],
-	range : "15 ft",
-	description : "5-ft rad; Con save, success - no damage, fail - also poisoned till end of their next turn;",
-	abilitytodamage : false,
-	dc : true
-};
-WeaponsList["alchemical acid"] = {
-	regExpSearch : /^(?=.*alchemical)(?=.*acid).*$/i,
-	name : "Alchemical Acid",
-	source : ["KT:RA", 17],
-	list : "instant reactions",
-	ability : 2,
-	type : "Cantrip",
-	damage : ["=C+C", 4, "acid"],
-	range : "15 ft",
-	description : "5-ft rad; Dex save, success - no damage; double dmg to structures;",
-	abilitytodamage : false,
-	dc : true
-};
-WeaponsList["explosive reaction"] = {
-	regExpSearch : /^(?=.*explosive)(?=.*reaction).*$/i,
-	name : "Explosive Reaction",
-	source : ["KT:RA", 18],
-	list : "instant reactions",
-	ability : 3,
-	type : "Cantrip",
-	damage : ["C", 10, "thunder"],
-	range : "15 ft",
-	description : "10-ft rad; Con save, success - no damage;",
-	abilitytodamage : false,
-	dc : true
-};
-WeaponsList["fortifying fumes reaction"] = {
-	regExpSearch : /^(?=.*fortifying)(?=.*fumes)(?=.*reaction).*$/i,
-	name : "Fortifying Fumes Reaction",
-	source : ["KT:RA", 18],
-	list : "instant reactions",
-	ability : 3,
-	type : "Cantrip",
-	damage : ["Cd4/Cd4", "", "Same"],
-	range : "15 ft",
-	description : "10-ft rad all; First is temp Hp added; second is dmg added to next wea atk; adv. on next Con save",
-	abilitytodamage : false
-};
-WeaponsList["frostbloom reaction"] = {
-	regExpSearch : /^(?=.*frostbloom)(?=.*reaction).*$/i,
-	name : "Frostbloom Reaction",
-	source : ["KT:RA", 18],
-	list : "instant reactions",
-	ability : 2,
-	type : "Cantrip",
-	damage : ["C", 6, "cold"],
-	range : "15 ft",
-	description : "5-ft rad; Dex save, success - no damage. fail - also restrained; area becomes difficult terrain",
-	abilitytodamage : false,
-	dc : true
-};
+// //Add Weapons for Instant Reactions
+// WeaponsList["alchemical fire"] = {
+// 	regExpSearch : /^(?=.*alchemical)(?=.*fire).*$/i,
+// 	name : "Alchemical Fire",
+// 	source : ["KT:AA", 16],
+// 	list : "instant reactions",
+// 	ability : 2,
+// 	type : "Cantrip",
+// 	damage : ["C", 8, "fire"],
+// 	range : "15 ft",
+// 	description : "5-ft rad; Dex save, success - no damage;",
+// 	abilitytodamage : false,
+//     dc : true
+// };
+// WeaponsList["poisonous gas"] = {
+// 	regExpSearch : /^(?=.*poisonous)(?=.*gas).*$/i,
+// 	name : "Poisonous Gas",
+// 	source : ["KT:AA", 16],
+// 	list : "instant reactions",
+// 	ability : 3,
+// 	type : "Cantrip",
+// 	damage : ["C", 4, "poison"],
+// 	range : "15 ft",
+// 	description : "5-ft rad; Con save, success - no damage, fail - also poisoned till end of their next turn;",
+// 	abilitytodamage : false,
+// 	dc : true
+// };
+// WeaponsList["alchemical acid"] = {
+// 	regExpSearch : /^(?=.*alchemical)(?=.*acid).*$/i,
+// 	name : "Alchemical Acid",
+// 	source : ["KT:AA", 17],
+// 	list : "instant reactions",
+// 	ability : 2,
+// 	type : "Cantrip",
+// 	damage : ["=C+C", 4, "acid"],
+// 	range : "15 ft",
+// 	description : "5-ft rad; Dex save, success - no damage; double dmg to structures;",
+// 	abilitytodamage : false,
+// 	dc : true
+// };
+// WeaponsList["explosive reaction"] = {
+// 	regExpSearch : /^(?=.*explosive)(?=.*reaction).*$/i,
+// 	name : "Explosive Reaction",
+// 	source : ["KT:AA", 18],
+// 	list : "instant reactions",
+// 	ability : 3,
+// 	type : "Cantrip",
+// 	damage : ["C", 10, "thunder"],
+// 	range : "15 ft",
+// 	description : "10-ft rad; Con save, success - no damage;",
+// 	abilitytodamage : false,
+// 	dc : true
+// };
+// WeaponsList["fortifying fumes reaction"] = {
+// 	regExpSearch : /^(?=.*fortifying)(?=.*fumes)(?=.*reaction).*$/i,
+// 	name : "Fortifying Fumes Reaction",
+// 	source : ["KT:AA", 18],
+// 	list : "instant reactions",
+// 	ability : 3,
+// 	type : "Cantrip",
+// 	damage : ["Cd4/Cd4", "", "Same"],
+// 	range : "15 ft",
+// 	description : "10-ft rad all; First is temp Hp added; second is dmg added to next wea atk; adv. on next Con save",
+// 	abilitytodamage : false
+// };
+// WeaponsList["frostbloom reaction"] = {
+// 	regExpSearch : /^(?=.*frostbloom)(?=.*reaction).*$/i,
+// 	name : "Frostbloom Reaction",
+// 	source : ["KT:AA", 18],
+// 	list : "instant reactions",
+// 	ability : 2,
+// 	type : "Cantrip",
+// 	damage : ["C", 6, "cold"],
+// 	range : "15 ft",
+// 	description : "5-ft rad; Dex save, success - no damage. fail - also restrained; area becomes difficult terrain",
+// 	abilitytodamage : false,
+// 	dc : true
+// };
 
 //*****************************************************\\
 //*                     -Warsmith-                    *\\
 //*****************************************************\\
 
-WeaponsList["mechplate gauntlet"] = {
-    regExpSearch : /^(?=.*mechplate)(?=.*gauntlet).*$/i,
-    name : "Mechplate Gauntlet",
-    source : ["KT:RA", 20],
-    weight : 2,
-    list : "revised artificer",
-    ability : 1,
-    type : "Artificer Weapon",
-    damage : [1, 6, "Bludgeoning"],
-    range : "Melee",
-    description : "Prof in Martial Weapons, Shocking Grasp",
-    abilitytodamage : true
-};
-WeaponsList["force blast"] = {
-    regExpSearch : /^(?=.*force)(?=.*blast).*$/i,
-    name : "Force Blast",
-    source : ["KT:RA", 21],
-    list : "revised artificer",
-    ability : 4,
-    type : "Artificer Weapon",
-    damage : [1, 8, "Force"],
-    range : "30 ft",
-    description : "Ranged spell attack",
-    abilitytodamage : true
-};
-WeaponsList["power gauntlet"] = {
-    regExpSearch :/^(?=.*power)(?=.*gauntlet).*$/i,
-    name : "Power Gauntlet",
-    source : ["KT:RA", 22],
-    weight : 2,
-    list : "revised artificer",
-    ability : 1,
-    type : "Artificer Weapon",
-    damage : [1, 8, "Bludgeoning"],
-    range : "Melee",
-    description : "Light, Magical, Special, Prof in Martial Weapons, Shocking Grasp",
-    abilitytodamage : true
-};
-ArmourList["mechplate"] = {
-    regExpSearch : /^(?=.*mechplate).*$/i,
-    name : "Mechplate",
-    source : ["KT:RA", 20],
-    list : "revised artificer",
-    type : "heavy",
-    ac : 18,
-    stealthdis : true,
-    weight : 105
-};
-ArmourList["mechsuit"] = {
-    regExpSearch : /^(?=.*mechsuit).*$/i,
-    name : "Mechsuit",
-    source : ["KT:RA", 22],
-    list : "revised artificer",
-    type : "medium",
-    ac : 15,
-    stealthdis : false,
-    weight : 40
-};
+// WeaponsList["mechplate gauntlet"] = {
+//     regExpSearch : /^(?=.*mechplate)(?=.*gauntlet).*$/i,
+//     name : "Mechplate Gauntlet",
+//     source : ["KT:AA", 20],
+//     weight : 2,
+//     list : "alternate artificer",
+//     ability : 1,
+//     type : "Artificer Weapon",
+//     damage : [1, 6, "Bludgeoning"],
+//     range : "Melee",
+//     description : "Prof in Martial Weapons, Shocking Grasp",
+//     abilitytodamage : true
+// };
+// WeaponsList["force blast"] = {
+//     regExpSearch : /^(?=.*force)(?=.*blast).*$/i,
+//     name : "Force Blast",
+//     source : ["KT:AA", 21],
+//     list : "alternate artificer",
+//     ability : 4,
+//     type : "Artificer Weapon",
+//     damage : [1, 8, "Force"],
+//     range : "30 ft",
+//     description : "Ranged spell attack",
+//     abilitytodamage : true
+// };
+// WeaponsList["power gauntlet"] = {
+//     regExpSearch :/^(?=.*power)(?=.*gauntlet).*$/i,
+//     name : "Power Gauntlet",
+//     source : ["KT:AA", 22],
+//     weight : 2,
+//     list : "alternate artificer",
+//     ability : 1,
+//     type : "Artificer Weapon",
+//     damage : [1, 8, "Bludgeoning"],
+//     range : "Melee",
+//     description : "Light, Magical, Special, Prof in Martial Weapons, Shocking Grasp",
+//     abilitytodamage : true
+// };
+// ArmourList["mechplate"] = {
+//     regExpSearch : /^(?=.*mechplate).*$/i,
+//     name : "Mechplate",
+//     source : ["KT:AA", 20],
+//     list : "alternate artificer",
+//     type : "heavy",
+//     ac : 18,
+//     stealthdis : true,
+//     weight : 105
+// };
+// ArmourList["mechsuit"] = {
+//     regExpSearch : /^(?=.*mechsuit).*$/i,
+//     name : "Mechsuit",
+//     source : ["KT:AA", 22],
+//     list : "alternate artificer",
+//     type : "medium",
+//     ac : 15,
+//     stealthdis : false,
+//     weight : 40
+// };
 
-//* 
 //*****************************************************\\
 //*                    -Wandsmith-                    *\\
 //*****************************************************\\
