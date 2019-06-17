@@ -1,0 +1,76 @@
+np) = nitpick (Just little gripes I had while working with the class), can mostly be ignored
+e) = error (something that needs fixing or clarification) ex. a typo
+s) = suggestion (something that I think would improve the understandability of the class)
+
+Revised Artificer -
+	Features
+		Specialization Upgrade
+e)			typo: "Only the Artificer selecting the upgrade use the upgrade"
+													       ^("can")
+
+Revised Artificer end -
+
+
+Gadgetsmith -
+	Essential Tools: Gadgetsmith Weapon vs. Gadgetsmith Upgrades
+e)		Repeating Crossbow or Repeating Hand Crossbow
+
+	Upgrades
+s)		Add weights for weapon upgrades or some reason why they don't have weights
+		(Realistically, all the gadget upgrades should have weights, 
+		but I like the idea of the Gadgetsmith having some reason for them not to)
+
+e)		"Nimble Gloves" are incompatible with "Gripping Gloves" but not vice-versa
+
+e)		typo in Airburst Mine desc					   v
+			"to be triggered by your reaction within a 1 minute"
+		
+e)		What is used to activate Element Eater. I assume it's a reaction to taking elemental damage?
+
+e)		Lightning Baton
+			Is the +1/+2 to both damage dies or just one, if just one, which one
+
+s)		As much as I love it, Bee Swarm Rockets seems a little overpowered at earlier levels 
+			30d6 (avg 105) is a lot of damage at lv 15, single target or spread out
+			even half (52-ish) is a lot, it's also guaranteed aoe damage, with no counter
+			40d6 at lv 20 seems fine but I feel like it starts to high
+			maybe make it 1d6 per, up to 2d6 at lv 17
+			or just make it a lv 17 pre-requirement like lv 9 spells
+			(Then again Force Cage is a lv 7 spell so maybe it's not that bad)
+Gadgetsmith end -
+
+
+Potionsmith -
+	Upgrades
+e)		Typo in Fortifying Fumes Reaction
+			"The both the temporary hit points and damage bonus"
+			  ^
+
+Potionsmith end -
+
+Warsmith -
+e)	typo in Mechplate feature desc
+		"in a process takes 1000 gold pieces and eight hours."
+			    	 ^("that")
+				  
+	Upgrades
+s)		Arcane Visor
+			The "using your spell save DC" line is not needed as nether spell uses the spell save DC
+
+s)		Energy Surge
+			Might want to add a minimum number of usages per long rest to this, incase of a negative Int mod
+
+s)		Projectors and Capacitors
+			There is only 2 of each, it doesn't really need to say "Incompatible with other projectors"
+			It can just say "Incompatible with Lightning Projector" for example
+			It's a little more clear that way. Same thing for Capacitors
+
+e)		Typo in Power Fist            
+			"Your Mechplate gauntlet's is upgraded to a magical weapon"
+            ^("One of ")            ^(remove)
+						 
+np)		Sentient Armor
+			"The bonus your Mechplate grants to your Intelligence score and maximum Intelligence score increases by 1 while wearing this armor"
+			Unless I'm mistaken this is the first and only ability that ups Int and max Int
+			This seems to imply that it should already have a bonus to increase
+Warsmith end -
