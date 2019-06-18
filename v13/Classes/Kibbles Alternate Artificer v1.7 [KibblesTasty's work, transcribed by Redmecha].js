@@ -100,8 +100,8 @@ SourceList["KT:AA"] = {
     "find traps",
     "heat metal",
     "hold person",
-    "knock",
     "invisibility",
+    "knock",
     "locate object",
     "magic weapon",
     "magic mouth",
@@ -166,13 +166,18 @@ ClassList["alternate artificer"] = {
     improvements :  [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5],
     die : 8,
     saves : ["Con", "Int"],
-    skills : ["\n\n" + toUni("Artificer") + ": Choose three from Arcana, Deception, History, Investigation, Medicine, Nature, Religion, and Sleight of Hand."],
-    toolProfs : { primary : ["Thieves' Tools", "Dex"] },
-    armor : [
+    skillstxt : {
+		primary : "Choose three from Arcana, Deception, History, Investigation, Medicine, Nature, Religion, and Sleight of Hand",
+        secondary : "You get Arcana"
+    },
+    toolProfs : { 
+        primary : [["Thieves' Tools"], ["Any tool", 1]]
+    },
+    armorProfs : [
         [true, true, false, false],
         [true, false, false, false]
     ],
-    weapons : [
+    weaponsProfs : [
         [true, false, ["hand crossbow", "heavy crossbow", "Artificer Weapon"]]
     ],
     equipment : "Artificer starting equipment:" + 
@@ -208,20 +213,25 @@ ClassList["alternate artificer"] = {
             source : ["KT:AA", 3],
             minlevel : 1,
             description : desc([
-                "I learn Detect Magic and Identify, I can cast them as rituals, or 'at will' at lv. 11"
+                "I can cast Detect Magic and Identify as rituals without material components"
             ]),
             spellcastingBonus : [{
                 name :  "Magic Item Analysis",
                 spells : ["detect magic"],
                 selection : ["detect magic"],
-                atwill : false
+                firstCol : "",
             }, {
                 name : "Magic Item Analysis",
                 spells : ["identify"],
                 selection : ["identify"],
-                atwill : false
+                firstCol : ""
             }],
-            changeeval : "if (classes.known['alternate artificer'].level >= 11) {ClassList['alternate artificer'].features['magic item analysis'].spellcastingBonus[0].atwill = true; ClassList['alternate artificer'].features['magic item analysis'].spellcastingBonus[1].atwill = true;};",
+            changeeval : function(lvl) {
+                if (lvl[1] >= 11) {
+                    ClassList["alternate artificer"].features["magic item analysis"].spellcastingBonus[0].firstCol = "atwill";
+                    ClassList["alternate artificer"].features["magic item analysis"].spellcastingBonus[1].firstCol = "atwill";
+                }
+            },
         },
         "tool expertise" : {
             name : "Tool Expertise",
@@ -230,19 +240,43 @@ ClassList["alternate artificer"] = {
             description : desc([
                 "I have expertise with any tool proficiencies I gain from the artificer class"
             ]),
-            skillstxt : "\n\n" + toUni("Artificer: Tool Expertise") + ": Expertise with any tool proficiencies gained from the artificer class."
+            skillstxt : "expertise with any tool proficiencies gained from the artificer class."
         },
         "spellcasting" : {
             name : "Spellcasting",
             source : ["KT:AA", 3],
             minlevel : 2,
             description : desc([
-                "I can cast any artificer spells I know, using Int as my spellcasting ability",
+                "I can cast artificer spells that I know, using Intelligence as my spellcasting ability",
                 "I can use an arcane focus as a spellcasting focus"
             ]),
             additional : levels.map(function (n, idx) {
                 return n < 2 ? "" : [0, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12][idx] + " spells known";
             })
+        },
+        "specialization upgrade" : {
+            name : "Specialization Upgrade",
+            source : ["KT:AA", 4],
+            minlevel : 3,
+            description : desc([
+                "Use the \"Choose Features\" button to add a Specialization Upgrade to the third page"
+            ]),
+            toNotesPage : [{
+                name : "Specialization Upgrade",
+                note : [
+                    "I apply an additional upgrade to my Specialization's Wondrous Item at",
+                    "5th, 7th, 9th, 11th, 13th, 15th, 17th, and 19th level",
+                    "I cannot apply an upgrade more than once, unless the upgrade's description says otherwise",
+                    "Upgrades cannot be replaced or changed, besides as described in the specialization",
+                    "Only the Artificer selecting the upgrade can use the upgrade unless otherwise specified",
+                    "In any case that Specialization allows the upgrade to be swapped out",
+                    "Upgrades must always be selected as if I was level I was when they got that Upgrade slot",
+                    "Ex. if I replace my Thundercannon and reselect all my upgrades at as a 5th level Artificer,",
+                    "I could select 1 3rd level upgrade and 1 5th level upgrade,",
+                    "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
+                ],
+                source : ["KT:AA", 4]
+            }]
         },
         "arcane reconstruction" : {
             name : "Arcane Reconstruction",
@@ -304,7 +338,7 @@ ClassList["alternate artificer"] = {
             description : desc([
                 "I have adv on all Int(Arcana) checks about magical traps, effects, or runes"
             ]),
-            skillstxt : "\n\n" + toUni("Artificer: Study of Magic") + ": Adv on Int(Arcana) checks about magical traps, effects, or runes"
+            skillstxt : "adv on Int(Arcana) checks about magical traps, effects, or runes"
         },
         "wondrous item mastery" : {
             name : "Wondrous Item Mastery",
@@ -320,7 +354,9 @@ ClassList["alternate artificer"] = {
             minlevel : 20,
             description : "",
             additional : "+1 to all saves per attuned magic item",
-            savetxt : { text : ["+1 to all saves per attuned magic item"]}
+            savetxt : { 
+                text : ["+1 to all saves per attuned magic item"]
+            }
             //TODO(v13): I think this is automatable
         },
     }
@@ -2085,31 +2121,7 @@ ClassSubList["alternate artificer-warsmith"] = {
 */
 //***********************************************-Extra Class/Subclass Stuff-***********************************************\\
 
-/** 
- * notesPage
- * * Add a function to add something to the notes page of the sheet with feature like formating
- * @param {string} name The title of the thing,
- *  ex."Integrated Attack"
- * @param {[string,string,number]} source The source of the info,
- *  ex.["Upgrade-Integrated Attack", "KT:AA", 22]
- * @param {string} desc The description of the thing,
- *  ex."It does the thing"
- * @param {boolean=} remove Should the thing be removed,
- *  ex. true, removes everything from the Notes
- */
-// notesPage = function(name, source, desc, remove) {
-
-//     var fullSource = " (" + source[0] + ", " + source[1] + " " + source[2] + ") -";
-
-//     var notes = "P5.ASnotes.Notes.Left";
-//     var inputString = "\n\n" + name + fullSource + desc;
-//     if (remove === true) {
-//         RemoveString(notes, inputString);
-//     } else {
-//         AddString(notes, inputString);
-//     }
-// };
-
+//* 1st Level Spells
 SpellsList["arcane ablation"] = {
     name : "Arcane Ablation",
 	source : ["KT:AA", 29],
@@ -2117,7 +2129,7 @@ SpellsList["arcane ablation"] = {
     level : 1,
     school : "Trans",
 	time : "1 a",
-    range : "touch",
+    range : "Touch",
 	components : "V,S",
 	duration : "1 h",
 	description : "Imbue armor/clothing, crea wearing n(4+1/SL) temp hp, after exhausted +(n-1) temp hp, repeat",
@@ -2130,10 +2142,10 @@ SpellsList["arcane weapon"] = {
     level : 1,
     school : "Trans",
 	time : "1 a",
-    range : "touch",
+    range : "Touch",
 	components : "V,S",
 	duration : "Conc, 1 h",
-	description : "Imbue weapon, counts as magical, dmg is Force",
+	description : "Imbue weapon, counts as magical, deals Force dmg",
 	descriptionFull : "You touch a weapon and imbue it with magic. For the duration the weapon counts as a magical weapon, any damage dealt by it is Force damage."
 };
 SpellsList["bond item"] = {
@@ -2143,12 +2155,137 @@ SpellsList["bond item"] = {
     level : 1,
     school : "Conj",
 	time : "1 min",
-    range : "touch",
+    range : "Touch",
 	components : "V,S",
     duration : "8 h",
     save : "Cha",
-	description : "Link >=100 lb item, recall as bns; If crea hold/wear save, Adv if >1 min",
+	description : "Link a up to 100 lb item, recall as bns; If crea hold/wear save, adv. if greater then 1 min",
 	descriptionFull : "You touch a item weighing no more than 100 pounds and form a link between you and it. Until the spell ends, you can recall it to your hand as a bonus action." + "\n   " + "If another creature is holding or wearing the item when you try to recall it, they make a Charisma saving throw, and if they succeed, the spell fails. They make this save with Advantage if they have had possession of the item for more than 1 minute."
+};
+SpellsList["fall"] = {
+    name : "Fall",
+	source : ["KT:AA", 29],
+	classes : ["alternate artificer","sorcerer","wizard"],
+    level : 1,
+    school : "Trans",
+	time : "1 a",
+    range : "Self",
+	components : "V,S",
+    duration : "Instantaneous",
+	description : "Change which way is down for you, fall up to 500 ft, all normal effects apply",
+	descriptionFull : "You alter gravity for yourself, causing you to reorient which way is down for you until the end of your turn. You can pick any direction to fall as if under the effect of gravity, falling up to 500 feet before the spell ends." + "\n   " + "If you collide with something during this time, you take falling damage as normal, but you can control your fall as you could under normal conditions by holding onto objects or move along a surface according to your new orientation as normal until your turn ends and gravity returns to normal."
+};
+SpellsList["unburden"] = {
+    name : "Unburden",
+	source : ["KT:AA", 29],
+	classes : ["alternate artificer"],
+    level : 1,
+    school : "Trans",
+	time : "1 a",
+    range : "Touch",
+	components : "V,S",
+    duration : "1 h",
+	description : "No penalties to MS or Dex(Stealth) in heavy armor, carry up to double weight",
+	descriptionFull : "A creature you touch no longer suffers the penalties to movement speed or to their Dexterity (Stealth) check while wearing heavy armor, and is no long encumbered from carry weight unless they are carrying more than twice the weight that would encumber them."
+};
+//* 2nd Level Spells
+SpellsList["imbue luck"] = {
+    name : "Imbue Luck",
+	source : ["KT:AA", 29],
+	classes : ["alternate artificer"],
+    level : 2,
+    school : "Abjur",
+	time : "1 a",
+    range : "Touch",
+	components : "V,S",
+    duration : "1 h",
+	description : "1 weapon/armor, if weapon on atk extra d20, if armor on atk against",
+	descriptionFull : "You touch a weapon and worn item and imbue luck into it. If imbued on a weapon, for the duration, on an attack roll, the wielder can roll an additional d20 (they can choose to this after they roll, but before the outcome is determined). The creature can choose which of the d20s is used for the attack roll." + "\n   " + "If imbued into a worn item, they can roll a d20 when attacked, then choose whether the attack uses the attacker's roll or theirs." + "\n   " + "With either use, the spell immediately ends upon rolling the extra d20."
+};
+SpellsList["lightning charged"] = {
+    name : "Lightning Charged",
+	source : ["KT:AA", 29],
+	classes : ["alternate artificer"],
+    level : 2,
+    school : "Evoc",
+	time : "1 a",
+    range : "Touch",
+    components : "V,S,M",
+    compMaterial : "a piece of used lightning rod",
+    duration : "10 min",
+	description : "The crea deals 1d6 lightning damage to any other crea it touches; ends after 6 times",
+	descriptionFull : "You channel lightning energy into a creature. The energy is harmless to the creature, but escapes the creature with dangerous bursts to other creatures. Every time that creature strikes another creature with a melee attack, a spell with a range of touch, is struck by another creature with melee attack, or ends their turn while grappling or being grappled by another creature, they deal 1d6 Lightning damage to that creature." + "\n   " + "Once this spell has discharged 6 times (dealing up to 6d6 damage), the spell ends"
+};
+SpellsList["thunderburst mine"] = {
+    name : "Thunderburst Mine",
+	source : ["KT:AA", 30],
+	classes : ["alternate artificer"],
+    level : 2,
+    school : "Abjur",
+	time : "1 min",
+    range : "Touch",
+    components : "V,S,M",
+    duration : "8 h",
+    save : "Con",
+	description : "Set trap 5 ft/1 rea(1 or more mines), crea in 10 ft save 3d8 thunder dmg, half on success",
+	descriptionFull : "You can set a magical trap by infusing explosive magic into an item. You can set this item to detonate when someone comes within 5 feet of it, or by a verbal command using your reaction (one or more mines can be detonated)." + "\n   " + "When the magic trap detonates, Each creature in a 10-foot-radius Sphere centered on item must make a Constitution saving throw. A creature takes 3d8 thunder damage on a failed save, or half as much damage on a successful one. If a creature is in the area of effect of more than one thunderburst mine during a turn, they take half damage from any subsequent effects of the mines." + "\n   " + "A magical mine must be set 5 feet or more from another mine, and cannot be moved once placed; any attempt to move it results it in detonating unless the Artificer that set it disarms it with an action."
+};
+//* 3rd Level Spells
+SpellsList["dispel construct"] = {
+    name : "Dispel Construct",
+	source : ["KT:AA", 30],
+	classes : ["alternate artificer"],
+    level : 3,
+    school : "Abjur",
+	time : "1 a",
+    range : "60 ft",
+    components : "V,S",
+    duration : "Instantaneous",
+    save : "Con",
+	description : "1 construct save or zero hp, if >100 hp Adv on save",
+	descriptionFull : "You can attempt to purge the magic animating a construct within range, rendering it inert. The target must succeed on a Constitution saving throw, or be reduced to zero hit points. If the target has more than 100 hit points remaining, it makes this roll with advantage."
+};
+SpellsList["fireburst mine"] = {
+    name : "Fireburst Mine",
+	source : ["KT:AA", 30],
+	classes : ["alternate artificer"],
+    level : 3,
+    school : "Abjur",
+	time : "1 min",
+    range : "Touch",
+    components : "V,S,M",
+    duration : "8 h",
+    save : "Con",
+	description : "Set trap 5 ft/1 rea(1 or more mines), crea in 20 ft save 5d8 fire dmg, half on success",
+	descriptionFull : "You can set a magical trap by infusing explosive magic into an item. You can set this item to detonate when someone comes within 5 feet of it, or by a verbal command using your reaction (one or more mines can be detonated)." + "\n   " + "When the magic trap detonates, Each creature in a 20-foot-radius Sphere centered on item must make a Dexterity saving throw. A creature takes 5d8 fire damage on a failed save, or half as much damage on a successful one. If a creature is in the area of effect of more than one fireburst mine during a turn, they take half damage from any subsequent effects of the mines." + "\n   " + "A magical mine must be set 5 feet or more from another mine, and cannot be moved once placed; any attempt to move it results it in detonating unless the Artificer that set it disarms it with an action."
+};
+//* 4th Level Spells
+SpellsList["repair"] = {
+    name : "Repair",
+	source : ["KT:AA", 30],
+	classes : ["alternate artificer"],
+    level : 4,
+    school : "Trans",
+	time : "1 a",
+    range : "Touch",
+    components : "V,S",
+    duration : "Instantaneous",
+	description : "Restore 10d6+2d6/SL hp or years ago to an construct/obj",
+	descriptionFull : "You touch a construct or inanimate object, causing it regain 10d6 hit points. This causes any parts or material that has broken away from the construct or object to reattach, repairing it to the condition it when before losing those hit points." + "\n   " + "If the construct or object damaged state is the result of age, you can instead repair to the condition it was in 10d6 years ago, if it was previously in a better condition during that time (the condition can only improve or not change)." + "\n   " + "At Higher Levels: The hit points restored increases by 2d6 (or the years restored) for each slot above 4th."
+};
+//* 5th Level Spells
+SpellsList["vorpal weapon"] = {
+    name : "Vorpal Weapon",
+	source : ["KT:AA", 30],
+	classes : ["alternate artificer"],
+    level : 5,
+    school : "Trans",
+	time : "1 a",
+    range : "Touch",
+    components : "V,S",
+    duration : "Conc, 1 h",
+	description : "Ignore slashing dmg resistance, double dmg to obj, +3 to atk & dmg if less; crit kills if less then 50 hp",
+	descriptionFull : "Until the spell ends, a weapon touch becomes indescribably sharp, ignoring resistance to slashing damage, and gains the Siege property, dealing double damage to inanimate objects such as structures. The weapon has a modifier of less than +3 to attack and damage rolls, its modifier becomes +3 to attack and damage rolls for the duration of the spell." + "\n   " + "Additionally, if a critical strike of this weapon would leave a creature with less than 50 hit points, the target creature is killed."
 };
 
 //*****************************************************\\
@@ -2160,24 +2297,21 @@ SpellsList["bond item"] = {
 //     source : ["KT:AA", 5],
 //     weight : 0.2, // based on the weight of renaissance bullets from the DMG
 //     icon : "Bullets",
-//     checks : [".Bullet"],
-//     display : 50,
 //     invName : "Thunder Rounds",
 //     alternatives : [/^((?=.*thunder)|(?=.*rounds?)).*$/i]
 // };
 // WeaponsList["thunder cannon"] = {
-//     regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
 //     name : "Thunder Cannon",
 //     source : ["KT:AA", 5],
-//     weight : 15,
-//     list : "alternate artificer",
-//     ability : 2,
+//     regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
 //     type : "Artificer Weapon",
+//     ability : 2,
+//     abilitytodamage : false,
 //     damage : [2, 6, "piercing"],
 //     range : "60/180 ft",
 //     description : "Ammunition, Two-handed, Loud, Reload(1)",
-//     abilitytodamage : false,
-//     ammo : "Thunder Rounds"
+//     weight : 15,
+//     ammo : "thunder rounds"
 // };
 // WeaponsList["lightning bayonet"] = {
 //     regExpSearch : /^(?=.*lightning)(?=.*bayonet).*$/i,
