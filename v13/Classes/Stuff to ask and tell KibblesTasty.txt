@@ -10,6 +10,12 @@ e)			typo: "Only the Artificer selecting the upgrade use the upgrade"
 
 Revised Artificer end -
 
+Cannonsmith -
+e)	At the bottom of page 5 it says "Revised Artificer v1.3" and it looks like their is two 5s for the page number. But that might just be the picture
+
+	Upgrades
+		typo in Blast Radius title 
+e)			Prerequisite is spelled wrong
 
 Gadgetsmith -
 	Essential Tools: Gadgetsmith Weapon vs. Gadgetsmith Upgrades
