@@ -443,11 +443,11 @@ ClassSubList["alternate artificer-cannonsmith"] = {
                 "Shock Absorber",
                 //5th Level Upgrades
                 "Autoloading Magazine (prereq: level 5 Artificer)",
-                // "Cannon Improvement (prereq: level 5 Artificer)",
-                // "Cannon Improvement Lv2 (prereq: Cannon Improvement)",
-                // "Cannon Improvement Lv3 (prereq: Cannon Improvement Lv2)",
-                // "Divination Scope (prereq: level 5 Artificer)",
-                // "Harpoon Reel (prereq: level 5 Artificer)",
+                "Cannon Improvement (prereq: level 5 Artificer)",
+                "Cannon Improvement Lv2 (prereq: Cannon Improvement)",
+                "Cannon Improvement Lv3 (prereq: Cannon Improvement Lv2)",
+                "Divination Scope (prereq: level 5 Artificer)",
+                "Harpoon Reel (prereq: level 5 Artificer)",
                 // "Terrifying Thunder (prereq: Echoing Boom)",
                 // "Storm Blast (prereq: level 5 Artificer)",
                 //9th Level Upgrades
@@ -681,29 +681,59 @@ ClassSubList["alternate artificer-cannonsmith"] = {
                 source : ["KT:AA", 7],
                 prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
                 usages : 3,
-                recovery : "long rest" //TODO: Add the spells to this
+                recovery : "long rest"//, //TODO: Add the spells to this through a Magic Item
+                // spellcastingBonus : [{
+                //     name : "1 charge",
+                //     selection : ["hunter's mark"],
+                //     spells : ["hunter's mark"],
+                //     firstCol : 1
+                // },{
+                //     name : "2 charges",
+                //     selection : ["see invisibility"],
+                //     spells : ["see invisibility"],
+                //     firstCol : 2
+                // },{
+                //     name : "3 charges",
+                //     selection : ["clairvoyance"],
+                //     spells : ["clairvoyance"],
+                //     firstCol : 3
+                // }],
+                // spellFirstColTitle : "Ch"
             },
-            // "harpoon reel (prereq: level 5 artificer)" : {
-            //     name : "Harpoon Reel",
-            //     description : "",
-            //     additional : "See Notes sheet",
-            //     noteDesc : desc([
-            //         "I can attack a surface, object, or creature with a harpoon",
-            //         "It has a range of 30/60 feet, and deals 1d6 piercing dmg",
-            //         "I must Reel it in before I can use it again.",
-            //         "It impales the target hit, connecting us with a 60ft cord", 
-            //         "Dragging the person connected causes the one moving to move at half speed",
-            //         "Unless they are a size larger As an action it can remove it, but it takes 1d6 dmg",
-            //         "If the target is medium or larger; using my bonus action, I can pull myself to it",
-            //         "If the target is Small or smaller I pull it to me. I can also just disconnect the cord"
-            //         //TODO(v13): Wanted to put this in the weapon description tooltip but that doesn't work in this version of the sheet
-            //     ]), 
-            //     source : ["KT:AA", 6],
-            //     eval : "AddWeapon('harpoon reel'); notesPage('Harpoon Reel', ['Upgrade-Harpoon Reel', 'KT:AA', 6], ClassSubList['alternate artificer-cannonsmith'].features['subclassfeature3']['harpoon reel (prereq: level 5 artificer)'].noteDesc);",
-            //     removeeval : "RemoveWeapon('harpoon reel'); notesPage('Harpoon Reel', ['Upgrade-Harpoon Reel', 'KT:AA', 6], ClassSubList['alternate artificer-cannonsmith'].features['subclassfeature3']['harpoon reel (prereq: level 5 artificer)'].noteDesc, true);",
-            //     action : ["bonus action", "[Reel]"],
-            //     prereqeval : "classes.known['alternate artificer'].level >= 5"
-            // },
+            "harpoon reel (prereq: level 5 artificer)" : {
+                name : "Harpoon Reel",
+                description : "See Notes sheet for info on how this works",
+                source : ["KT:AA", 7],
+                action : ["bonus action", " [Reel]"],
+                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
+                weaponOptions : {
+                    regExpSearch : /^(?=.*harpoon)(?=.*reel).*$/i,
+                    name : "Harpoon Reel",
+                    source : ["KT:AA", 7],
+                    list : "alternate artificer",
+                    ability : 2,
+                    type : "Artificer Weapon",
+                    damage : [1, 6, "piercing"],
+                    range : "30/60 ft",
+                    description : "60 ft cord, Must be Reeled in, See notes sheet",
+                    abilitytodamage : true
+                },
+                weaponsAdd : ["Harpoon Reel"],
+                toNotesPage : [{
+                    name : "Upgrade-Harpoon Reel",
+                    note : [
+                        "I can attack a surface, object, or creature with a harpoon",
+                        "It has a range of 30/60 feet, and deals 1d6 piercing dmg",
+                        "I must Reel it in before I can use it again.",
+                        "It impales the target hit, connecting us with a 60ft cord", 
+                        "Dragging the person connected causes the one moving to move at half speed",
+                        "Unless they are a size larger As an action it can remove it, but it takes 1d6 dmg",
+                        "If the target is medium or larger; using my bonus action, I can pull myself to it",
+                        "If the target is Small or smaller I pull it to me. I can also just disconnect the cord"
+                    ],
+                    source : ["KT:AA", 7]
+                }]
+            },
             // "terrifying thunder (prereq: echoing boom)" : {
             //     name : "Terrifying Thunder",
             //     description : desc([
@@ -2363,6 +2393,39 @@ SpellsList["vorpal weapon"] = {
 //*****************************************************\\
 //*                   -Cannonsmith-                   *\\
 //*****************************************************\\
+
+// MagicItemsList["thunder cannon"] = {
+//     name : "Thunder Cannon",
+//     source : ["KT:AA", 5],
+//     type : "wondrous item",
+//     rarity : "very rare",
+//     extraTooltip : "Attunement (creator only)",
+//     attunement : true,
+//     weight : 15,
+//     prerequisite : "Only for a Cannonsmith Artificer",
+//     prereqeval : function(v) {
+//         return classes.known["alternate artificer"].subclass == "alternate artificer-cannonsmith";
+//     },
+//     allowDuplicates : true,
+//     description : "",
+//     descriptionFull : "",
+//     weaponOptions : {
+//         regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
+//         name : "Thunder Cannon",
+//         source : ["KT:AA", 5],
+//         list : "alternate artificer",
+//         ability : 2,
+//         type : "Artificer Weapon",
+//         damage : [2, 6, "piercing"],
+//         range : "60/180 ft",
+//         weight : 15,
+//         description : "Ammunition, Two-handed, Loud, Reload(1)",
+//         abilitytodamage : true,
+//         ammo : "thunder rounds",
+//         artThundercannon : true
+//     },
+//     weaponsAdd : ["Thunder Cannon"],
+// };
 
 AmmoList["thunder rounds"] = {
     name : "Thunder Rounds",
