@@ -14,8 +14,12 @@ Cannonsmith -
 e)	At the bottom of page 5 it says "Revised Artificer v1.3" and it looks like their is two 5s for the page number. But that might just be the picture
 
 	Upgrades
-		typo in Blast Radius title 
+		typo in Blast Radius subtitle 
 e)			Prerequisite is spelled wrong
+
+		typo in Terrifying Thunder Prerequisite subtitle
+e)			Echoing Booms while the upgrades name is Echoing Boom
+			(Not sure if this is intentional or not)
 
 Gadgetsmith -
 	Essential Tools: Gadgetsmith Weapon vs. Gadgetsmith Upgrades
