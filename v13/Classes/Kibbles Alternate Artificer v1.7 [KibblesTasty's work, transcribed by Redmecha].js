@@ -184,7 +184,7 @@ ClassList["alternate artificer"] = {
         "\n\nAlternatively, choose 5d4 \xD7 10 gp worth of starting equipment instead of both the class' and the background's starting equipment.",
     subclasses : ["Artificer Specialization", [
         "alternate artificer-cannonsmith",
-        ////"alternate artificer-gadgetsmith",
+        "alternate artificer-gadgetsmith",
         ////"alternate artificer-golemsmith",
         ////"alternate artificer-infusionsmith",
         ////"alternate artificer-potionsmith",
@@ -820,45 +820,49 @@ ClassSubList["alternate artificer-cannonsmith"] = {
         }
     }
 };
-/*
+
 ClassSubList["alternate artificer-gadgetsmith"] = {
 
     regExpSearch : /gadgetsmith/i,
     subname : "Gadgetsmith",
-    source : ["KT:AA", 7],
+    source : ["KT:AA", 8],
     attacks : [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
     features : {
         "subclassfeature1" : {
             name : "Gadgetsmith's Proficiency",
-            source : ["KT:AA", 7],
+            source : ["KT:AA", 8],
             minlevel : 1,
             description : desc([
                 "I gain proficiency with nets, rapiers, whips, and tinker's tools."
             ]),
-            weapons : [true, false, ["net", "rapier", "whip"]],
-            toolProfs : [["Tinker's Tools", "Dex"]]
+            weaponProfs : [true, false, ["net", "rapier", "whip"]],
+            toolProfs : ["Tinker's Tools"]
         },
         "subclassfeature1.1" : {
             name : "Essential Tools: Grappling Hook/Smoke Bomb",
-            source : ["KT:AA", 7],
+            source : ["KT:AA", 8],
             minlevel : 1,
-            description : "",
-            additional : "See Notes",
-            noteDesc1 : desc([
-                "I can attack a surface, object, or creature within 20 feet and hook on to it",
-                "If the it is small or smaller, I can make a Grapple check to pull it to me, grappling it",
-                "If the target is medium or larger, I can choose to be pulled to it, not grappling it"
-            ]),
-            noteDesc2 : desc([
-                "I can use my action to cast Fog Cloud without using a spell slot",
-                "It does not require concentration and lasts my Int Mod in rounds"
-            ]),
-            eval : "notesPage('Grappling Hook', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc1); notesPage('Smoke Bomb', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc2);",
-            removeeval : "notesPage('Grappling Hook', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc1, true); notesPage('Smoke Bomb', ['Essential Tools', 'KT:AA', 7], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature1.1'].noteDesc2, true);"
-        }, //TODO(v13): Make these magic items
+            description : "See Notes page for info on how these work",
+            toNotesPage : [{
+                name : "Essential Tools: Grappling Hook",
+                note : [
+                    "I can attack a surface, object, or creature within 20 feet and hook on to it",
+                    "If the it is small or smaller, I can make a Grapple check to pull it to me, grappling it",
+                    "If the target is medium or larger, I can choose to be pulled to it, not grappling it"
+                ],
+                source : ["KT:AA", 8]
+            },{
+                name : "Essential Tools: Smoke Bomb",
+                note : [
+                    "I can use my action to cast Fog Cloud without using a spell slot",
+                    "It does not require concentration and lasts my Intelligence modifier in rounds"
+                ],
+                source : ["KT:AA", 8]
+            }]
+        }, 
         "subclassfeature1.2" : {
             name : "Essential Tools: Gadgetsmith Weapon",
-            source : ["KT:AA", 7],
+            source : ["KT:AA", 8],
             minlevel : 1,
             description : desc([
                 "Gadgetsmith Weapon: Use the \"Choose Features\" button to add a Gadgetsmith Weapon"
@@ -871,12 +875,25 @@ ClassSubList["alternate artificer-gadgetsmith"] = {
                     "When Thrown, I can make separate attacks at 2 creatures within 10 ft of each other"
                 ]),
                 source : ["KT:AA", 8],
-                eval : "AddWeapon('boomerang of hitting');",
-                removeeval : "RemoveWeapon('boomerang of hitting');",
+                weaponsAdd : ["Boomerang of Hitting"],
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        function (fields, v, output) {
+                            if (v.theWea.artBoomerang && classes.known["alternate artificer"].level >= 5 && classes.known["alternate artificer"].level < 14) {
+                                output.extraDmg += 1; 
+                                output.extraHit += 1;
+                            } else if (v.theWea.artBoomerang && classes.known["alternate artificer"].level >= 14) {
+                                output.extraDmg += 2; 
+                                output.extraHit += 2;
+                            }
+                        },
                         "The Boomerang of Hitting gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+                    ],
+                    atkAdd : [
+                        function (fields, v) {
+                            if (v.theWea.artBoomerang) fields.Proficiency = true;
+                        },
+                        ""
                     ]
                 }
             },
@@ -887,12 +904,25 @@ ClassSubList["alternate artificer-gadgetsmith"] = {
                     "Before I attack, I can forgo my Prof mod for the attack, but If it hits I get double"
                 ]),
                 source : ["KT:AA", 9],
-                eval : "AddWeapon('impact gauntlet');",
-                removeeval : "RemoveWeapon('impact gauntlet');",
+                weaponsAdd : ["Impact Gauntlet"],
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        function (fields, v, output) {
+                            if (v.theWea.artGauntlet && classes.known["alternate artificer"].level >= 5 && classes.known["alternate artificer"].level < 14) {
+                                output.extraDmg += 1; 
+                                output.extraHit += 1;
+                            } else if (v.theWea.artGauntlet && classes.known["alternate artificer"].level >= 14) {
+                                output.extraDmg += 2; 
+                                output.extraHit += 2;
+                            }
+                        },
                         "The Impact Gauntlet gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+                    ],
+                    atkAdd : [
+                        function (fields, v) {
+                            if (v.theWea.artGauntlet) fields.Proficiency = true;
+                        },
+                        ""
                     ]
                 }
             },
@@ -903,12 +933,25 @@ ClassSubList["alternate artificer-gadgetsmith"] = {
                     "If I have Adv, once per turn I can forgo it on an attack to make an additional attack"
                 ]),
                 source : ["KT:AA", 9],
-                eval : "AddWeapon('repeating hand crossbow');",
-                removeeval : "RemoveWeapon('repeating hand crossbow');",
+                weaponsAdd : ["Repeating Hand Crossbow"],
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        function (fields, v, output) {
+                            if (v.theWea.artRepeatCrossbow && classes.known["alternate artificer"].level >= 5 && classes.known["alternate artificer"].level < 14) {
+                                output.extraDmg += 1; 
+                                output.extraHit += 1;
+                            } else if (v.theWea.artRepeatCrossbow && classes.known["alternate artificer"].level >= 14) {
+                                output.extraDmg += 2; 
+                                output.extraHit += 2;
+                            }
+                        },
                         "The Repeating Hand Crossbow gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+                    ],
+                    atkAdd : [
+                        function (fields, v) {
+                            if (v.theWea.artRepeatCrossbow) fields.Proficiency = true;
+                        },
+                        ""
                     ]
                 }
             },
@@ -919,11 +962,18 @@ ClassSubList["alternate artificer-gadgetsmith"] = {
                     "I can add my Dex or Int mod (sheet automatically chooses the highest) to the attack"
                 ]),
                 source : ["KT:AA", 9],
-                eval : "AddWeapon('shocking grasp');",
-                removeeval : "RemoveWeapon('shocking grasp');",
+                weaponsAdd : ["Shocking Grasp"],
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'shocking grasp') {if (What('Int Mod') >= What('Dex Mod')) {output.extraHit += What('Int Mod');} else {output.extraHit += What('Dex Mod');};};",
+                        function (fields, v, output) {
+                            if (v.WeaponTextName == "Shocking Grasp") {
+                                if (What("Int Mod") >= What("Dex Mod")) {
+                                    output.extraHit += What("Int Mod");
+                                } else {
+                                    output.extraHit += What("Dex Mod");
+                                }
+                            }
+                        },
                         "I can add my Dexterity or Intelligence modifier to Shocking Grasp's attack roll"
                     ]
                 }
@@ -934,543 +984,554 @@ ClassSubList["alternate artificer-gadgetsmith"] = {
                     "I get a lightning baton, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14"
                 ]),
                 source : ["KT:AA", 9],
-                eval : "AddWeapon('lightning baton');",
-                removeeval : "RemoveWeapon('lightning baton');",
+                weaponsAdd : ["Lightning Baton"],
                 calcChanges : {
                     atkCalc : [
-                        "if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+                        function (fields, v, output) {
+                            if (v.theWea.artBaton && classes.known["alternate artificer"].level >= 5 && classes.known["alternate artificer"].level < 14) {
+                                output.extraDmg += 1; 
+                                output.extraHit += 1;
+                            } else if (v.theWea.artBaton && classes.known["alternate artificer"].level >= 14) {
+                                output.extraDmg += 2; 
+                                output.extraHit += 2;
+                            }
+                        },
                         "The Lightning Baton gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+                    ],
+                    atkAdd : [
+                        function (fields, v) {
+                            if (v.theWea.artBaton) fields.Proficiency = true;
+                        },
+                        ""
                     ]
                 }
             }
         },
-        "subclassfeature3" : {
-            name : "Gadgetsmith Upgrades/Additional Upgrade",
-            minlevel : 3,
-            description : desc([
-                "Use the \"Choose Features\" button to add a Specialization Upgrade to the third page",
-                "As a Gadgetsmith I get one extra upgrade for my class, two at Lv. 5",
-                "(Make sure to see the notes sheet for more info on choosing and swapping upgrades)"
-            ]),
-            source : [["KT:AA", 2],["KT:AA", 7]],
-            additional : levels.map(function (n, idx) {
-                    return n < 3 ? "" : [0, 0, 2, 2, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11][idx] + " upgrades";
-            }),
-            noteDesc : desc([
-                "I apply an additional upgrade to my Specialization's Wondrous Item at",
-                "5th, 7th, 9th, 11th, 13th, 15th, 17th, and 19th level",
-                "I cannot apply an upgrade more than once, unless the upgrade's description says otherwise",
-                "Upgrades cannot be replaced or changed, besides as described in the specialization",
-                "Only the Artificer selecting the upgrade can use the upgrade unless otherwise specified",
-                "In any case that Specialization allows the upgrade to be swapped out",
-                "Upgrades must always be selected as if I was level I was when they got that Upgrade slot",
-                "Ex. if I replace my Thundercannon and reselect all my upgrades at as a 5th level Artificer,",
-                "I could select 1 3rd level upgrade and 1 5th level upgrade,",
-                "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
-            ]),
-            eval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3'].noteDesc);",
-            removeeval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassList['alternate artificer-gadgetsmith'].features['subclassfeature3'].noteDesc, true);",
-            extraname : "Gadgetsmith Upgrades",
-            extrachoices : [
-                "Airburst Mine",
-                "Arcane Nullifier (prereq: level 9 Artificer)",
-                "Boomerang of Hitting (Incompatible with Essential Tools: Boomerang of Hitting)",
-                "Belt of Adjusting Size",
-                "Binding Rope (prereq: level 5 Artificer)",
-                "Bracers of Empowerment (prereq: level 11 Artificer)",
-                "Deployable Wings (prereq: level 11 Artificer)",
-                "Disintegration Ray (prereq: level 15 Artificer)",
-                "Gripping Gloves (prereq: level 11 Artificer, Incompatible with Nimble Gloves)",
-                "Element Eater",
-                "Enhanced Grappling Hook",
-                "Fire Spitter",
-                "Flashbang",
-                "Impact Gauntlet (Incompatible with Essential Tools: Impact Gauntlet)",
-                "Impact Gauntlet No.2 (prereq: Any Impact Gauntlet)",
-                "Lightning Baton (Incompatible with Essential Tools: Lightning Baton)",
-                "Lightning Baton No.2 (prereq: Any Lightning Baton)",
-                "Lightning Generator (prereq: level 11 Artificer, Shock Generator)",
-                "Mechanical Arm",
-                "Mechanical Familiar",
-                "Nimble Gloves (prereq: level 11 Artificer, Incompatible with Gripping Gloves)",
-                "Phase Trinket (prereq: level 9 Artificer)",
-                "Jumping Boots",
-                "Repeating Hand Crossbow (Incompatible with Essential Tools: Repeating Hand Crossbow)",
-                "Bee Swarm Rockets (prereq: level 15 Artificer)",
-                "Shock Generator (Incompatible with Essential Tools: Shock Generator)",
-                "Shocking Hook (prereq: Shock Generator)",
-                "Sight Lenses",
-                "Smoke Cloak",
-                "Stinking Gas (prereq: level 9 Artificer)",
-                "Striding Boots",
-                "Stopwatch Trinket (prereq: level 9 Artificer)",
-                "Truesight Lenses (prereq: level 11 Artificer, Sight Lenses)",
-                "Useful Universal Key (prereq: level 11 Artificer)"
-            ],
-            "airburst mine" : {
-                name : "Airburst Mine",
-                description : desc([
-                    "I can use this device to cast shatter without using a spell slot or I can place it",
-                    "To be triggered by my reaction within 1 min; I cannot use it again until after a SR"
-                ]),
-                source : ["KT:AA", 8],
-                usages : 1,
-                recovery : "short rest",
-                spellcastingBonus : [{
-                    name :  "Airburst Mine",
-                    spells : ["shatter"],
-                    selection : ["shatter"],
-                    oncesr : true
-                }]
-            },
-            "arcane nullifier (prereq: level 9 artificer)" : {
-                name : "Arcane Nullifier ",
-                description : desc([
-                    "As an action, I can use this device to cast dispel magic",
-                    "I cannot use it again until I complete a short or long rest"
-                ]),
-                source : ["KT:AA", 8],
-                usages : 1,
-                recovery : "short rest",
-                spellcastingBonus : [{
-                    name :  "Arcane Nullifier",
-                    spells : ["dispel magic"],
-                    selection : ["dispel magic"],
-                    oncesr : true
-                }],
-                prereqeval : "classes.known['alternate artificer'].level >= 9"
-            },
-            "boomerang of hitting (incompatible with essential tools: boomerang of hitting)" : {
-                name : "Boomerang of Hitting",
-                description : desc([
-                    "I get a magical boomerang, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
-                    "When Thrown, I can make separate attacks at 2 creatures within 10 ft of each other"
-                ]),
-                source : ["KT:AA", 8],
-                eval : "AddWeapon('boomerang of hitting');",
-                removeeval : "RemoveWeapon('boomerang of hitting');",
-                calcChanges : {
-                    atkCalc : [
-                        "if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
-                        "The Boomerang of Hitting gains a +1 to Attack and Damage at level 5, a +2 at level 14"
-                    ]
-                },
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: boomerang of hitting') == -1"
-            },
-            "belt of adjusting size" : {
-                name : "Belt of Adjusting Size",
-                description : desc([
-                    "While wearing the belt, I can use an action to cast Enlarge/Reduce on myself",
-                    "I cannot use it again until I complete a short or long rest"
-                ]),
-                source : ["KT:AA", 8],
-                usages : 1,
-                recovery : "short rest",
-                spellcastingBonus : [{
-                    name :  "Arcane Nullifier",
-                    spells : ["enlarge/reduce"],
-                    selection : ["enlarge/reduce"],
-                    oncesr : true
-                }]
-            },
-            "binding rope (prereq: level 5 artificer)" : {
-                name : "Binding Rope",
-                description : desc([
-                    "As an action, I restrain a creature (30 ft, dex save vs. spell DC) till the end of my next turn",
-                    "Disadvantage If I'm already grappling it. I can only restrain one target a time"
-                ]),
-                source : ["KT:AA", 8],
-                action : ["action","[30 ft, dex save vs. spell DC]"],
-                prereqeval : "classes.known['alternate artificer'].level >= 5"
-            },
-            "bracers of empowerment (prereq: level 11 artificer)" : {
-                name : "Bracers of Empowerment",
-                description : desc([
-                    "I can use these to cast Tenser's Transformation without using a spell slot.",
-                    "I cannot use it again until I complete a long rest"
-                ]),
-                source : ["KT:AA", 8],
-                usages : 1,
-                recovery : "long rest",
-                spellcastingBonus : [{
-                    name :  "Bracers of Empowerment",
-                    spells : ["tenser's transformation"],
-                    selection : ["tenser's transformation"],
-                    oncelr : true
-                }],
-                prereqeval : "classes.known['alternate artificer'].level >= 11"
-            },
-            "deployable wings (prereq: level 11 artificer)" : {
-                name : "Deployable Wings",
-                description : desc([
-                    "I can deploy wings as a bonus action/reaction to falling, I get a flying speed of 30 ft"
-                ]),
-                source : ["KT:AA", 8],
-                action : ["bonus action",""], //TODO(v13): add a reaction to this to replace the eval and removeeval
-                speed : { 
-                    fly : { spd : 30, enc : 20 }
-                },
-                eval : "AddAction('reaction', 'Deployable Wings (falling)', 'Artificer (Gadgetsmith)');",
-                removeeval : "RemoveAction('reaction', 'Deployable Wings (falling)');",
-                prereqeval : "classes.known['alternate artificer'].level >= 9"
-            },
-            "disintegration ray (prereq: level 15 artificer)" : {
-                name : "Disintegration Ray",
-                description : desc([
-                    "I can use this to cast Disintegration without expending a Spell Slot.",
-                    "I cannot use it again until I complete a long rest"
-                ]),
-                source : ["KT:AA", 8],
-                usages : 1,
-                recovery : "long rest",
-                spellcastingBonus : [{
-                    name :  "Disintegration Ray",
-                    spells : ["disintegration"],
-                    selection : ["disintegration"],
-                    oncelr : true
-                }],
-                prereqeval : "classes.known['alternate artificer'].level >= 15"
-            },
-            "gripping gloves (prereq: level 11 artificer, incompatible with nimble gloves)" : {
-                name : "Gripping Gloves",
-                description : desc([
-                    "While wearing the gloves, My Str and maximum Str increases by 2", //TODO(v13): add automation for this
-                    "And I gain adv on Str(Athletics) checks involving manipulating things with my hands"
-                ]),
-                source : ["KT:AA", 8],
-                skillstxt : "\n\n" + toUni("Gadgetsmith: Gripping Gloves") + ": Adv on Str(Athletics) checks involving manipulating things with my hands",
-                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('nimble gloves') == -1" //TODO(v13): Do this with getFeatureChoice
-            },
-            "element eater" : {
-                name : "Element Eater",
-                description : desc([
-                    "As a reaction to taking elemental damage, I can cast Absorb Elements",
-                    "Without using a spell slot. I cannot use it again until I complete a short or long rest"
-                ]),
-                source : ["KT:AA", 8],
-                usages : 1,
-                recovery : "short rest",
-                spellcastingBonus : [{
-                    name :  "Element Eater",
-                    spells : ["absorb elements"],
-                    selection : ["absorb elements"],
-                    oncesr : true,
-                }]
-            },
-            "enhanced grappling hook" : {
-                name : "Enhanced Grappling Hook",
-                description : desc([
-                    "I enhance my grappling hook, increasing its range to 40 feet",
-                    "And lets me drag something with me when pulling myself to something"
-                ]),
-                source : ["KT:AA", 8],
-                additional : "See Notes sheet",
-                noteDesc : desc([
-                    "I can attack a surface, object, or creature within 40 feet and hook on to it",
-                    "If the it is small or smaller, I can make a Grapple check to pull it to me, grappling it",
-                    "If the target is medium or larger, I can choose to be pulled to it, not grappling it",
-                    "While pulling myself, I can drag a medium or smaller",
-                    "willing/grappled creature within 5 ft of me with me"
-                ]),
-                eval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:AA', 8], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc);",
-                removeeval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:AA', 8], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc, true);"
-            }, //TODO(v13): Make this a magic item
-            "fire spitter" : {
-                name : "Fire Spitter",
-                description : desc([
-                    "As an action, I can cast Aganazzar's Scorcher without using a spell slot",
-                    "I cannot use it again until I complete a short or long rest"
-                ]),
-                source : ["KT:AA", 9],
-                usages : 1,
-                recovery : "short rest",
-                spellcastingBonus : [{
-                    name :  "Fire Spitter",
-                    spells : ["aganazzar's scorcher"],
-                    selection : ["aganazzar's scorcher"],
-                    oncesr : true
-                }]
-            },
-            "flashbang" : {
-                name : "Flashbang",
-                description : desc([
-                    "As an action, you can target a point in 30 ft. Any creature within a 20 ft radius makes:",
-                    "A dex save or is blinded until the end of its next turn It cannot used again until after a SR"
-                ]),
-                source : ["KT:AA", 9],
-                usages : 1,
-                recovery : "short rest"
-            },
-            "impact gauntlet (incompatible with essential tools: impact gauntlet)" : {
-                name : "Impact Gauntlet",
-                description : desc([
-                    "I get a magical gauntlet, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
-                    "Before I attack, I can forgo my Prof mod for the attack, but If it hits I get double"
-                ]),
-                source : ["KT:AA", 9],
-                eval : "AddWeapon('impact gauntlet');",
-                removeeval : "RemoveWeapon('impact gauntlet');",
-                calcChanges : {
-                    atkCalc : [
-                        "if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
-                        "The Impact Gauntlet gains a +1 to Attack and Damage at level 5, a +2 at level 14"
-                    ]
-                },
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: impact gauntlet') == -1"
-            },
-            "impact gauntlet no.2 (prereq: any impact gauntlet)" : {
-                name : "Impact Gauntlet No.2",
-                description : desc([
-                    "I get another magical gauntlet, letting me dual weld them"
-                ]),
-                source : ["KT:AA", 9],
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: impact gauntlet') != -1 || What('Extra.Notes').toLowerCase().indexOf('impact gauntlet') != -1" //TODO(v13): Do this with getFeatureChoice
-            },
-            "lightning baton (incompatible with essential tools: lightning baton)" : {
-                name : "Lightning Baton",
-                description : desc([
-                    "I get a lightning baton, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14"
-                ]),
-                source : ["KT:AA", 9],
-                eval : "AddWeapon('lightning baton');",
-                removeeval : "RemoveWeapon('lightning baton');",
-                calcChanges : {
-                    atkCalc : [
-                        "if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
-                        "The Lightning Baton gains a +1 to Attack and Damage at level 5, a +2 at level 14"
-                    ]
-                },
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: lightning baton') == -1"
-            },
-            "lightning baton no.2 (prereq: any lightning baton)" : {
-                name : "Lightning Baton No.2",
-                description : desc([
-                    "I get another lightning baton, letting me dual weld them)"
-                ]),
-                source : ["KT:AA", 9],
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: lightning baton') != -1 || What('Extra.Notes').toLowerCase().indexOf('lightning baton') != -1" //TODO(v13): Do this with getFeatureChoice
-            },
-            "lightning generator (prereq: level 11 artificer, shock generator)" : {
-                name : "Lightning Generator",
-                description : desc([
-                    "You can cast lightning lure at-will using it, can overload it to cast lightning bolt",
-                    "Once I overload it, I cannot use lightning bolt again until I complete a short or long rest"
-                ]),
-                source : ["KT:AA", 9],
-                eval : "AddWeapon('lightning lure');",
-                removeeval : "RemoveWeapon('lightning lure');",
-                usages : 1,
-                recovery : "short rest",
-                spellcastingBonus : [{
-                    name :  "Lightning Generator",
-                    spells : ["lightning lure"],
-                    selection : ["lightning lure"],
-                    atwill : true
-                }, {
-                    name :  "Lightning Generator",
-                    spells : ["lightning bolt"],
-                    selection : ["lightning bolt"],
-                    oncesr : true
-                }],
-                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('shock generator') != -1" //TODO(v13): Do this with getFeatureChoice
-            },
-            "mechanical arm" : {
-                name : "Mechanical Arm",
-                description : desc([
-                    "The arm only works while it is mounted to my gear, but can be controlled mentally",
-                    "It can do anything a normal hand could, but does not give you additional actions"
-                ]),
-                source : ["KT:AA", 9],
-            },
-            "mechanical familiar" : {
-                name : "Mechanical Familiar",
-                description : desc([
-                    "At the end of a long rest, I can cast Find Familiar with the following modifications:",
-                    "Type: Construct, cannot fly, stays active until deactivated/destroyed, reactivated after LR"
-                ]),
-                source : ["KT:AA", 9],
-                //TODO: I'm sure this is automatable, but i'll come back to it later...
-                //| Probably after I do the Golemsmith (which I'm sure is going be a BITCH to do...)
-            },
-            "nimble gloves (prereq: level 11 artificer, incompatible with gripping gloves)" : {
-                name : "Nimble Gloves",
-                description : desc([
-                    "While wearing the gloves, My Dex and maximum Dex increases by 2", //TODO(v13): add automation for this
-                    "And I gain Adv on Dex(Slight of Hand) checks involving manipulating things with my hands"
-                ]),
-                skillstxt : "\n\n" + toUni("Gadgetsmith: Nimble Gloves") + ": Adv on Dex(Slight of Hand) checks involving manipulating things with my hands",
-                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('gripping gloves') == -1" //TODO(v13): Do this with getFeatureChoice
-            },
-            "phase trinket (prereq: level 9 artificer)" : {
-                name : "Phase Trinket",
-                description : desc([
-                    "As an action, I can cast Blink or Dimension Door without using a Spell Slot",
-                    "I cannot use it again until I complete a long rest"
-                ]),
-                usages : 1,
-                recovery : "long rest",
-                spellcastingBonus : [{
-                    name :  "Phase Trinket",
-                    spells : ["blink"],
-                    selection : ["blink"],
-                    oncelr : true
-                }, {
-                    name :  "Phase Trinket",
-                    spells : ["dimension door"],
-                    selection : ["dimension door"],
-                    oncelr : true
-                }],
-                prereqeval : "classes.known['alternate artificer'].level >= 9"
-            },
-            "jumping boots" : {
-                name : "Jumping Boots",
-                description : desc([
-                    "While wearing these boots, I am under the effects of the Jump spell"
-                ])
-            },
-            "repeating hand crossbow (incompatible with essential tools: repeating hand crossbow)" : {
-                name : "Repeating Hand Crossbow",
-                description : desc([
-                    "I get a magical hand crossbow, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
-                    "If I have Adv, once per turn I can forgo it on an attack to make an additional attack"
-                ]),
-                source : ["KT:AA", 9],
-                eval : "AddWeapon('repeating hand crossbow');",
-                removeeval : "RemoveWeapon('repeating hand crossbow');",
-                calcChanges : {
-                    atkCalc : [
-                        "if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
-                        "The Repeating Hand Crossbow gains a +1 to Attack and Damage at level 5, a +2 at level 14"
-                    ]
-                },
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: repeating hand crossbow') == -1"
-            },
-            "bee swarm rockets (prereq: level 15 artificer)" : {
-                name : "Bee Swarm Rockets",
-                description : desc([
-                    "I have my Artificer level in rockets. I can fire up to my remaining rockets as an action",
-                    "Each targets a point I can see in 40 ft. Creatures in 10 ft of a point makes a dex save",
-                    "On fail take 2d6 fire damage per rocket, half on success. I refill my stock during a LR"
-                ]),
-                source : ["KT:AA", 9],
-                usages : "Artificer level per ",
-                usagescalc : "event.value = What('Character Level');",
-                recovery : "long rest",
-                prereqeval : "classes.known['alternate artificer'].level >= 15"
-            },
-            "shock generator (incompatible with essential tools: shock generator)" : {
-                name : "Shock Generator",
-                description : desc([
-                    "I get a device that lets me cast Shocking Grasp",
-                    "I can add my Dex or Int mod (sheet automatically chooses the highest) to the attack"
-                ]),
-                source : ["KT:AA", 9],
-                eval : "AddWeapon('shocking grasp');",
-                removeeval : "RemoveWeapon('shocking grasp');",
-                calcChanges : {
-                    atkCalc : [
-                        "if (WeaponName == 'shocking grasp') {if (What('Int Mod') >= What('Dex Mod')) {output.extraHit += What('Int Mod');} else {output.extraHit += What('Dex Mod');};};",
-                        "I can add my Dexterity or Intelligence modifier to Shocking Grasp's attack roll"
-                    ]
-                },
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: shock generator') == -1"
-            },
-            "shocking hook (prereq: shock generator)" : {
-                name : "Shocking Hook",
-                description : desc([
-                    "If the target of my Grappling Hook is a creature, I can cast Shocking Grasp on it",
-                    "As a bonus action when pulling it to me or being pulled to it"
-                ]),
-                source : ["KT:AA", 9],
-                prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: shock generator') != -1 || What('Extra.Notes').toLowerCase().indexOf('shock generator') != -1;" //TODO(v13): Do this with getFeatureChoice
-            },
-            "sight lenses" : {
-                name : "Sight Lenses",
-                description : desc([
-                    "I can see through fog, mist, smoke, clouds, and non-magical darkness, up to 15 ft"
-                ]),
-                source : ["KT:AA", 9],
-                vision : ["Sight Lenses", 15]
-            },
-            "smoke cloak" : {
-                name : "Smoke Cloak",
-                description : desc([
-                    "When I start my turn lightly or heavily obscured by smoke, I am invisible until:",
-                    "My turn ends, I cast a spell, make an attack, or damage an enemy"
-                ]),
-                source : ["KT:AA", 10]
-            },
-            "stinking gas (prereq: level 9 artificer)" : {
-                name : "Stinking Gas",
-                description : desc([
-                    "When I use a smoke bomb, I can also choose to use stinking cloud (follows the same rules)"
-                ]),
-                source : ["KT:AA", 10],
-                prereqeval : "classes.known['alternate artificer'].level >= 9"
-            },
-            "striding boots" : {
-                name : "Striding Boots",
-                description : desc([
-                    "While earing these boots, I am under the effects of Longstrider spell"
-                ]),
-                source : ["KT:AA", 10],
-                speed : { 
-                    allModes : "+10"
-                },
-                prereqeval : "classes.known['alternate artificer'].level >= 1"
-            },
-            "stopwatch trinket (prereq: level 9 artificer)" : {
-                name : "Stopwatch Trinket",
-                description : desc([
-                    "As an action, I can cast Haste or Slow without expending a Spell Slot",
-                    "I cannot use it again until I complete a long rest"
-                ]),
-                source : ["KT:AA", 10],
-                usages : 1,
-                recovery : "long rest",
-                spellcastingBonus : [{
-                    name :  "Stopwatch Trinket",
-                    spells : ["haste"],
-                    selection : ["haste"],
-                    firstCol : "LR"
-                }, {
-                    name :  "Stopwatch Trinket",
-                    spells : ["slow"],
-                    selection : ["slow"],
-                    oncelr : true
-                }],
-                prereqeval : "classes.known['alternate artificer'].level >= 9"
-            },
-            "truesight lenses (prereq: level 11 artificer, sight lenses)" : {
-                name : "Truesight Lenses",
-                description : desc([
-                    "I get Truesight up to 30 feet"
-                ]),
-                source : ["KT:AA", 10],
-                vision : ["Truesight", 30],
-                prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('sight lenses') != -1;" //TODO(v13): Do this with getFeatureChoice
-            },
-            "useful universal key (prereq: level 11 artificer)" : {
-                name : "Useful Universal Key",
-                description : desc([
-                    "As an action, I can  cast passwall without expending a spell slot",
-                    "I cannot use it again until I complete a long rest"
-                ]),
-                source : ["KT:AA", 10],
-                usages : 1,
-                recovery : "long rest",
-                spellcastingBonus : [{
-                    name :  "Useful Universal Key",
-                    spells : ["passwall"],
-                    selection : ["passwall"],
-                    oncelr : true
-                }],
-                prereqeval : "classes.known['alternate artificer'].level >= 11"
-            }
-        },
+        // "subclassfeature3" : {
+        //     name : "Additional Upgrade",
+        //     minlevel : 3,
+        //     description : desc([
+        //         "As a Gadgetsmith I get one extra upgrade for my class, two at Lv. 5"
+        //     ]),
+        //     source : [["KT:AA", 2],["KT:AA", 7]],
+        //     additional : levels.map(function (n, idx) {
+        //             return n < 3 ? "" : [0, 0, 2, 2, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11][idx] + " upgrades";
+        //     }),
+        //     noteDesc : desc([
+        //         "I apply an additional upgrade to my Specialization's Wondrous Item at",
+        //         "5th, 7th, 9th, 11th, 13th, 15th, 17th, and 19th level",
+        //         "I cannot apply an upgrade more than once, unless the upgrade's description says otherwise",
+        //         "Upgrades cannot be replaced or changed, besides as described in the specialization",
+        //         "Only the Artificer selecting the upgrade can use the upgrade unless otherwise specified",
+        //         "In any case that Specialization allows the upgrade to be swapped out",
+        //         "Upgrades must always be selected as if I was level I was when they got that Upgrade slot",
+        //         "Ex. if I replace my Thundercannon and reselect all my upgrades at as a 5th level Artificer,",
+        //         "I could select 1 3rd level upgrade and 1 5th level upgrade,",
+        //         "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
+        //     ]),
+        //     eval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3'].noteDesc);",
+        //     removeeval : "notesPage('Gadgetsmith Upgrades', ['Specialization Upgrade', 'KT:AA', 2], ClassList['alternate artificer-gadgetsmith'].features['subclassfeature3'].noteDesc, true);",
+        //     extraname : "Gadgetsmith Upgrades",
+        //     extrachoices : [
+        //         "Airburst Mine",
+        //         "Arcane Nullifier (prereq: level 9 Artificer)",
+        //         "Boomerang of Hitting (Incompatible with Essential Tools: Boomerang of Hitting)",
+        //         "Belt of Adjusting Size",
+        //         "Binding Rope (prereq: level 5 Artificer)",
+        //         "Bracers of Empowerment (prereq: level 11 Artificer)",
+        //         "Deployable Wings (prereq: level 11 Artificer)",
+        //         "Disintegration Ray (prereq: level 15 Artificer)",
+        //         "Gripping Gloves (prereq: level 11 Artificer, Incompatible with Nimble Gloves)",
+        //         "Element Eater",
+        //         "Enhanced Grappling Hook",
+        //         "Fire Spitter",
+        //         "Flashbang",
+        //         "Impact Gauntlet (Incompatible with Essential Tools: Impact Gauntlet)",
+        //         "Impact Gauntlet No.2 (prereq: Any Impact Gauntlet)",
+        //         "Lightning Baton (Incompatible with Essential Tools: Lightning Baton)",
+        //         "Lightning Baton No.2 (prereq: Any Lightning Baton)",
+        //         "Lightning Generator (prereq: level 11 Artificer, Shock Generator)",
+        //         "Mechanical Arm",
+        //         "Mechanical Familiar",
+        //         "Nimble Gloves (prereq: level 11 Artificer, Incompatible with Gripping Gloves)",
+        //         "Phase Trinket (prereq: level 9 Artificer)",
+        //         "Jumping Boots",
+        //         "Repeating Hand Crossbow (Incompatible with Essential Tools: Repeating Hand Crossbow)",
+        //         "Bee Swarm Rockets (prereq: level 15 Artificer)",
+        //         "Shock Generator (Incompatible with Essential Tools: Shock Generator)",
+        //         "Shocking Hook (prereq: Shock Generator)",
+        //         "Sight Lenses",
+        //         "Smoke Cloak",
+        //         "Stinking Gas (prereq: level 9 Artificer)",
+        //         "Striding Boots",
+        //         "Stopwatch Trinket (prereq: level 9 Artificer)",
+        //         "Truesight Lenses (prereq: level 11 Artificer, Sight Lenses)",
+        //         "Useful Universal Key (prereq: level 11 Artificer)"
+        //     ],
+        //     "airburst mine" : {
+        //         name : "Airburst Mine",
+        //         description : desc([
+        //             "I can use this device to cast shatter without using a spell slot or I can place it",
+        //             "To be triggered by my reaction within 1 min; I cannot use it again until after a SR"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         usages : 1,
+        //         recovery : "short rest",
+        //         spellcastingBonus : [{
+        //             name :  "Airburst Mine",
+        //             spells : ["shatter"],
+        //             selection : ["shatter"],
+        //             oncesr : true
+        //         }]
+        //     },
+        //     "arcane nullifier (prereq: level 9 artificer)" : {
+        //         name : "Arcane Nullifier ",
+        //         description : desc([
+        //             "As an action, I can use this device to cast dispel magic",
+        //             "I cannot use it again until I complete a short or long rest"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         usages : 1,
+        //         recovery : "short rest",
+        //         spellcastingBonus : [{
+        //             name :  "Arcane Nullifier",
+        //             spells : ["dispel magic"],
+        //             selection : ["dispel magic"],
+        //             oncesr : true
+        //         }],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 9"
+        //     },
+        //     "boomerang of hitting (incompatible with essential tools: boomerang of hitting)" : {
+        //         name : "Boomerang of Hitting",
+        //         description : desc([
+        //             "I get a magical boomerang, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
+        //             "When Thrown, I can make separate attacks at 2 creatures within 10 ft of each other"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         eval : "AddWeapon('boomerang of hitting');",
+        //         removeeval : "RemoveWeapon('boomerang of hitting');",
+        //         calcChanges : {
+        //             atkCalc : [
+        //                 "if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'boomerang of hitting' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+        //                 "The Boomerang of Hitting gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+        //             ]
+        //         },
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: boomerang of hitting') == -1"
+        //     },
+        //     "belt of adjusting size" : {
+        //         name : "Belt of Adjusting Size",
+        //         description : desc([
+        //             "While wearing the belt, I can use an action to cast Enlarge/Reduce on myself",
+        //             "I cannot use it again until I complete a short or long rest"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         usages : 1,
+        //         recovery : "short rest",
+        //         spellcastingBonus : [{
+        //             name :  "Arcane Nullifier",
+        //             spells : ["enlarge/reduce"],
+        //             selection : ["enlarge/reduce"],
+        //             oncesr : true
+        //         }]
+        //     },
+        //     "binding rope (prereq: level 5 artificer)" : {
+        //         name : "Binding Rope",
+        //         description : desc([
+        //             "As an action, I restrain a creature (30 ft, dex save vs. spell DC) till the end of my next turn",
+        //             "Disadvantage If I'm already grappling it. I can only restrain one target a time"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         action : ["action","[30 ft, dex save vs. spell DC]"],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 5"
+        //     },
+        //     "bracers of empowerment (prereq: level 11 artificer)" : {
+        //         name : "Bracers of Empowerment",
+        //         description : desc([
+        //             "I can use these to cast Tenser's Transformation without using a spell slot.",
+        //             "I cannot use it again until I complete a long rest"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         usages : 1,
+        //         recovery : "long rest",
+        //         spellcastingBonus : [{
+        //             name :  "Bracers of Empowerment",
+        //             spells : ["tenser's transformation"],
+        //             selection : ["tenser's transformation"],
+        //             oncelr : true
+        //         }],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 11"
+        //     },
+        //     "deployable wings (prereq: level 11 artificer)" : {
+        //         name : "Deployable Wings",
+        //         description : desc([
+        //             "I can deploy wings as a bonus action/reaction to falling, I get a flying speed of 30 ft"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         action : ["bonus action",""], //TODO(v13): add a reaction to this to replace the eval and removeeval
+        //         speed : { 
+        //             fly : { spd : 30, enc : 20 }
+        //         },
+        //         eval : "AddAction('reaction', 'Deployable Wings (falling)', 'Artificer (Gadgetsmith)');",
+        //         removeeval : "RemoveAction('reaction', 'Deployable Wings (falling)');",
+        //         prereqeval : "classes.known['alternate artificer'].level >= 9"
+        //     },
+        //     "disintegration ray (prereq: level 15 artificer)" : {
+        //         name : "Disintegration Ray",
+        //         description : desc([
+        //             "I can use this to cast Disintegration without expending a Spell Slot.",
+        //             "I cannot use it again until I complete a long rest"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         usages : 1,
+        //         recovery : "long rest",
+        //         spellcastingBonus : [{
+        //             name :  "Disintegration Ray",
+        //             spells : ["disintegration"],
+        //             selection : ["disintegration"],
+        //             oncelr : true
+        //         }],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 15"
+        //     },
+        //     "gripping gloves (prereq: level 11 artificer, incompatible with nimble gloves)" : {
+        //         name : "Gripping Gloves",
+        //         description : desc([
+        //             "While wearing the gloves, My Str and maximum Str increases by 2", //TODO(v13): add automation for this
+        //             "And I gain adv on Str(Athletics) checks involving manipulating things with my hands"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         skillstxt : "\n\n" + toUni("Gadgetsmith: Gripping Gloves") + ": Adv on Str(Athletics) checks involving manipulating things with my hands",
+        //         prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('nimble gloves') == -1" //TODO(v13): Do this with getFeatureChoice
+        //     },
+        //     "element eater" : {
+        //         name : "Element Eater",
+        //         description : desc([
+        //             "As a reaction to taking elemental damage, I can cast Absorb Elements",
+        //             "Without using a spell slot. I cannot use it again until I complete a short or long rest"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         usages : 1,
+        //         recovery : "short rest",
+        //         spellcastingBonus : [{
+        //             name :  "Element Eater",
+        //             spells : ["absorb elements"],
+        //             selection : ["absorb elements"],
+        //             oncesr : true,
+        //         }]
+        //     },
+        //     "enhanced grappling hook" : {
+        //         name : "Enhanced Grappling Hook",
+        //         description : desc([
+        //             "I enhance my grappling hook, increasing its range to 40 feet",
+        //             "And lets me drag something with me when pulling myself to something"
+        //         ]),
+        //         source : ["KT:AA", 8],
+        //         additional : "See Notes sheet",
+        //         noteDesc : desc([
+        //             "I can attack a surface, object, or creature within 40 feet and hook on to it",
+        //             "If the it is small or smaller, I can make a Grapple check to pull it to me, grappling it",
+        //             "If the target is medium or larger, I can choose to be pulled to it, not grappling it",
+        //             "While pulling myself, I can drag a medium or smaller",
+        //             "willing/grappled creature within 5 ft of me with me"
+        //         ]),
+        //         eval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:AA', 8], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc);",
+        //         removeeval : "notesPage('Enhanced Grappling Hook', ['Upgrade-Enhanced Grappling Hook', 'KT:AA', 8], ClassSubList['alternate artificer-gadgetsmith'].features['subclassfeature3']['enhanced grappling hook'].noteDesc, true);"
+        //     }, //TODO(v13): Make this a magic item
+        //     "fire spitter" : {
+        //         name : "Fire Spitter",
+        //         description : desc([
+        //             "As an action, I can cast Aganazzar's Scorcher without using a spell slot",
+        //             "I cannot use it again until I complete a short or long rest"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         usages : 1,
+        //         recovery : "short rest",
+        //         spellcastingBonus : [{
+        //             name :  "Fire Spitter",
+        //             spells : ["aganazzar's scorcher"],
+        //             selection : ["aganazzar's scorcher"],
+        //             oncesr : true
+        //         }]
+        //     },
+        //     "flashbang" : {
+        //         name : "Flashbang",
+        //         description : desc([
+        //             "As an action, you can target a point in 30 ft. Any creature within a 20 ft radius makes:",
+        //             "A dex save or is blinded until the end of its next turn It cannot used again until after a SR"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         usages : 1,
+        //         recovery : "short rest"
+        //     },
+        //     "impact gauntlet (incompatible with essential tools: impact gauntlet)" : {
+        //         name : "Impact Gauntlet",
+        //         description : desc([
+        //             "I get a magical gauntlet, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
+        //             "Before I attack, I can forgo my Prof mod for the attack, but If it hits I get double"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         eval : "AddWeapon('impact gauntlet');",
+        //         removeeval : "RemoveWeapon('impact gauntlet');",
+        //         calcChanges : {
+        //             atkCalc : [
+        //                 "if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'impact gauntlet' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+        //                 "The Impact Gauntlet gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+        //             ]
+        //         },
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: impact gauntlet') == -1"
+        //     },
+        //     "impact gauntlet no.2 (prereq: any impact gauntlet)" : {
+        //         name : "Impact Gauntlet No.2",
+        //         description : desc([
+        //             "I get another magical gauntlet, letting me dual weld them"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: impact gauntlet') != -1 || What('Extra.Notes').toLowerCase().indexOf('impact gauntlet') != -1" //TODO(v13): Do this with getFeatureChoice
+        //     },
+        //     "lightning baton (incompatible with essential tools: lightning baton)" : {
+        //         name : "Lightning Baton",
+        //         description : desc([
+        //             "I get a lightning baton, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         eval : "AddWeapon('lightning baton');",
+        //         removeeval : "RemoveWeapon('lightning baton');",
+        //         calcChanges : {
+        //             atkCalc : [
+        //                 "if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'lightning baton' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+        //                 "The Lightning Baton gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+        //             ]
+        //         },
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: lightning baton') == -1"
+        //     },
+        //     "lightning baton no.2 (prereq: any lightning baton)" : {
+        //         name : "Lightning Baton No.2",
+        //         description : desc([
+        //             "I get another lightning baton, letting me dual weld them)"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: lightning baton') != -1 || What('Extra.Notes').toLowerCase().indexOf('lightning baton') != -1" //TODO(v13): Do this with getFeatureChoice
+        //     },
+        //     "lightning generator (prereq: level 11 artificer, shock generator)" : {
+        //         name : "Lightning Generator",
+        //         description : desc([
+        //             "You can cast lightning lure at-will using it, can overload it to cast lightning bolt",
+        //             "Once I overload it, I cannot use lightning bolt again until I complete a short or long rest"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         eval : "AddWeapon('lightning lure');",
+        //         removeeval : "RemoveWeapon('lightning lure');",
+        //         usages : 1,
+        //         recovery : "short rest",
+        //         spellcastingBonus : [{
+        //             name :  "Lightning Generator",
+        //             spells : ["lightning lure"],
+        //             selection : ["lightning lure"],
+        //             atwill : true
+        //         }, {
+        //             name :  "Lightning Generator",
+        //             spells : ["lightning bolt"],
+        //             selection : ["lightning bolt"],
+        //             oncesr : true
+        //         }],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('shock generator') != -1" //TODO(v13): Do this with getFeatureChoice
+        //     },
+        //     "mechanical arm" : {
+        //         name : "Mechanical Arm",
+        //         description : desc([
+        //             "The arm only works while it is mounted to my gear, but can be controlled mentally",
+        //             "It can do anything a normal hand could, but does not give you additional actions"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //     },
+        //     "mechanical familiar" : {
+        //         name : "Mechanical Familiar",
+        //         description : desc([
+        //             "At the end of a long rest, I can cast Find Familiar with the following modifications:",
+        //             "Type: Construct, cannot fly, stays active until deactivated/destroyed, reactivated after LR"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         //TODO: I'm sure this is automatable, but i'll come back to it later...
+        //         //| Probably after I do the Golemsmith (which I'm sure is going be a BITCH to do...)
+        //     },
+        //     "nimble gloves (prereq: level 11 artificer, incompatible with gripping gloves)" : {
+        //         name : "Nimble Gloves",
+        //         description : desc([
+        //             "While wearing the gloves, My Dex and maximum Dex increases by 2", //TODO(v13): add automation for this
+        //             "And I gain Adv on Dex(Slight of Hand) checks involving manipulating things with my hands"
+        //         ]),
+        //         skillstxt : "\n\n" + toUni("Gadgetsmith: Nimble Gloves") + ": Adv on Dex(Slight of Hand) checks involving manipulating things with my hands",
+        //         prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('gripping gloves') == -1" //TODO(v13): Do this with getFeatureChoice
+        //     },
+        //     "phase trinket (prereq: level 9 artificer)" : {
+        //         name : "Phase Trinket",
+        //         description : desc([
+        //             "As an action, I can cast Blink or Dimension Door without using a Spell Slot",
+        //             "I cannot use it again until I complete a long rest"
+        //         ]),
+        //         usages : 1,
+        //         recovery : "long rest",
+        //         spellcastingBonus : [{
+        //             name :  "Phase Trinket",
+        //             spells : ["blink"],
+        //             selection : ["blink"],
+        //             oncelr : true
+        //         }, {
+        //             name :  "Phase Trinket",
+        //             spells : ["dimension door"],
+        //             selection : ["dimension door"],
+        //             oncelr : true
+        //         }],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 9"
+        //     },
+        //     "jumping boots" : {
+        //         name : "Jumping Boots",
+        //         description : desc([
+        //             "While wearing these boots, I am under the effects of the Jump spell"
+        //         ])
+        //     },
+        //     "repeating hand crossbow (incompatible with essential tools: repeating hand crossbow)" : {
+        //         name : "Repeating Hand Crossbow",
+        //         description : desc([
+        //             "I get a magical hand crossbow, at Lv. 5 it gets a +1 to atk & dmg, +2 at Lv. 14; Special:",
+        //             "If I have Adv, once per turn I can forgo it on an attack to make an additional attack"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         eval : "AddWeapon('repeating hand crossbow');",
+        //         removeeval : "RemoveWeapon('repeating hand crossbow');",
+        //         calcChanges : {
+        //             atkCalc : [
+        //                 "if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 5 && classes.known['alternate artificer'].level < 14) {output.extraDmg += 1; output.extraHit += 1;} else if (WeaponName == 'repeating hand crossbow' && classes.known['alternate artificer'].level >= 14) {output.extraDmg += 2; output.extraHit += 2;};",
+        //                 "The Repeating Hand Crossbow gains a +1 to Attack and Damage at level 5, a +2 at level 14"
+        //             ]
+        //         },
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: repeating hand crossbow') == -1"
+        //     },
+        //     "bee swarm rockets (prereq: level 15 artificer)" : {
+        //         name : "Bee Swarm Rockets",
+        //         description : desc([
+        //             "I have my Artificer level in rockets. I can fire up to my remaining rockets as an action",
+        //             "Each targets a point I can see in 40 ft. Creatures in 10 ft of a point makes a dex save",
+        //             "On fail take 2d6 fire damage per rocket, half on success. I refill my stock during a LR"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         usages : "Artificer level per ",
+        //         usagescalc : "event.value = What('Character Level');",
+        //         recovery : "long rest",
+        //         prereqeval : "classes.known['alternate artificer'].level >= 15"
+        //     },
+        //     "shock generator (incompatible with essential tools: shock generator)" : {
+        //         name : "Shock Generator",
+        //         description : desc([
+        //             "I get a device that lets me cast Shocking Grasp",
+        //             "I can add my Dex or Int mod (sheet automatically chooses the highest) to the attack"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         eval : "AddWeapon('shocking grasp');",
+        //         removeeval : "RemoveWeapon('shocking grasp');",
+        //         calcChanges : {
+        //             atkCalc : [
+        //                 "if (WeaponName == 'shocking grasp') {if (What('Int Mod') >= What('Dex Mod')) {output.extraHit += What('Int Mod');} else {output.extraHit += What('Dex Mod');};};",
+        //                 "I can add my Dexterity or Intelligence modifier to Shocking Grasp's attack roll"
+        //             ]
+        //         },
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: shock generator') == -1"
+        //     },
+        //     "shocking hook (prereq: shock generator)" : {
+        //         name : "Shocking Hook",
+        //         description : desc([
+        //             "If the target of my Grappling Hook is a creature, I can cast Shocking Grasp on it",
+        //             "As a bonus action when pulling it to me or being pulled to it"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         prereqeval : "What('Class Features Remember').toLowerCase().indexOf('essential tools: shock generator') != -1 || What('Extra.Notes').toLowerCase().indexOf('shock generator') != -1;" //TODO(v13): Do this with getFeatureChoice
+        //     },
+        //     "sight lenses" : {
+        //         name : "Sight Lenses",
+        //         description : desc([
+        //             "I can see through fog, mist, smoke, clouds, and non-magical darkness, up to 15 ft"
+        //         ]),
+        //         source : ["KT:AA", 9],
+        //         vision : ["Sight Lenses", 15]
+        //     },
+        //     "smoke cloak" : {
+        //         name : "Smoke Cloak",
+        //         description : desc([
+        //             "When I start my turn lightly or heavily obscured by smoke, I am invisible until:",
+        //             "My turn ends, I cast a spell, make an attack, or damage an enemy"
+        //         ]),
+        //         source : ["KT:AA", 10]
+        //     },
+        //     "stinking gas (prereq: level 9 artificer)" : {
+        //         name : "Stinking Gas",
+        //         description : desc([
+        //             "When I use a smoke bomb, I can also choose to use stinking cloud (follows the same rules)"
+        //         ]),
+        //         source : ["KT:AA", 10],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 9"
+        //     },
+        //     "striding boots" : {
+        //         name : "Striding Boots",
+        //         description : desc([
+        //             "While earing these boots, I am under the effects of Longstrider spell"
+        //         ]),
+        //         source : ["KT:AA", 10],
+        //         speed : { 
+        //             allModes : "+10"
+        //         },
+        //         prereqeval : "classes.known['alternate artificer'].level >= 1"
+        //     },
+        //     "stopwatch trinket (prereq: level 9 artificer)" : {
+        //         name : "Stopwatch Trinket",
+        //         description : desc([
+        //             "As an action, I can cast Haste or Slow without expending a Spell Slot",
+        //             "I cannot use it again until I complete a long rest"
+        //         ]),
+        //         source : ["KT:AA", 10],
+        //         usages : 1,
+        //         recovery : "long rest",
+        //         spellcastingBonus : [{
+        //             name :  "Stopwatch Trinket",
+        //             spells : ["haste"],
+        //             selection : ["haste"],
+        //             firstCol : "LR"
+        //         }, {
+        //             name :  "Stopwatch Trinket",
+        //             spells : ["slow"],
+        //             selection : ["slow"],
+        //             oncelr : true
+        //         }],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 9"
+        //     },
+        //     "truesight lenses (prereq: level 11 artificer, sight lenses)" : {
+        //         name : "Truesight Lenses",
+        //         description : desc([
+        //             "I get Truesight up to 30 feet"
+        //         ]),
+        //         source : ["KT:AA", 10],
+        //         vision : ["Truesight", 30],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 11 && What('Extra.Notes').toLowerCase().indexOf('sight lenses') != -1;" //TODO(v13): Do this with getFeatureChoice
+        //     },
+        //     "useful universal key (prereq: level 11 artificer)" : {
+        //         name : "Useful Universal Key",
+        //         description : desc([
+        //             "As an action, I can  cast passwall without expending a spell slot",
+        //             "I cannot use it again until I complete a long rest"
+        //         ]),
+        //         source : ["KT:AA", 10],
+        //         usages : 1,
+        //         recovery : "long rest",
+        //         spellcastingBonus : [{
+        //             name :  "Useful Universal Key",
+        //             spells : ["passwall"],
+        //             selection : ["passwall"],
+        //             oncelr : true
+        //         }],
+        //         prereqeval : "classes.known['alternate artificer'].level >= 11"
+        //     }
+        // },
         "subclassfeature3.1" : {
             name : "Recycle Gadgets",
-            source : ["KT:AA", 7],
+            source : ["KT:AA", 8],
             minlevel : 3,
             description : desc([
                 "During a long rest and taking effect when I complete it",
@@ -1496,7 +1557,7 @@ ClassSubList["alternate artificer-gadgetsmith"] = {
         }
     }
 };
-
+/*
 // ClassSubList["alternate artificer-golemsmith"] = {
 //     regExpSearch : /golemsmith/i,
 //     subname : "Golemsmith",
@@ -2481,97 +2542,64 @@ AmmoList["thunder rounds"] = {
     invName : "Thunder Rounds",
     alternatives : [/^((?=.*thunder)|(?=.*rounds?)).*$/i]
 };
-// WeaponsList["thunder cannon"] = {
-//     name : "Thunder Cannon",
-//     source : ["KT:AA", 5],
-//     regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
-//     type : "Artificer Weapon",
-//     ability : 2,
-//     abilitytodamage : false,
-//     damage : [2, 6, "piercing"],
-//     range : "60/180 ft",
-//     description : "Ammunition, Two-handed, Loud, Reload(1)",
-//     weight : 15,
-//     ammo : "thunder rounds"
-// };
-// WeaponsList["lightning bayonet"] = {
-//     regExpSearch : /^(?=.*lightning)(?=.*bayonet).*$/i,
-//     name : "TC: Lightning Bayonet",
-//     source : ["KT:AA", 6],
-//     list : "alternate artificer",
-//     ability : 2,
-//     type : "Artificer Weapon",
-//     damage : [1, 6, "piercing"],
-//     range : "Melee",
-//     description : "Finesse",
-//     abilitytodamage : true
-// };
-// WeaponsList["harpoon reel"] = {
-//     regExpSearch : /^(?=.*harpoon)(?=.*reel).*$/i,
-//     name : "TC: Harpoon Reel",
-//     source : ["KT:AA", 6],
-//     list : "alternate artificer",
-//     ability : 2,
-//     type : "Artificer Weapon",
-//     damage : [1, 6, "piercing"],
-//     range : "30/60 ft",
-//     description : "60 ft cord, Must be Reeled in, See notes sheet",
-//     abilitytodamage : false
-// };
 
 //*****************************************************\\
 //*                   -Gadgetsmith-                   *\\
 //*****************************************************\\
 
-// WeaponsList["boomerang of hitting"] = {
-//     regExpSearch : /^(?=.*boomerang)(?=.*hitting).*$/i,
-//     name : "Boomerang of Hitting",
-//     source : ["KT:AA", 8],
-//     list : "alternate artificer",
-//     ability : 2,
-//     type : "Artificer Weapon",
-//     damage : [1, 4, "bludgeoning"],
-//     range : "Melee, 30/90 ft",
-//     description : "Finesse; Thrown, Returns; Special",
-//     abilitytodamage : true
-// };
-// WeaponsList["impact gauntlet"] = {
-//     regExpSearch : /^(?=.*impact)(?=.*gauntlet).*$/i,
-//     name : "Impact Gauntlet",
-//     source : ["KT:AA", 9],
-//     list : "alternate artificer",
-//     ability : 2,
-//     type : "Artificer Weapon",
-//     damage : [1, 8, "bludgeoning"],
-//     range : "Melee",
-//     description : "Finesse, Light, Special",
-//     abilitytodamage : true
-// };
-// WeaponsList["repeating hand crossbow"] = {
-//     regExpSearch : /^(?=.*repeating)(?=.*crossbow).*$/i,
-//     name : "Repeating Hand Crossbow",
-//     source : ["KT:AA", 9],
-//     list : "alternate artificer",
-//     ability : 2,
-//     type : "Artificer Weapon",
-//     damage : [1, 6, "piercing"],
-//     range : "30/120 ft",
-//     description : "Ammunition, Light, Special, Auto-loading",
-//     abilitytodamage : true,
-//     ammo : "Bolts"
-// };
-// WeaponsList["lightning baton"] = {
-//     regExpSearch : /^(?=.*lightning)(?=.*baton).*$/i,
-//     name : "Lightning Baton",
-//     source : ["KT:AA", 9],
-//     list : "alternate artificer",
-//     ability : 2,
-//     type : "Artificer Weapon",
-//     damage : ["1d4/1d4", "", "bludgeoning"],
-//     range : "30/120 ft",
-//     description : "Finesse, Light, 1d4 is lightning, Con save vs. spell save DC on crit; fail - is stunned until my next turn",
-//     abilitytodamage : true
-// };
+WeaponsList["boomerang of hitting"] = {
+    regExpSearch : /^(?=.*boomerang)(?=.*hitting).*$/i,
+    name : "Boomerang of Hitting",
+    source : ["KT:AA", 8],
+    list : "alternate artificer",
+    ability : 2,
+    type : "Artificer Weapon",
+    damage : [1, 4, "bludgeoning"],
+    range : "Melee, 30/90 ft",
+    description : "Finesse; Thrown, Returns; Special",
+    abilitytodamage : true,
+    artBoomerang : true
+};
+WeaponsList["impact gauntlet"] = {
+    regExpSearch : /^(?=.*impact)(?=.*gauntlet).*$/i,
+    name : "Impact Gauntlet",
+    source : ["KT:AA", 9],
+    list : "alternate artificer",
+    ability : 2,
+    type : "Artificer Weapon",
+    damage : [1, 8, "bludgeoning"],
+    range : "Melee",
+    description : "Finesse, Light, Special",
+    abilitytodamage : true,
+    artGauntlet : true
+};
+WeaponsList["repeating hand crossbow"] = {
+    regExpSearch : /^(?=.*repeating)(?=.*crossbow).*$/i,
+    name : "Repeating Hand Crossbow",
+    source : ["KT:AA", 9],
+    list : "alternate artificer",
+    ability : 2,
+    type : "Artificer Weapon",
+    damage : [1, 6, "piercing"],
+    range : "30/120 ft",
+    description : "Ammunition, Light, Special, Auto-loading",
+    abilitytodamage : true,
+    ammo : "Bolts",
+    artRepeatCrossbow : true
+};
+WeaponsList["lightning baton"] = {
+    regExpSearch : /^(?=.*lightning)(?=.*baton).*$/i,
+    name : "Lightning Baton",
+    source : ["KT:AA", 9],
+    list : "alternate artificer",
+    ability : 2,
+    type : "Artificer Weapon",
+    damage : ["1d4/1d4", "", "bludgeoning"],
+    range : "30/120 ft",
+    description : "Finesse, Light, 1d4 is lightning, Con save vs. spell save DC on crit; fail - is stunned until my next turn",
+    abilitytodamage : true,
+    artBaton : true
+};
 
 //*****************************************************\\
 //*                    -Golemsmith-                   *\\
