@@ -13,7 +13,7 @@
     Effect:     This script adds a class called the "alternate Artificer" and will add its 7 subclasses once completed.
 
                 This class has been made by /u/KibblesTasty on the subreddit r/UnearthedArcana
-                It can be found here: http://redd.it/bc0osd
+                It can be found here: http://redd.it/cal77v
                 This code is based on v1.7 of /u/KibblesTasty's work (2019-04-11)
 
                 This script was based upon most of MPMB's scripts.
@@ -41,9 +41,9 @@
  */
 /**
  * TODO: Changes and automation
- * > Rewrite the Cannonsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.7 of the class and v13 of the sheet
- * | Rewrite the Gadgetsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.7 of the class and v13 of the sheet
- * | Rewrite the Warsmith subclass to be closer to MPMB's standards, fix bugs, and update to 1.7 of the class and v13 of the sheet
+ * | Rewrite the Cannonsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0 of the class and v13 of the sheet
+ * | Rewrite the Gadgetsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0 of the class and v13 of the sheet
+ * | Rewrite the Warsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0 of the class and v13 of the sheet
  * | (Undo this) Move Specialization Upgrade to each subclass rather then having It in the main class
  * | Automate the Gadgetsmith's Mechanical Familiar upgrade
  * | Write the code for Golemsmith
@@ -52,15 +52,15 @@
  * | Write the code for Wandsmith
  */
 
-var iFileName = "Kibbles Alternate Artificer v1.7 [KibblesTasty's work, transcribed by Redmecha].js";
+var iFileName = "Kibbles Alternate Artificer v2.0 [KibblesTasty's work, transcribed by Redmecha].js";
 RequiredSheetVersion(13);
 
 SourceList["KT:AA"] = {
-    name : "/u/KibblesTasty: Alternate Artificer (v1.7)",
+    name : "/u/KibblesTasty: Alternate Artificer (v2.0)",
     abbreviation : "KT:AA",
     group : "Reddit/r/UnearthedArcana",
-    url : "http://redd.it/bc0osd",
-    date : "2019/04/11"
+    url : "http://redd.it/cal77v",
+    date : "2019/05/08"
 };
 
 //first make the sheet know which spells are artificer spells
@@ -157,7 +157,7 @@ ClassList["alternate artificer"] = {
     regExpSearch : /^(?=.*artificer)(?!.*wizard).*$/i,
     name : "Artificer",
     source : ["KT:AA", 1],
-    primaryAbility : "\n \u2022 Artificer: Cannon/Gadget: Dexterity\n\t Golem/Infusion/Potion/Wand: Intelligence\n\t War: Strength",
+    primaryAbility : "\n \u2022 Artificer: Thunder/Gadget: Dexterity\n\t Golem/Infusion/Potion: Intelligence\n\t War/Flesh: Strength",
     abilitySave : 4,
     prereqs : "Intelligence 13",
     improvements :  [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5],
@@ -183,13 +183,13 @@ ClassList["alternate artificer"] = {
         "\n \u2022 Thieves' tools and a dungeoneer's pack." + 
         "\n\nAlternatively, choose 5d4 \xD7 10 gp worth of starting equipment instead of both the class' and the background's starting equipment.",
     subclasses : ["Artificer Specialization", [
-        "alternate artificer-cannonsmith",
-        "alternate artificer-gadgetsmith",
+        "alternate artificer-thundersmith",
+        ////"alternate artificer-gadgetsmith",
         ////"alternate artificer-golemsmith",
         ////"alternate artificer-infusionsmith",
         ////"alternate artificer-potionsmith",
-        ////"alternate artificer-warsmith"//,
-        ////"alternate artificer-wandsmith"
+        ////"alternate artificer-warsmith",
+        ////"alternate artificer-fleshsmith"
     ]],
     attacks : [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     spellcastingFactor : 2,
@@ -235,9 +235,9 @@ ClassList["alternate artificer"] = {
             source : ["KT:AA", 3],
             minlevel : 2,
             description : desc([
-                "I have expertise with any tool proficiencies I gain from the artificer class"
+                "I get double proficiency with any tool proficiencies I gain from the artificer class"
             ]),
-            skillstxt : "expertise with any tool proficiencies gained from the artificer class."
+            skillstxt : "I get double proficiency with any tool proficiencies I gain from the artificer class."
         },
         "spellcasting" : {
             name : "Spellcasting",
@@ -265,16 +265,16 @@ ClassList["alternate artificer"] = {
             toNotesPage : [{
                 name : "Specialization Upgrade",
                 note : [
-                    "I apply an additional upgrade to my Specialization's Wondrous Item at",
-                    "5th, 7th, 9th, 11th, 13th, 15th, 17th, and 19th level",
-                    "I cannot apply an upgrade more than once, unless the upgrade's description says otherwise",
-                    "Upgrades cannot be replaced or changed, besides as described in the specialization",
-                    "Only the Artificer selecting the upgrade can use the upgrade unless otherwise specified",
-                    "In any case that Specialization allows the upgrade to be swapped out",
-                    "Upgrades must always be selected as if I was level I was when they got that Upgrade slot",
-                    "Ex. if I replace my Thundercannon and reselect all my upgrades at as a 5th level Artificer,",
-                    "I could select 1 3rd level upgrade and 1 5th level upgrade,",
-                    "I would not be able to select two upgrades that had a prerequisite of 5th level artificer."
+                    "You select an additional Upgrade at 5th, 7th, 9th, 11th, 13th, 15th, 17th, and 19th level.",
+                    "You cannot select an Upgrade more than once, unless the Upgrade's description says otherwise.",
+                    "Whenever you level up, you can exchange one of your existing upgrades for",
+                    "another upgrade of the same level requirement as the replaced upgrade.",
+                    "   In any case that a specialization allows an Upgrade to be swapped out,",
+                    "Upgrades must always be selected as if the Artificer is",
+                    "the level they were when they got that Upgrade slot. For example,",
+                    "if you replace your Stormforged Weapon and reselect all of your upgrades as a 5th level Artificer,",
+                    "you could select one 3rd level upgrade and one 5th level upgrade, or two 3rd level upgrades,",
+                    "but you would not be able to select two 5th level upgrades."
                 ],
                 source : ["KT:AA", 4]
             }]
@@ -297,22 +297,50 @@ ClassList["alternate artificer"] = {
                 selection : ["cure wounds"],
             }]
         },
-        "superior attunement" : {
-            name : "Superior Attunement",
+        "cross disciplinary knowledge" : {
+            name : "Cross Disciplinary Knowledge",
             source : ["KT:AA", 4],
             minlevel : 6,
-            description : "",
-            additional : levels.map(function (n) {
-                return n < 6 ? "" : "attune to " + (n < 20 ? 4 : 5) + " magic items instead of 3";
-            })
+            description : "Use the \"Choose Features\" button to add a feature from another subclass",
+            choices: ["Stormforged Weapon", "Infused Armament", "Alchemical Reagents Pouch", "Gadgetsmith Upgrade"],
+            "stormforged weapon" : {
+                name : "Stormforged Weapon",
+                description : desc([
+                    "I get a weapon from the Thundersmith subclass, if it uses ammo I know how to make it"
+                ]),
+                source : ["KT:AA", 4]
+                //TODO: Add automation
+            },
+            "infused armament" : {
+                name : "Infused Armament",
+                description : desc([
+                    "I get the Infused Armament feature from the Infusionsmith subclass"
+                ]),
+                source : ["KT:AA", 4]
+            },
+            "alchemical reagents pouch" : {
+                name : "Alchemical Reagents Pouch",
+                description : desc([
+                    "I get an Alchemical Reagents Pouch, and Alchemical Fire or Acid from the Potionsmith subclass"
+                ]),
+                source : ["KT:AA", 4]
+                //TODO: Add automation
+            },
+            "gadgetsmith upgrade" : {
+                name : "Gadgetsmith Upgrade",
+                description : desc([
+                    "I get an unrestricted Upgrade from the Gadgetsmith subclass"
+                ]),
+                source : ["KT:AA", 4]
+            }
         },
         "wondrous items proficiency" : {
             name : "Wondrous Items Proficiency",
             source : ["KT:AA", 4],
             minlevel : 7,
             description : desc([
-                "I can ignore class based restrictions on attuning to magical items"
-            ])
+                "I can attune to 4 and, ignore class based restrictions on, magical items"
+            ]),
         },
         "improved magical crafting" : {
             name : "Improved Magical Crafting",
@@ -349,16 +377,11 @@ ClassList["alternate artificer"] = {
                 "I can activate a magic item that would normally take an action as a bonus action"
             ])
         },
-        "soul of artifice" : {
-            name : "Soul of Artifice",
+        "peerless inventor" : {
+            name : "Peerless Inventor",
             source : ["KT:AA", 4],
             minlevel : 20,
-            description : "",
-            additional : "+1 to all saves per attuned magic item",
-            savetxt : { 
-                text : ["+1 to all saves per attuned magic item"]
-            }
-            //TODO(v13): I think this is automatable
+            description : "After every short rest I can select one extra 11th or lower upgrade from my subclass",
         },
     }
 };
@@ -833,7 +856,7 @@ ClassSubList["alternate artificer-cannonsmith"] = {
         }
     }
 };
-
+/*
 ClassSubList["alternate artificer-gadgetsmith"] = {
 
     regExpSearch : /gadgetsmith/i,
@@ -1673,7 +1696,7 @@ ClassSubList["alternate artificer-gadgetsmith"] = {
         }
     }
 };
-/*
+
 // ClassSubList["alternate artificer-golemsmith"] = {
 //     regExpSearch : /golemsmith/i,
 //     subname : "Golemsmith",
