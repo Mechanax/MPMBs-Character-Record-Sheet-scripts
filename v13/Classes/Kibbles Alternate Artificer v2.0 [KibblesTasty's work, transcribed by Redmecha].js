@@ -381,41 +381,43 @@ ClassList["alternate artificer"] = {
             name : "Peerless Inventor",
             source : ["KT:AA", 4],
             minlevel : 20,
-            description : "After every short rest I can select one extra 11th or lower upgrade from my subclass",
+            description : desc([
+                "After every short rest I can select one extra 11th or lower upgrade from my subclass"
+            ])
         },
     }
 };
 
 //***************************************************-Subclasses-*****************************************************\\
 
-ClassSubList["alternate artificer-cannonsmith"] = {
-    regExpSearch : /cannonsmith/i,
-    subname : "Cannonsmith",
-    source : ["KT:AA", 5],
+ClassSubList["alternate artificer-thundersmith"] = {
+    regExpSearch : /thundersmith/i,
+    subname : "Thundersmith",
+    source : ["KT:AA", 22],
     features : {
         "subclassfeature1" : {
-            name : "Cannonsmith's Proficiency",
-            source : ["KT:AA", 5],
+            name : "Thundersmith's Proficiency",
+            source : ["KT:AA", 22],
             minlevel : 1,
             description : desc([
                 "I gain proficiency with tinker's tools and smith's tools",
-                "I can create up to 50 Thunder Rounds during a LR (1gp per 10 rounds)"
+                "I can create up to 50 rounds during a LR (1gp per 10 rounds)"
             ]),
             toolProfs : ["Smith's Tools", "Tinker's Tools"]
         },
         "subclassfeature1.1" : {
-            name : "Thunder Cannon",
-            source : ["KT:AA", 5],
+            name : "Stormforged Weapon",
+            source : ["KT:AA", 22],
             minlevel : 1,
             description : desc([
-                "I forge a deadly magic firearm called the Thunder Cannon",
+                "I forge a Thunder Powered Weapon-",
                 "I can make a new one over 3 days(8h each) with 200gp of metal and other materials"
             ]),
             eval : function(lvl, chc) {
-                AddMagicItem("Thunder Cannon");
+                AddMagicItem("Stormforged Weapon");
             },
             removeeval : function(lvl, chc) {
-                RemoveMagicItem("Thunder Cannon");
+                RemoveMagicItem("Stormforged Weapon");
             }
         },
         "subclassfeature3" : {
@@ -434,32 +436,32 @@ ClassSubList["alternate artificer-cannonsmith"] = {
             // These are here so I don't have to take up more space in the Class Features section
             extraname : "Cannonsmith Upgrades",
             extrachoices : [
-                //Unrestricted Upgrades
-                "Echoing Boom (prereq: incompatible with Silencer)",
-                "Extended Barrel",
-                "Extended Barrel Lv2 (prereq: Extended Barrel)",
-                "Lightning Burst",
-                "Lightning Charged Bayonet",
-                "Silencer (prereq: incompatible with Echoing Boom)",
-                "Shock Absorber",
-                //5th Level Upgrades
-                "Autoloading Magazine (prereq: level 5 Artificer)",
-                "Cannon Improvement (prereq: level 5 Artificer)",
-                "Cannon Improvement Lv2 (prereq: Cannon Improvement)",
-                "Cannon Improvement Lv3 (prereq: Cannon Improvement Lv2)",
-                "Divination Scope (prereq: level 5 Artificer)",
-                "Harpoon Reel (prereq: level 5 Artificer)",
-                "Terrifying Thunder (prereq: Echoing Boom)",
-                "Storm Blast (prereq: level 5 Artificer)",
-                // 9th Level Upgrades
-                "Shock Harpoon (prereq: level 9 Artificer, Harpoon Reel)",
-                "Synaptic Feedback (prereq: level 9 Artificer)",
-                "Thunder Jump (prereq: level 9 Artificer)",
-                // 11th Level Upgrades
-                "Blast Radius (prereq: level 11 Artificer)",
-                "Stabilization (prereq: level 11 Artificer)",
-                // 15th Level Upgrades
-                "Mortar Shells (prereq: level 15 Artificer)"
+                // //Unrestricted Upgrades
+                // "Echoing Boom (prereq: incompatible with Silencer)",
+                // "Extended Barrel",
+                // "Extended Barrel Lv2 (prereq: Extended Barrel)",
+                // "Lightning Burst",
+                // "Lightning Charged Bayonet",
+                // "Silencer (prereq: incompatible with Echoing Boom)",
+                // "Shock Absorber",
+                // //5th Level Upgrades
+                // "Autoloading Magazine (prereq: level 5 Artificer)",
+                // "Cannon Improvement (prereq: level 5 Artificer)",
+                // "Cannon Improvement Lv2 (prereq: Cannon Improvement)",
+                // "Cannon Improvement Lv3 (prereq: Cannon Improvement Lv2)",
+                // "Divination Scope (prereq: level 5 Artificer)",
+                // "Harpoon Reel (prereq: level 5 Artificer)",
+                // "Terrifying Thunder (prereq: Echoing Boom)",
+                // "Storm Blast (prereq: level 5 Artificer)",
+                // // 9th Level Upgrades
+                // "Shock Harpoon (prereq: level 9 Artificer, Harpoon Reel)",
+                // "Synaptic Feedback (prereq: level 9 Artificer)",
+                // "Thunder Jump (prereq: level 9 Artificer)",
+                // // 11th Level Upgrades
+                // "Blast Radius (prereq: level 11 Artificer)",
+                // "Stabilization (prereq: level 11 Artificer)",
+                // // 15th Level Upgrades
+                // "Mortar Shells (prereq: level 15 Artificer)"
             ],
             extraTimes : levels.map(function (n) {
                 return n < 3 ? 0 : n < 5 ? 1 : n < 7 ? 2 : n < 9 ? 3 : n < 11 ? 4 : n < 13 ? 5 : n < 15 ? 6 : n < 17 ? 7 : n < 19 ? 8 : 9;
@@ -467,375 +469,375 @@ ClassSubList["alternate artificer-cannonsmith"] = {
 
             //Unrestricted Upgrades
 
-            "echoing boom (prereq: incompatible with silencer)" : {
-                name : "Echoing Boom",
-                description : desc([
-                    "I pack extra power into my Thundermonger, increasing the damage it deals by 1d6"
-                ]),
-                source : ["KT:AA", 6],
-                prereqeval : function(v) { 
-                    return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("silencer (prereq: incompatible with echoing boom)") == -1;
-                }
-                //TODO: Find out how to add full automation of this upgrade
-            },
-            "extended barrel" : {
-                name : "Extended Barrel",
-                description : desc([
-                    "The range of my Thunder Cannon increases by 30/90 feet",
-                    "I can take this upgrade 1 more time"
-                ]),
-                source : ["KT:AA", 6],
-                calcChanges : {
-                    atkAdd : [
-                        function (fields, v) {
-                            if (v.theWea.artThundercannon) {
-                                fields.Range = "90/270 ft";
-                            }
-                        },
-                        "Range increased by 30/90 ft"
-                    ]
-                }
-            },
-            "extended barrel lv2 (prereq: extended barrel)" : {
-                name : "Extended Barrel Lv2",
-                description : desc([
-                    "The range of my Thunder Cannon increases by another 30/90 feet",
-                    "If I have the Bayonet upgrade, it gains the Reach property",
-                ]),
-                source : ["KT:AA", 6],
-                prereqeval : function(v) {
-                    return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("extended barrel") != -1;
-                },
-                calcChanges : {
-                    atkAdd : [
-                        function (fields, v) {
-                            if (v.theWea.artThundercannon) {
-                                fields.Range = "120/360 ft";
-                            }
-                            if (v.theWea.artLightningBayonet) {
-                                fields.Description += ", reach";
-                            }
-                        },
-                        "Range increased by another 30/90 ft and added reach to the Lightning Bayonet"
-                    ]
-                }
-            },
-            "lightning burst" : {
-                name : "Lightning Burst",
-                description : desc([
-                    "As an action, I can fire the cannon; without using ammo, in a 5ft wide, 60ft long line",
-                    "Creatures hit make a Dex save, and take Thundermonger's damage as Lightning damage",
-                    "They take half on a successful save. This action uses Thundermonger for the turn"
-                ]),
-                source : ["KT:AA", 6],
-                action : ["action", ""]
-            },
-            "lightning charged bayonet" : {
-                name : "Lightning Charged Bayonet",
-                description : desc([
-                    "I add a finesse weapon melee weapon that I am proficient with to the end of my cannon,",
-                    "It deals 1d6 Piercing damage and I can use Thundermonger with it,",
-                    "but the damage type is lightning and counts as using it for the turn"
-                ]),
-                source : ["KT:AA", 6],
-                weaponOptions : {
-                    regExpSearch : /^(?=.*lightning)(?=.*bayonet).*$/i,
-                    name : "Lightning Bayonet",
-                    source : ["KT:AA", 6],
-                    list : "alternate artificer",
-                    ability : 2,
-                    type : "Artificer Weapon",
-                    damage : [1, 6, "piercing"],
-                    range : "Melee",
-                    description : "Finesse",
-                    abilitytodamage : true,
-                    artLightningBayonet : true
-                },
-                weaponsAdd : ["Lightning Bayonet"],
-                calcChanges : {
-                    atkAdd : [
-                        function (fields, v) {
-                            if (v.theWea.artLightningBayonet) fields.Proficiency = true;
-                        },
-                        ""
-                    ]
-                }
-            },
-            "silencer (prereq: incompatible with echoing boom)" : {
-                name : "Silencer",
-                description : desc([
-                    "My Thunder Cannon loses the Loud property",
-                    "I can use a 2nd lvl spell slot to overcharge the silencer, casting silence"
-                ]),
-                source : ["KT:AA", 6],
-                prereqeval : function(v) { 
-                    return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("echoing boom (prereq: incompatible with silencer)") == -1;
-                },
-                calcChanges : {
-					atkAdd : [
-						function (fields, v) {
-							if (v.theWea.artThundercannon) {
-								fields.Description = fields.Description.replace(" Loud,", "");
-							}
-						},
-						"My Thunder Cannon loses the Loud property."
-					]
-				},
-            },
-            "shock absorber" : {
-                name : "Shock Absorber",
-                description : desc([
-                    "If I take Lightning/Thunder Damage, I can cast Absorb Elements without using a spell slot",
-                    "I can apply this damage to my next Thundercannon attack even if its a ranged attack."
-                ]),
-                source : ["KT:AA", 6],
-                action : ["reaction", "[Lightning/Thunder Dmg]"]
-            },
+            // "echoing boom (prereq: incompatible with silencer)" : {
+            //     name : "Echoing Boom",
+            //     description : desc([
+            //         "I pack extra power into my Thundermonger, increasing the damage it deals by 1d6"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     prereqeval : function(v) { 
+            //         return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("silencer (prereq: incompatible with echoing boom)") == -1;
+            //     }
+            //     //TODO: Find out how to add full automation of this upgrade
+            // },
+            // "extended barrel" : {
+            //     name : "Extended Barrel",
+            //     description : desc([
+            //         "The range of my Thunder Cannon increases by 30/90 feet",
+            //         "I can take this upgrade 1 more time"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     calcChanges : {
+            //         atkAdd : [
+            //             function (fields, v) {
+            //                 if (v.theWea.artThundercannon) {
+            //                     fields.Range = "90/270 ft";
+            //                 }
+            //             },
+            //             "Range increased by 30/90 ft"
+            //         ]
+            //     }
+            // },
+            // "extended barrel lv2 (prereq: extended barrel)" : {
+            //     name : "Extended Barrel Lv2",
+            //     description : desc([
+            //         "The range of my Thunder Cannon increases by another 30/90 feet",
+            //         "If I have the Bayonet upgrade, it gains the Reach property",
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     prereqeval : function(v) {
+            //         return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("extended barrel") != -1;
+            //     },
+            //     calcChanges : {
+            //         atkAdd : [
+            //             function (fields, v) {
+            //                 if (v.theWea.artThundercannon) {
+            //                     fields.Range = "120/360 ft";
+            //                 }
+            //                 if (v.theWea.artLightningBayonet) {
+            //                     fields.Description += ", reach";
+            //                 }
+            //             },
+            //             "Range increased by another 30/90 ft and added reach to the Lightning Bayonet"
+            //         ]
+            //     }
+            // },
+            // "lightning burst" : {
+            //     name : "Lightning Burst",
+            //     description : desc([
+            //         "As an action, I can fire the cannon; without using ammo, in a 5ft wide, 60ft long line",
+            //         "Creatures hit make a Dex save, and take Thundermonger's damage as Lightning damage",
+            //         "They take half on a successful save. This action uses Thundermonger for the turn"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     action : ["action", ""]
+            // },
+            // "lightning charged bayonet" : {
+            //     name : "Lightning Charged Bayonet",
+            //     description : desc([
+            //         "I add a finesse weapon melee weapon that I am proficient with to the end of my cannon,",
+            //         "It deals 1d6 Piercing damage and I can use Thundermonger with it,",
+            //         "but the damage type is lightning and counts as using it for the turn"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     weaponOptions : {
+            //         regExpSearch : /^(?=.*lightning)(?=.*bayonet).*$/i,
+            //         name : "Lightning Bayonet",
+            //         source : ["KT:AA", 6],
+            //         list : "alternate artificer",
+            //         ability : 2,
+            //         type : "Artificer Weapon",
+            //         damage : [1, 6, "piercing"],
+            //         range : "Melee",
+            //         description : "Finesse",
+            //         abilitytodamage : true,
+            //         artLightningBayonet : true
+            //     },
+            //     weaponsAdd : ["Lightning Bayonet"],
+            //     calcChanges : {
+            //         atkAdd : [
+            //             function (fields, v) {
+            //                 if (v.theWea.artLightningBayonet) fields.Proficiency = true;
+            //             },
+            //             ""
+            //         ]
+            //     }
+            // },
+            // "silencer (prereq: incompatible with echoing boom)" : {
+            //     name : "Silencer",
+            //     description : desc([
+            //         "My Thunder Cannon loses the Loud property",
+            //         "I can use a 2nd lvl spell slot to overcharge the silencer, casting silence"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     prereqeval : function(v) { 
+            //         return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("echoing boom (prereq: incompatible with silencer)") == -1;
+            //     },
+            //     calcChanges : {
+			// 		atkAdd : [
+			// 			function (fields, v) {
+			// 				if (v.theWea.artThundercannon) {
+			// 					fields.Description = fields.Description.replace(" Loud,", "");
+			// 				}
+			// 			},
+			// 			"My Thunder Cannon loses the Loud property."
+			// 		]
+			// 	},
+            // },
+            // "shock absorber" : {
+            //     name : "Shock Absorber",
+            //     description : desc([
+            //         "If I take Lightning/Thunder Damage, I can cast Absorb Elements without using a spell slot",
+            //         "I can apply this damage to my next Thundercannon attack even if its a ranged attack."
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     action : ["reaction", "[Lightning/Thunder Dmg]"]
+            // },
 
-            //5th Level Upgrades
+            // //5th Level Upgrades
 
-            "autoloading magazine (prereq: level 5 artificer)" : {
-                name : "Autoloading Magazine",
-                description : desc([
-                    "I automatically reload, I no longer require my bonus action"
-                ]),
-                source : ["KT:AA", 6],
-                calcChanges : {
-                    atkAdd : [
-                        function (fields, v) {
-                        if (v.theWea.artThundercannon) {
-                            fields.Description = fields.Description.replace("Reload(1)", "Auto-Reload");
-                        }
-                    },
-                        "My Thunder Cannon now auto-reloads"
-                    ]
-                },
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;}
-            },
-            "cannon improvement (prereq: level 5 artificer)" : {
-                name : "Cannon Improvement",
-                description : desc([
-                    "My Thunder Cannon gains a +1 to Attack and Damage, It now counts as magical",
-                    "I can take this upgrade 2 more times"
-                ]),
-                source : ["KT:AA", 6],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
-                calcChanges : {
-                    atkAdd : [
-                        function (fields, v) {
-                            if (v.theWea.artThundercannon) {
-                                fields.Description += "; Counts as magical";
-                            }
-                        },
-                        "My Thunder Cannon attacks count as magical for overcoming resistances and damage reduction."
-                    ],
-                    atkCalc : [
-                        function (fields, v) {
-                            if (v.theWea.artThundercannon) {
-                                output.extraDmg += 1; output.extraHit += 1;
-                            }
-                        },
-                        "The Thunder Cannon gains a +1 to Attack and Damage"
-                    ]
-                }
-            },
-            "cannon improvement lv2 (prereq: cannon improvement)" : {
-                name : "Cannon Improvement Lv2",
-                description : desc([
-                    "My Thunder Cannon gains another +1 to Attack and Damage",
-                    "I can take this upgrade 1 more time"
-                ]),
-                source : ["KT:AA", 6],
-                prereqeval : function(v) { 
-                    return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("cannon improvement (prereq: level 5 artificer)") != -1;
-                },
-                calcChanges : {
-                    atkCalc : [
-                        function (fields, v) {
-                            if (v.theWea.artThundercannon) {
-                                output.extraDmg += 1; output.extraHit += 1;
-                            }
-                        },
-                        "The Thunder Cannon gains another +1 to Attack and Damage"
-                    ]
-                }
-            },
-            "cannon improvement lv3 (prereq: cannon improvement lv2)" : {
-                name : "Cannon Improvement Lv3",
-                description : desc([
-                    "My Thunder Cannon gains another +1 to Attack and Damage"
-                ]),
-                source : ["KT:AA", 6],
-                prereqeval : function(v) { 
-                    return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("cannon improvement lv2 (prereq: cannon improvement)") != -1;
-                },
-                calcChanges : {
-                    atkCalc : [
-                        function (fields, v) {
-                            if (v.theWea.artThundercannon) {
-                                output.extraDmg += 1; output.extraHit += 1;
-                            }
-                        },
-                        "The Thunder Cannon gains another +1 to Attack and Damage"
-                    ]
-                }
-            },
-            "divination scope (prereq: level 5 artificer)" : {
-                name : "Divination Scope",
-                description : desc([
-                    "The scope has 3 charges, As a bonus action I can use 1 charge to cast Hunter's Mark,",
-                    "as an action I can use 2 to cast See Invisibility, or 3 to cast Clairvoyance"
-                ]),
-                source : ["KT:AA", 7],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
-                usages : 3,
-                recovery : "long rest",
-                eval : function(lvl, chc) {
-                    changeSpellsOnMagicItem(true, "thunder cannon", "Divination Scope", ["hunter's mark", "see invisibility", "clairvoyance"], ["1","2","3"], [{},{},{time : "1 a", changes : "I can cast clairvoyance as an action instead of over 10 minutes."}]);
-                },
-                removeeval : function(lvl, chc) {
-                    changeSpellsOnMagicItem(false, "thunder cannon", "Divination Scope", ["hunter's mark", "see invisibility", "clairvoyance"], ["1","2","3"]);
-                }
-            },
-            "harpoon reel (prereq: level 5 artificer)" : {
-                name : "Harpoon Reel",
-                description : "See Notes sheet for info on how this works",
-                source : ["KT:AA", 7],
-                action : ["bonus action", " [Reel]"],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
-                weaponOptions : {
-                    regExpSearch : /^(?=.*harpoon)(?=.*reel).*$/i,
-                    name : "Harpoon Reel",
-                    source : ["KT:AA", 7],
-                    list : "alternate artificer",
-                    ability : 2,
-                    type : "Artificer Weapon",
-                    damage : [1, 6, "piercing"],
-                    range : "30/60 ft",
-                    description : "60 ft cord, Must be Reeled in, See notes sheet",
-                    abilitytodamage : true
-                },
-                weaponsAdd : ["Harpoon Reel"],
-                toNotesPage : [{
-                    name : "Upgrade-Harpoon Reel",
-                    note : [
-                        "I can attack a surface, object, or creature with a harpoon",
-                        "It has a range of 30/60 feet, and deals 1d6 piercing dmg",
-                        "I must Reel it in before I can use it again.",
-                        "It impales the target hit, connecting us with a 60ft cord", 
-                        "Dragging the person connected causes the one moving to move at half speed",
-                        "Unless they are a size larger As an action it can remove it, but it takes 1d6 dmg",
-                        "If the target is medium or larger; using my bonus action, I can pull myself to it",
-                        "If the target is Small or smaller I pull it to me. I can also just disconnect the cord"
-                    ],
-                    source : ["KT:AA", 7]
-                }]
-            },
-            "terrifying thunder (prereq: echoing boom)" : {
-                name : "Terrifying Thunder",
-                description : desc([
-                    "The first time I hit a target, it is deaf until the end of it's next turn",
-                    "It must also make a Wis save against my spell save DC or become frightened for 1 minute",
-                    "It can repeat the save at the end it's turn; on success, it is immune to the effects for 24hrs"
-                ]),
-                source : ["KT:AA", 7],
-                prereqeval : function(v) { 
-                    return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("echoing boom (prereq: incompatible with silencer)") != -1;
-                }
-            },
-            "storm blast (prereq: level 5 artificer)" : {
-                name : "Storm Blast",
-                description : desc([
-                    "I upgrade my cannon to fire in a 30-foot cone. Each creature hit must make a Str save,",
-                    "or take 1d6 plus half the damage of Thundermonger and they're knocked prone",
-                    "Using this counts as applying Thundermonger damage. Does not consume ammo."
-                ]),
-                source : ["KT:AA", 7],
-                prereqeval :  function(v) {return classes.known["alternate artificer"].level >= 5;},
-                action : ["action", " (1d6 + 1/2 Thundermonger)"]
-            },
+            // "autoloading magazine (prereq: level 5 artificer)" : {
+            //     name : "Autoloading Magazine",
+            //     description : desc([
+            //         "I automatically reload, I no longer require my bonus action"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     calcChanges : {
+            //         atkAdd : [
+            //             function (fields, v) {
+            //             if (v.theWea.artThundercannon) {
+            //                 fields.Description = fields.Description.replace("Reload(1)", "Auto-Reload");
+            //             }
+            //         },
+            //             "My Thunder Cannon now auto-reloads"
+            //         ]
+            //     },
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;}
+            // },
+            // "cannon improvement (prereq: level 5 artificer)" : {
+            //     name : "Cannon Improvement",
+            //     description : desc([
+            //         "My Thunder Cannon gains a +1 to Attack and Damage, It now counts as magical",
+            //         "I can take this upgrade 2 more times"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
+            //     calcChanges : {
+            //         atkAdd : [
+            //             function (fields, v) {
+            //                 if (v.theWea.artThundercannon) {
+            //                     fields.Description += "; Counts as magical";
+            //                 }
+            //             },
+            //             "My Thunder Cannon attacks count as magical for overcoming resistances and damage reduction."
+            //         ],
+            //         atkCalc : [
+            //             function (fields, v) {
+            //                 if (v.theWea.artThundercannon) {
+            //                     output.extraDmg += 1; output.extraHit += 1;
+            //                 }
+            //             },
+            //             "The Thunder Cannon gains a +1 to Attack and Damage"
+            //         ]
+            //     }
+            // },
+            // "cannon improvement lv2 (prereq: cannon improvement)" : {
+            //     name : "Cannon Improvement Lv2",
+            //     description : desc([
+            //         "My Thunder Cannon gains another +1 to Attack and Damage",
+            //         "I can take this upgrade 1 more time"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     prereqeval : function(v) { 
+            //         return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("cannon improvement (prereq: level 5 artificer)") != -1;
+            //     },
+            //     calcChanges : {
+            //         atkCalc : [
+            //             function (fields, v) {
+            //                 if (v.theWea.artThundercannon) {
+            //                     output.extraDmg += 1; output.extraHit += 1;
+            //                 }
+            //             },
+            //             "The Thunder Cannon gains another +1 to Attack and Damage"
+            //         ]
+            //     }
+            // },
+            // "cannon improvement lv3 (prereq: cannon improvement lv2)" : {
+            //     name : "Cannon Improvement Lv3",
+            //     description : desc([
+            //         "My Thunder Cannon gains another +1 to Attack and Damage"
+            //     ]),
+            //     source : ["KT:AA", 6],
+            //     prereqeval : function(v) { 
+            //         return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("cannon improvement lv2 (prereq: cannon improvement)") != -1;
+            //     },
+            //     calcChanges : {
+            //         atkCalc : [
+            //             function (fields, v) {
+            //                 if (v.theWea.artThundercannon) {
+            //                     output.extraDmg += 1; output.extraHit += 1;
+            //                 }
+            //             },
+            //             "The Thunder Cannon gains another +1 to Attack and Damage"
+            //         ]
+            //     }
+            // },
+            // "divination scope (prereq: level 5 artificer)" : {
+            //     name : "Divination Scope",
+            //     description : desc([
+            //         "The scope has 3 charges, As a bonus action I can use 1 charge to cast Hunter's Mark,",
+            //         "as an action I can use 2 to cast See Invisibility, or 3 to cast Clairvoyance"
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
+            //     usages : 3,
+            //     recovery : "long rest",
+            //     eval : function(lvl, chc) {
+            //         changeSpellsOnMagicItem(true, "thunder cannon", "Divination Scope", ["hunter's mark", "see invisibility", "clairvoyance"], ["1","2","3"], [{},{},{time : "1 a", changes : "I can cast clairvoyance as an action instead of over 10 minutes."}]);
+            //     },
+            //     removeeval : function(lvl, chc) {
+            //         changeSpellsOnMagicItem(false, "thunder cannon", "Divination Scope", ["hunter's mark", "see invisibility", "clairvoyance"], ["1","2","3"]);
+            //     }
+            // },
+            // "harpoon reel (prereq: level 5 artificer)" : {
+            //     name : "Harpoon Reel",
+            //     description : "See Notes sheet for info on how this works",
+            //     source : ["KT:AA", 7],
+            //     action : ["bonus action", " [Reel]"],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 5;},
+            //     weaponOptions : {
+            //         regExpSearch : /^(?=.*harpoon)(?=.*reel).*$/i,
+            //         name : "Harpoon Reel",
+            //         source : ["KT:AA", 7],
+            //         list : "alternate artificer",
+            //         ability : 2,
+            //         type : "Artificer Weapon",
+            //         damage : [1, 6, "piercing"],
+            //         range : "30/60 ft",
+            //         description : "60 ft cord, Must be Reeled in, See notes sheet",
+            //         abilitytodamage : true
+            //     },
+            //     weaponsAdd : ["Harpoon Reel"],
+            //     toNotesPage : [{
+            //         name : "Upgrade-Harpoon Reel",
+            //         note : [
+            //             "I can attack a surface, object, or creature with a harpoon",
+            //             "It has a range of 30/60 feet, and deals 1d6 piercing dmg",
+            //             "I must Reel it in before I can use it again.",
+            //             "It impales the target hit, connecting us with a 60ft cord", 
+            //             "Dragging the person connected causes the one moving to move at half speed",
+            //             "Unless they are a size larger As an action it can remove it, but it takes 1d6 dmg",
+            //             "If the target is medium or larger; using my bonus action, I can pull myself to it",
+            //             "If the target is Small or smaller I pull it to me. I can also just disconnect the cord"
+            //         ],
+            //         source : ["KT:AA", 7]
+            //     }]
+            // },
+            // "terrifying thunder (prereq: echoing boom)" : {
+            //     name : "Terrifying Thunder",
+            //     description : desc([
+            //         "The first time I hit a target, it is deaf until the end of it's next turn",
+            //         "It must also make a Wis save against my spell save DC or become frightened for 1 minute",
+            //         "It can repeat the save at the end it's turn; on success, it is immune to the effects for 24hrs"
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     prereqeval : function(v) { 
+            //         return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("echoing boom (prereq: incompatible with silencer)") != -1;
+            //     }
+            // },
+            // "storm blast (prereq: level 5 artificer)" : {
+            //     name : "Storm Blast",
+            //     description : desc([
+            //         "I upgrade my cannon to fire in a 30-foot cone. Each creature hit must make a Str save,",
+            //         "or take 1d6 plus half the damage of Thundermonger and they're knocked prone",
+            //         "Using this counts as applying Thundermonger damage. Does not consume ammo."
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     prereqeval :  function(v) {return classes.known["alternate artificer"].level >= 5;},
+            //     action : ["action", " (1d6 + 1/2 Thundermonger)"]
+            // },
 
-            //9th Level Upgrades
+            // //9th Level Upgrades
 
-            "shock harpoon (prereq: level 9 artificer, harpoon reel)" : {
-                name : "Shock Harpoon",
-                description : desc([
-                    "As a bonus action, If the Harpoon is in a target, and I have not used Thundermonger yet",
-                    "I can do it's damage as lightning damage to the target and it is stunned unless:",
-                    "It succeeds on a Con save against my spell save DC. To use this again, I have to reel it in"
-                ]),
-                source : ["KT:AA", 7],
-                action : ["bonus action", "[Harpoon Reel]"],
-                prereqeval : function(v) { 
-                    return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("harpoon reel (prereq: level 5 artificer)") != -1 && classes.known["alternate artificer"].level >= 9;
-                }
-            },
-            "synaptic feedback (prereq: level 9 artificer)" : {
-                name : "Synaptic Feedback",
-                description : desc([
-                    "When I deal lightning damage with my cannon, my walking speed increases by 10ft",
-                    "and I can take the Dash or Disengage actions as a bonus action.",
-                    "This boost lasts until the start of my next turn."
-                ]),
-                action : [
-                    ["bonus action", "Dash (Synaptic Feedback)"],
-                    ["bonus action", "Disengage (Synaptic Feedback)"]
-                ],
-                source : ["KT:AA", 7],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 9;}
-            },
-            "thunder jump (prereq: level 9 artificer)" : {
-                name : "Thunder Jump",
-                description : desc([
-                    "As an action I can cast Thunder Step. This counts as applying my Thundermonger damage",
-                    "I cannot use this ability again until I complete a short or long rest."
-                ]),
-                source : ["KT:AA", 7],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 9;},
-                usages : 1,
-                recovery : "short rest",
-                eval : function(lvl, chc) {
-                    changeSpellsOnMagicItem(true, "thunder cannon", "Thunder Jump", ["thunder step"], ["oncesr"]);
-                },
-                removeeval : function(lvl, chc) {
-                    changeSpellsOnMagicItem(false, "thunder cannon", "Thunder Jump", ["thunder step"], ["oncesr"]);
-                }
-            },
+            // "shock harpoon (prereq: level 9 artificer, harpoon reel)" : {
+            //     name : "Shock Harpoon",
+            //     description : desc([
+            //         "As a bonus action, If the Harpoon is in a target, and I have not used Thundermonger yet",
+            //         "I can do it's damage as lightning damage to the target and it is stunned unless:",
+            //         "It succeeds on a Con save against my spell save DC. To use this again, I have to reel it in"
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     action : ["bonus action", "[Harpoon Reel]"],
+            //     prereqeval : function(v) { 
+            //         return GetFeatureChoice("class", "alternate artificer", "subclassfeature3", true).indexOf("harpoon reel (prereq: level 5 artificer)") != -1 && classes.known["alternate artificer"].level >= 9;
+            //     }
+            // },
+            // "synaptic feedback (prereq: level 9 artificer)" : {
+            //     name : "Synaptic Feedback",
+            //     description : desc([
+            //         "When I deal lightning damage with my cannon, my walking speed increases by 10ft",
+            //         "and I can take the Dash or Disengage actions as a bonus action.",
+            //         "This boost lasts until the start of my next turn."
+            //     ]),
+            //     action : [
+            //         ["bonus action", "Dash (Synaptic Feedback)"],
+            //         ["bonus action", "Disengage (Synaptic Feedback)"]
+            //     ],
+            //     source : ["KT:AA", 7],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 9;}
+            // },
+            // "thunder jump (prereq: level 9 artificer)" : {
+            //     name : "Thunder Jump",
+            //     description : desc([
+            //         "As an action I can cast Thunder Step. This counts as applying my Thundermonger damage",
+            //         "I cannot use this ability again until I complete a short or long rest."
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 9;},
+            //     usages : 1,
+            //     recovery : "short rest",
+            //     eval : function(lvl, chc) {
+            //         changeSpellsOnMagicItem(true, "thunder cannon", "Thunder Jump", ["thunder step"], ["oncesr"]);
+            //     },
+            //     removeeval : function(lvl, chc) {
+            //         changeSpellsOnMagicItem(false, "thunder cannon", "Thunder Jump", ["thunder step"], ["oncesr"]);
+            //     }
+            // },
 
-            //11th Level Upgrades
+            // //11th Level Upgrades
 
-            "blast radius (prereq: level 11 artificer)" : {
-                name : "Blast Radius",
-                description : desc([
-                    "My Devastating Blast now deals half my weapon damage + half Thundermonger damage",
-                    "When the target is within 30 ft of me"
-                ]),
-                source : ["KT:AA", 7],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 11;}
-            },
-            "stabilization (prereq: level 11 artificer)" : {
-                name : "Stabilization",
-                description : desc([
-                    "Being prone doesn't cause disadvantage when using my Thunder Cannon",
-                    "If me or my target hasn't moved sense my last attack, I get advantage"
-                ]),
-                source : ["KT:AA", 7],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 11;}
-            },
+            // "blast radius (prereq: level 11 artificer)" : {
+            //     name : "Blast Radius",
+            //     description : desc([
+            //         "My Devastating Blast now deals half my weapon damage + half Thundermonger damage",
+            //         "When the target is within 30 ft of me"
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 11;}
+            // },
+            // "stabilization (prereq: level 11 artificer)" : {
+            //     name : "Stabilization",
+            //     description : desc([
+            //         "Being prone doesn't cause disadvantage when using my Thunder Cannon",
+            //         "If me or my target hasn't moved sense my last attack, I get advantage"
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 11;}
+            // },
 
-            //15th Level Upgrades
+            // //15th Level Upgrades
 
-            "mortar shells (prereq: level 15 artificer)" : {
-                name : "Mortar Shells",
-                description : desc([
-                    "Pick a point within range, and make an attack roll against all creatures in a 5ft radius",
-                    "Creatures hit take weapon damage plus half of Thundermonger's damage (using it)",
-                    "Creatures do not benefit from cover against this unless they have overhead cover as well"
-                ]),
-                source : ["KT:AA", 7],
-                prereqeval : function(v) {return classes.known["alternate artificer"].level >= 15;},
-                action : ["action", ""]
-            }
+            // "mortar shells (prereq: level 15 artificer)" : {
+            //     name : "Mortar Shells",
+            //     description : desc([
+            //         "Pick a point within range, and make an attack roll against all creatures in a 5ft radius",
+            //         "Creatures hit take weapon damage plus half of Thundermonger's damage (using it)",
+            //         "Creatures do not benefit from cover against this unless they have overhead cover as well"
+            //     ]),
+            //     source : ["KT:AA", 7],
+            //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 15;},
+            //     action : ["action", ""]
+            // }
         },
         "subclassfeature5" : {
             name : "Devastating Blasts",
@@ -2623,45 +2625,85 @@ changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, chang
 };
 
 //*****************************************************\\
-//*                   -Cannonsmith-                   *\\
+//*                  -Thundersmith-                   *\\
 //*****************************************************\\
 
-MagicItemsList["thunder cannon"] = {
-    name : "Thunder Cannon",
-    source : ["KT:AA", 5],
+MagicItemsList["stormforged weapon"] = {
+    name : "Stormforged Weapon",
+    source : ["KT:AA", 22],
     type : "wondrous item",
     rarity : "very rare",
     extraTooltip : "Attunement (creator only)",
     attunement : true,
-    weight : 15,
-    prerequisite : "Only for a Cannonsmith Artificer",
+    prerequisite : "Only for a Thundersmith Artificer",
     prereqeval : function(v) {
-        return classes.known["alternate artificer"].subclass == "alternate artificer-cannonsmith";
+        return classes.known["alternate artificer"].subclass == "alternate artificer-thundersmith";
     },
     allowDuplicates : true,
     description : "A two-handed firearm that you are proficient with and does 2d6 piercing damage. It has a range of 60/180 ft. This weapon can be upgraded with several upgrades down the line. If broken, It can be remade over 3 days of work (8h each). Spending 200 gp worth of metal and other raw materials.",
     descriptionFull : "You are proficient with the Thunder Cannon. The firearm is a two-handed ranged weapon that deals 2d6 piercing damage. Its normal range is 60 feet, and its maximum range is 180 feet. " + "\n   " + "Loud. Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack." + "\n   " + "Reload(1). Once fired, it must be reloaded as a bonus action." + "\n   " + "If you lose your Thunder Cannon, you can create a new one over the course of three days of work (eight hours each day) by expending 200 gp worth of metal and other raw materials.",
-    weaponOptions : {
+    weaponOptions : [{
         regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
         name : "Thunder Cannon",
-        source : ["KT:AA", 5],
+        source : ["KT:AA", 22],
         list : "alternate artificer",
         ability : 2,
         type : "Artificer Weapon",
-        damage : [2, 6, "piercing"],
+        damage : [1, 12, "piercing"],
         range : "60/180 ft",
         weight : 15,
-        description : "Ammunition, Two-handed, Loud, Reload(1)",
+        description : "Ammunition, Two-handed, Loud, Loading",
         abilitytodamage : true,
-        ammo : "thunder rounds",
+        ammo : "storm rounds",
         artThundercannon : true
-    },
-    weaponsAdd : ["Thunder Cannon"],
-    action : ["bonus action", " Reload"],
+    },{
+        regExpSearch : /^(?=.*Hand)(?=.*cannon).*$/i,
+        name : "Hand Cannon",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 2,
+        type : "Artificer Weapon",
+        damage : [1, 8, "piercing"],
+        range : "30/90 ft",
+        weight : 5,
+        description : "Ammunition, Light, Loud, Loading",
+        abilitytodamage : true,
+        ammo : "storm rounds",
+        artHandcannon : true
+    },{
+        regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
+        name : "Kinetic Hammer",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 1,
+        type : "Artificer Weapon",
+        damage : [1, 10, "bludgeoning"],
+        range : "Melee",
+        weight : 10,
+        description : "Two-Handed, Heavy, Loud, Charged",
+        abilitytodamage : true,
+        artKineticHammer : true
+    },{
+        regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
+        name : "Charged Blade",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 1,
+        type : "Artificer Weapon",
+        damage : [1, 8, "slashing"],
+        range : "Melee",
+        weight : 3,
+        description : "Finesse, Loud, Charged",
+        abilitytodamage : true,
+        artChargedBlade : true
+    }],
     calcChanges : {
         atkAdd : [
             function (fields, v) {
                 if (v.theWea.artThundercannon) fields.Proficiency = true;
+                if (v.theWea.artHandcannon) fields.Proficiency = true;
+                if (v.theWea.artKineticHammer) fields.Proficiency = true;
+                if (v.theWea.artChargedBlade) fields.Proficiency = true;
             },
             ""
         ]
@@ -2671,93 +2713,93 @@ MagicItemsList["thunder cannon"] = {
     spellChanges : {}
 };
 
-AmmoList["thunder rounds"] = {
-    name : "Thunder Rounds",
+AmmoList["storm rounds"] = {
+    name : "Storm Rounds",
     source : ["KT:AA", 5],
     weight : 0.2, // based on the weight of renaissance bullets from the DMG
     icon : "Bullets",
     checks : [".Bullet"],
     display : 50,
-    invName : "Thunder Rounds",
-    alternatives : [/^((?=.*thunder)|(?=.*rounds?)).*$/i]
+    invName : "Storm Rounds",
+    alternatives : [/^((?=.*storm)|(?=.*rounds?)).*$/i]
 };
 
 //*****************************************************\\
 //*                   -Gadgetsmith-                   *\\
 //*****************************************************\\
 
-MagicItemsList["gadgetsmith's gadgets"] = {
-    name : "Gadgetsmith's Gadgets",
-    source : ["KT:AA", 5],
-    type : "wondrous item",
-    rarity : "artifact",
-    extraTooltip : "Attunement (creator only)",
-    attunement : true,
-    prerequisite : "Only for a Gadgetsmith Artificer",
-    prereqeval : function(v) {
-        return classes.known["alternate artificer"].subclass == "alternate artificer-gadgetsmith";
-    },
-    allowDuplicates : true,
-    description : "A bunch of gadgets and tools that you have that have all kinds of functions. I can get get new gadgets and tools from my Specialization Upgrade feature. (This is just a item I added to hold the spells from the upgrades)",
-    descriptionFull : "A bunch of gadgets and tools that you have that have all kinds of functions. I can get get new gadgets and tools from my Specialization Upgrade feature. (This is just a item I added to hold the spells from the upgrades)",
-    spellcastingBonus : [],
-    spellFirstColTitle : "Rs",
-    spellChanges : {}
-};
+// MagicItemsList["gadgetsmith's gadgets"] = {
+//     name : "Gadgetsmith's Gadgets",
+//     source : ["KT:AA", 5],
+//     type : "wondrous item",
+//     rarity : "artifact",
+//     extraTooltip : "Attunement (creator only)",
+//     attunement : true,
+//     prerequisite : "Only for a Gadgetsmith Artificer",
+//     prereqeval : function(v) {
+//         return classes.known["alternate artificer"].subclass == "alternate artificer-gadgetsmith";
+//     },
+//     allowDuplicates : true,
+//     description : "A bunch of gadgets and tools that you have that have all kinds of functions. I can get get new gadgets and tools from my Specialization Upgrade feature. (This is just a item I added to hold the spells from the upgrades)",
+//     descriptionFull : "A bunch of gadgets and tools that you have that have all kinds of functions. I can get get new gadgets and tools from my Specialization Upgrade feature. (This is just a item I added to hold the spells from the upgrades)",
+//     spellcastingBonus : [],
+//     spellFirstColTitle : "Rs",
+//     spellChanges : {}
+// };
 
-WeaponsList["boomerang of hitting"] = {
-    regExpSearch : /^(?=.*boomerang)(?=.*hitting).*$/i,
-    name : "Boomerang of Hitting",
-    source : ["KT:AA", 8],
-    list : "alternate artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 4, "bludgeoning"],
-    range : "Melee, 30/90 ft",
-    description : "Finesse; Thrown, Returns; Special",
-    abilitytodamage : true,
-    artBoomerang : true
-};
-WeaponsList["impact gauntlet"] = {
-    regExpSearch : /^(?=.*impact)(?=.*gauntlet).*$/i,
-    name : "Impact Gauntlet",
-    source : ["KT:AA", 9],
-    list : "alternate artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 8, "bludgeoning"],
-    range : "Melee",
-    description : "Finesse, Light, Special",
-    abilitytodamage : true,
-    artGauntlet : true
-};
-WeaponsList["repeating hand crossbow"] = {
-    regExpSearch : /^(?=.*repeating)(?=.*crossbow).*$/i,
-    name : "Repeating Hand Crossbow",
-    source : ["KT:AA", 9],
-    list : "alternate artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : [1, 6, "piercing"],
-    range : "30/120 ft",
-    description : "Ammunition, Light, Special, Auto-loading",
-    abilitytodamage : true,
-    ammo : "Bolts",
-    artRepeatCrossbow : true
-};
-WeaponsList["lightning baton"] = {
-    regExpSearch : /^(?=.*lightning)(?=.*baton).*$/i,
-    name : "Lightning Baton",
-    source : ["KT:AA", 9],
-    list : "alternate artificer",
-    ability : 2,
-    type : "Artificer Weapon",
-    damage : ["1d4/1d4", "", "bludgeoning"],
-    range : "30/120 ft",
-    description : "Finesse, Light, 1d4 is lightning, Con save vs. spell save DC on crit; fail - is stunned until my next turn",
-    abilitytodamage : true,
-    artBaton : true
-};
+// WeaponsList["boomerang of hitting"] = {
+//     regExpSearch : /^(?=.*boomerang)(?=.*hitting).*$/i,
+//     name : "Boomerang of Hitting",
+//     source : ["KT:AA", 8],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 4, "bludgeoning"],
+//     range : "Melee, 30/90 ft",
+//     description : "Finesse; Thrown, Returns; Special",
+//     abilitytodamage : true,
+//     artBoomerang : true
+// };
+// WeaponsList["impact gauntlet"] = {
+//     regExpSearch : /^(?=.*impact)(?=.*gauntlet).*$/i,
+//     name : "Impact Gauntlet",
+//     source : ["KT:AA", 9],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 8, "bludgeoning"],
+//     range : "Melee",
+//     description : "Finesse, Light, Special",
+//     abilitytodamage : true,
+//     artGauntlet : true
+// };
+// WeaponsList["repeating hand crossbow"] = {
+//     regExpSearch : /^(?=.*repeating)(?=.*crossbow).*$/i,
+//     name : "Repeating Hand Crossbow",
+//     source : ["KT:AA", 9],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : [1, 6, "piercing"],
+//     range : "30/120 ft",
+//     description : "Ammunition, Light, Special, Auto-loading",
+//     abilitytodamage : true,
+//     ammo : "Bolts",
+//     artRepeatCrossbow : true
+// };
+// WeaponsList["lightning baton"] = {
+//     regExpSearch : /^(?=.*lightning)(?=.*baton).*$/i,
+//     name : "Lightning Baton",
+//     source : ["KT:AA", 9],
+//     list : "alternate artificer",
+//     ability : 2,
+//     type : "Artificer Weapon",
+//     damage : ["1d4/1d4", "", "bludgeoning"],
+//     range : "30/120 ft",
+//     description : "Finesse, Light, 1d4 is lightning, Con save vs. spell save DC on crit; fail - is stunned until my next turn",
+//     abilitytodamage : true,
+//     artBaton : true
+// };
 
 //*****************************************************\\
 //*                    -Golemsmith-                   *\\
