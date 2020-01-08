@@ -10,11 +10,11 @@
 /*  
     !INFORMATION!
     Subject:    Class
-    Effect:     This script adds a class called the "alternate Artificer" and will add its 7 subclasses once completed.
+    Effect:     This script adds a class called the "Alternate Artificer" and will add its 7 subclasses once completed.
 
                 This class has been made by /u/KibblesTasty on the subreddit r/UnearthedArcana
-                It can be found here: http://redd.it/cal77v
-                This code is based on v1.7 of /u/KibblesTasty's work (2019-04-11)
+                It can be found here: http://redd.it/e8rbvz
+                This code is based on v2.0.2 of /u/KibblesTasty's work (2019-04-11)
 
                 This script was based upon most of MPMB's scripts.
 
@@ -41,9 +41,9 @@
  */
 /**
  * TODO: Changes and automation
- * | Rewrite the Cannonsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0 of the class and v13 of the sheet
- * | Rewrite the Gadgetsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0 of the class and v13 of the sheet
- * | Rewrite the Warsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0 of the class and v13 of the sheet
+ * | Rewrite the Cannonsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0.2 of the class and v13 of the sheet
+ * | Rewrite the Gadgetsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0.2 of the class and v13 of the sheet
+ * | Rewrite the Warsmith subclass to be closer to MPMB's standards, fix bugs, and update to 2.0.2 of the class and v13 of the sheet
  * | (Undo this) Move Specialization Upgrade to each subclass rather then having It in the main class
  * | Automate the Gadgetsmith's Mechanical Familiar upgrade
  * | Write the code for Golemsmith
@@ -52,14 +52,14 @@
  * | Write the code for Wandsmith
  */
 
-var iFileName = "Kibbles Alternate Artificer v2.0 [KibblesTasty's work, transcribed by Redmecha].js";
+var iFileName = "Kibbles Alternate Artificer v2.0.2 [KibblesTasty's work, transcribed by Redmecha].js";
 RequiredSheetVersion(13);
 
 SourceList["KT:AA"] = {
-    name : "/u/KibblesTasty: Alternate Artificer (v2.0)",
+    name : "/u/KibblesTasty: Alternate Artificer (v2.0.2)",
     abbreviation : "KT:AA",
     group : "Reddit/r/UnearthedArcana",
-    url : "http://redd.it/cal77v",
+    url : "http://redd.it/e8rbvz",
     date : "2019/05/08"
 };
 
@@ -67,12 +67,16 @@ SourceList["KT:AA"] = {
 [
     // 1st level
     "alarm",
+    "arcane ablation",
+    "arcane weapon",
+    "bond item",
     "catapult",
     "comprehend languages",
     "cure wounds",
     "detect magic",
     "disguise self",
     "expeditious retreat",
+    "fall",
     "false life",
     "feather fall",
     "grease",
@@ -81,7 +85,9 @@ SourceList["KT:AA"] = {
     "jump",
     "longstrider",
     "sanctuary",
+    "seeking projectile",
     "snare",
+    "unburden",
     "unseen servant",
     "tenser's floating disk",
     // 2nd level
@@ -97,19 +103,25 @@ SourceList["KT:AA"] = {
     "find traps",
     "heat metal",
     "hold person",
+    "imbue luck",
     "invisibility",
     "knock",
+    "lightning charged",
     "locate object",
     "magic weapon",
     "magic mouth",
+    "nystul's magic aura",
     "protection from poison",
     "see invisibility",
     "spider climb",
+    "thunderburst mine",
     // 3rd level
     "dispel magic",
+    "dispel construct",
     "elemental weapon",
     "feign death",
     "flame arrows",
+    "fireburst mine",
     "gaseous form",
     "glyph of warding",
     "life transference",
@@ -132,6 +144,7 @@ SourceList["KT:AA"] = {
     "greater invisibility",
     "leomund's secret chest",
     "otiluke's resilient sphere",
+    "repair",
     "stone shape",
     "stoneskin",
     "sickening radiance",
@@ -146,6 +159,7 @@ SourceList["KT:AA"] = {
     "telekinesis",
     "teleportation circle",
     "transmute rock",
+    "vorpal weapon",
     "wall of stone"
 ].forEach( function (s) {
     if(SpellsList[s] && SpellsList[s].classes && SpellsList[s].classes.indexOf("alternate artificer") === -1) SpellsList[s].classes.push("alternate artificer");
@@ -183,7 +197,7 @@ ClassList["alternate artificer"] = {
         "\n \u2022 Thieves' tools and a dungeoneer's pack." + 
         "\n\nAlternatively, choose 5d4 \xD7 10 gp worth of starting equipment instead of both the class' and the background's starting equipment.",
     subclasses : ["Artificer Specialization", [
-        "alternate artificer-thundersmith",
+        ////"alternate artificer-thundersmith",
         ////"alternate artificer-gadgetsmith",
         ////"alternate artificer-golemsmith",
         ////"alternate artificer-infusionsmith",
@@ -306,7 +320,7 @@ ClassList["alternate artificer"] = {
             "stormforged weapon" : {
                 name : "Stormforged Weapon",
                 description : desc([
-                    "I get a weapon from the Thundersmith subclass, if it uses ammo I know how to make it"
+                    "I get a weapon from the Thundersmith subclass, I get prof and how to make the ammo"
                 ]),
                 source : ["KT:AA", 4]
                 //TODO: Add automation
@@ -317,6 +331,7 @@ ClassList["alternate artificer"] = {
                     "I get the Infused Armament feature from the Infusionsmith subclass"
                 ]),
                 source : ["KT:AA", 4]
+                //TODO: Add automation
             },
             "alchemical reagents pouch" : {
                 name : "Alchemical Reagents Pouch",
@@ -332,6 +347,7 @@ ClassList["alternate artificer"] = {
                     "I get an unrestricted Upgrade from the Gadgetsmith subclass"
                 ]),
                 source : ["KT:AA", 4]
+                //TODO: Add automation
             }
         },
         "wondrous items proficiency" : {
@@ -365,6 +381,7 @@ ClassList["alternate artificer"] = {
             source : ["KT:AA", 4],
             minlevel : 11,
             description : desc([
+                "I can cast Detect Magic and Identify at will",
                 "I have adv on all Int(Arcana) checks about magical traps, effects, or runes"
             ]),
             skillstxt : "adv on Int(Arcana) checks about magical traps, effects, or runes"
@@ -389,7 +406,8 @@ ClassList["alternate artificer"] = {
 };
 
 //***************************************************-Subclasses-*****************************************************\\
-
+//#region
+/*
 ClassSubList["alternate artificer-thundersmith"] = {
     regExpSearch : /thundersmith/i,
     subname : "Thundersmith",
@@ -858,7 +876,7 @@ ClassSubList["alternate artificer-thundersmith"] = {
         }
     }
 };
-/*
+
 ClassSubList["alternate artificer-gadgetsmith"] = {
 
     regExpSearch : /gadgetsmith/i,
@@ -2413,21 +2431,14 @@ ClassSubList["alternate artificer-warsmith"] = {
         }
     }
 };
-
-// ClassSubList["alternate artificer-wandsmith"] = {
-//     regExpSearch : /wandsmith/i,
-//     subname : "Wandsmith",
-//     features : {
-
-//     }
-// };
 */
+//#endregion
 //***********************************************-Extra Class/Subclass Stuff-***********************************************\\
 
 //* 1st Level Spells
 SpellsList["arcane ablation"] = {
     name : "Arcane Ablation",
-	source : ["KT:AA", 29],
+	source : ["KT:AA", 36],
 	classes : ["alternate artificer"],
     level : 1,
     school : "Trans",
@@ -2440,7 +2451,7 @@ SpellsList["arcane ablation"] = {
 };
 SpellsList["arcane weapon"] = {
     name : "Arcane Weapon",
-	source : ["KT:AA", 29],
+	source : ["KT:AA", 36],
 	classes : ["alternate artificer"],
     level : 1,
     school : "Trans",
@@ -2453,7 +2464,7 @@ SpellsList["arcane weapon"] = {
 };
 SpellsList["bond item"] = {
     name : "Bond Item",
-	source : ["KT:AA", 29],
+	source : ["KT:AA", 36],
 	classes : ["alternate artificer"],
     level : 1,
     school : "Conj",
@@ -2467,7 +2478,7 @@ SpellsList["bond item"] = {
 };
 SpellsList["fall"] = {
     name : "Fall",
-	source : ["KT:AA", 29],
+	source : ["KT:AA", 36],
 	classes : ["alternate artificer","sorcerer","wizard"],
     level : 1,
     school : "Trans",
@@ -2478,9 +2489,22 @@ SpellsList["fall"] = {
 	description : "Change which way is down for you, fall up to 500 ft, all normal effects apply",
 	descriptionFull : "You alter gravity for yourself, causing you to reorient which way is down for you until the end of your turn. You can pick any direction to fall as if under the effect of gravity, falling up to 500 feet before the spell ends." + "\n   " + "If you collide with something during this time, you take falling damage as normal, but you can control your fall as you could under normal conditions by holding onto objects or move along a surface according to your new orientation as normal until your turn ends and gravity returns to normal."
 };
+SpellsList["seeking projectile"] = {
+    name : "Seeking Projectile",
+	source : ["KT:AA", 36],
+	classes : ["alternate artificer"],
+    level : 1,
+    school : "Trans",
+	time : "1 a",
+    range : "Touch",
+	components : "V,S",
+    duration : "Conc, 10 min",
+	description : "1 ammo/thrown, add spell mod to atk roll, if >= 20 crit",
+	descriptionFull : "You touch a piece of ammunition or weapon with the thrown property imbuing it with the property of seeking its target. When an ranged attack roll is made with that weapon, the attack roll can add your spell casting modifier to the value on the dice. If that makes the value on the die a 20 or more, the attack is a critical hit as if a 20 was rolled. After making the attack roll, the spell ends."
+};
 SpellsList["unburden"] = {
     name : "Unburden",
-	source : ["KT:AA", 29],
+	source : ["KT:AA", 36],
 	classes : ["alternate artificer"],
     level : 1,
     school : "Trans",
@@ -2494,7 +2518,7 @@ SpellsList["unburden"] = {
 //* 2nd Level Spells
 SpellsList["imbue luck"] = {
     name : "Imbue Luck",
-	source : ["KT:AA", 29],
+	source : ["KT:AA", 36],
 	classes : ["alternate artificer"],
     level : 2,
     school : "Abjur",
@@ -2507,7 +2531,7 @@ SpellsList["imbue luck"] = {
 };
 SpellsList["lightning charged"] = {
     name : "Lightning Charged",
-	source : ["KT:AA", 29],
+	source : ["KT:AA", 37],
 	classes : ["alternate artificer"],
     level : 2,
     school : "Evoc",
@@ -2521,7 +2545,7 @@ SpellsList["lightning charged"] = {
 };
 SpellsList["thunderburst mine"] = {
     name : "Thunderburst Mine",
-	source : ["KT:AA", 30],
+	source : ["KT:AA", 37],
 	classes : ["alternate artificer"],
     level : 2,
     school : "Abjur",
@@ -2536,7 +2560,7 @@ SpellsList["thunderburst mine"] = {
 //* 3rd Level Spells
 SpellsList["dispel construct"] = {
     name : "Dispel Construct",
-	source : ["KT:AA", 30],
+	source : ["KT:AA", 37],
 	classes : ["alternate artificer"],
     level : 3,
     school : "Abjur",
@@ -2550,7 +2574,7 @@ SpellsList["dispel construct"] = {
 };
 SpellsList["fireburst mine"] = {
     name : "Fireburst Mine",
-	source : ["KT:AA", 30],
+	source : ["KT:AA", 37],
 	classes : ["alternate artificer"],
     level : 3,
     school : "Abjur",
@@ -2565,7 +2589,7 @@ SpellsList["fireburst mine"] = {
 //* 4th Level Spells
 SpellsList["repair"] = {
     name : "Repair",
-	source : ["KT:AA", 30],
+	source : ["KT:AA", 37],
 	classes : ["alternate artificer"],
     level : 4,
     school : "Trans",
@@ -2579,7 +2603,7 @@ SpellsList["repair"] = {
 //* 5th Level Spells
 SpellsList["vorpal weapon"] = {
     name : "Vorpal Weapon",
-	source : ["KT:AA", 30],
+	source : ["KT:AA", 37],
 	classes : ["alternate artificer"],
     level : 5,
     school : "Trans",
@@ -2592,137 +2616,137 @@ SpellsList["vorpal weapon"] = {
 };
 
 
-/**
- * changeSpellsOnMagicItem
- * @param {boolean} AddRemove true to add, false to remove
- * @param {String} item the name of the item to add/remove from
- * @param {String} upgrade the name of the upgrade that adds the spells
- * @param {String[]} spells the names of the spells to add
- * @param {String[]} fCol the String you want in the first colum of each spell
- * @param {Object[]} changes the Object of what you want changed for each spell if any
- */
-changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, changes) {
-    var theItemBonus = MagicItemsList[item].spellcastingBonus;
-    var theItemChanges = MagicItemsList[item].spellChanges;
-    for (var i = 0; i < spells.length; i++) {
-        var theSpellObj = {
-            name : upgrade,
-            spells : [spells[i]],
-            selection : [spells[i]],
-            firstCol : fCol[i]
-        };
-        if (AddRemove && theItemBonus.indexOf(theSpellObj) === -1) {
-            theItemBonus.push(theSpellObj);
-            if (changes) {theItemChanges[spells[i]] = changes[i];}
-        } else {
-            theItemBonus.splice(theItemBonus.indexOf(theSpellObj), 1);
-            delete theItemChanges[spells[i]];
-        }
-    }
-    //Force apply updates to the magic Item(need to get the spellChanges to work)
-    RemoveMagicItem(item);
-    AddMagicItem(item);
-};
+// /**
+//  * changeSpellsOnMagicItem
+//  * @param {boolean} AddRemove true to add, false to remove
+//  * @param {String} item the name of the item to add/remove from
+//  * @param {String} upgrade the name of the upgrade that adds the spells
+//  * @param {String[]} spells the names of the spells to add
+//  * @param {String[]} fCol the String you want in the first colum of each spell
+//  * @param {Object[]} changes the Object of what you want changed for each spell if any
+//  */
+// changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, changes) {
+//     var theItemBonus = MagicItemsList[item].spellcastingBonus;
+//     var theItemChanges = MagicItemsList[item].spellChanges;
+//     for (var i = 0; i < spells.length; i++) {
+//         var theSpellObj = {
+//             name : upgrade,
+//             spells : [spells[i]],
+//             selection : [spells[i]],
+//             firstCol : fCol[i]
+//         };
+//         if (AddRemove && theItemBonus.indexOf(theSpellObj) === -1) {
+//             theItemBonus.push(theSpellObj);
+//             if (changes) {theItemChanges[spells[i]] = changes[i];}
+//         } else {
+//             theItemBonus.splice(theItemBonus.indexOf(theSpellObj), 1);
+//             delete theItemChanges[spells[i]];
+//         }
+//     }
+//     //Force apply updates to the magic Item(need to get the spellChanges to work)
+//     RemoveMagicItem(item);
+//     AddMagicItem(item);
+// };
 
 //*****************************************************\\
 //*                  -Thundersmith-                   *\\
 //*****************************************************\\
 
-MagicItemsList["stormforged weapon"] = {
-    name : "Stormforged Weapon",
-    source : ["KT:AA", 22],
-    type : "wondrous item",
-    rarity : "very rare",
-    extraTooltip : "Attunement (creator only)",
-    attunement : true,
-    prerequisite : "Only for a Thundersmith Artificer",
-    prereqeval : function(v) {
-        return classes.known["alternate artificer"].subclass == "alternate artificer-thundersmith";
-    },
-    allowDuplicates : true,
-    description : "A two-handed firearm that you are proficient with and does 2d6 piercing damage. It has a range of 60/180 ft. This weapon can be upgraded with several upgrades down the line. If broken, It can be remade over 3 days of work (8h each). Spending 200 gp worth of metal and other raw materials.",
-    descriptionFull : "You are proficient with the Thunder Cannon. The firearm is a two-handed ranged weapon that deals 2d6 piercing damage. Its normal range is 60 feet, and its maximum range is 180 feet. " + "\n   " + "Loud. Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack." + "\n   " + "Reload(1). Once fired, it must be reloaded as a bonus action." + "\n   " + "If you lose your Thunder Cannon, you can create a new one over the course of three days of work (eight hours each day) by expending 200 gp worth of metal and other raw materials.",
-    weaponOptions : [{
-        regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
-        name : "Thunder Cannon",
-        source : ["KT:AA", 22],
-        list : "alternate artificer",
-        ability : 2,
-        type : "Artificer Weapon",
-        damage : [1, 12, "piercing"],
-        range : "60/180 ft",
-        weight : 15,
-        description : "Ammunition, Two-handed, Loud, Loading",
-        abilitytodamage : true,
-        ammo : "storm rounds",
-        artThundercannon : true
-    },{
-        regExpSearch : /^(?=.*Hand)(?=.*cannon).*$/i,
-        name : "Hand Cannon",
-        source : ["KT:AA", 22],
-        list : "alternate artificer",
-        ability : 2,
-        type : "Artificer Weapon",
-        damage : [1, 8, "piercing"],
-        range : "30/90 ft",
-        weight : 5,
-        description : "Ammunition, Light, Loud, Loading",
-        abilitytodamage : true,
-        ammo : "storm rounds",
-        artHandcannon : true
-    },{
-        regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
-        name : "Kinetic Hammer",
-        source : ["KT:AA", 22],
-        list : "alternate artificer",
-        ability : 1,
-        type : "Artificer Weapon",
-        damage : [1, 10, "bludgeoning"],
-        range : "Melee",
-        weight : 10,
-        description : "Two-Handed, Heavy, Loud, Charged",
-        abilitytodamage : true,
-        artKineticHammer : true
-    },{
-        regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
-        name : "Charged Blade",
-        source : ["KT:AA", 22],
-        list : "alternate artificer",
-        ability : 1,
-        type : "Artificer Weapon",
-        damage : [1, 8, "slashing"],
-        range : "Melee",
-        weight : 3,
-        description : "Finesse, Loud, Charged",
-        abilitytodamage : true,
-        artChargedBlade : true
-    }],
-    calcChanges : {
-        atkAdd : [
-            function (fields, v) {
-                if (v.theWea.artThundercannon) fields.Proficiency = true;
-                if (v.theWea.artHandcannon) fields.Proficiency = true;
-                if (v.theWea.artKineticHammer) fields.Proficiency = true;
-                if (v.theWea.artChargedBlade) fields.Proficiency = true;
-            },
-            ""
-        ]
-    },
-    spellcastingBonus : [],
-    spellFirstColTitle : "Ch",
-    spellChanges : {}
-};
+// MagicItemsList["stormforged weapon"] = {
+//     name : "Stormforged Weapon",
+//     source : ["KT:AA", 22],
+//     type : "wondrous item",
+//     rarity : "very rare",
+//     extraTooltip : "Attunement (creator only)",
+//     attunement : true,
+//     prerequisite : "Only for a Thundersmith Artificer",
+//     prereqeval : function(v) {
+//         return classes.known["alternate artificer"].subclass == "alternate artificer-thundersmith";
+//     },
+//     allowDuplicates : true,
+//     description : "A two-handed firearm that you are proficient with and does 2d6 piercing damage. It has a range of 60/180 ft. This weapon can be upgraded with several upgrades down the line. If broken, It can be remade over 3 days of work (8h each). Spending 200 gp worth of metal and other raw materials.",
+//     descriptionFull : "You are proficient with the Thunder Cannon. The firearm is a two-handed ranged weapon that deals 2d6 piercing damage. Its normal range is 60 feet, and its maximum range is 180 feet. " + "\n   " + "Loud. Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack." + "\n   " + "Reload(1). Once fired, it must be reloaded as a bonus action." + "\n   " + "If you lose your Thunder Cannon, you can create a new one over the course of three days of work (eight hours each day) by expending 200 gp worth of metal and other raw materials.",
+//     weaponOptions : [{
+//         regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
+//         name : "Thunder Cannon",
+//         source : ["KT:AA", 22],
+//         list : "alternate artificer",
+//         ability : 2,
+//         type : "Artificer Weapon",
+//         damage : [1, 12, "piercing"],
+//         range : "60/180 ft",
+//         weight : 15,
+//         description : "Ammunition, Two-handed, Loud, Loading",
+//         abilitytodamage : true,
+//         ammo : "storm rounds",
+//         artThundercannon : true
+//     },{
+//         regExpSearch : /^(?=.*Hand)(?=.*cannon).*$/i,
+//         name : "Hand Cannon",
+//         source : ["KT:AA", 22],
+//         list : "alternate artificer",
+//         ability : 2,
+//         type : "Artificer Weapon",
+//         damage : [1, 8, "piercing"],
+//         range : "30/90 ft",
+//         weight : 5,
+//         description : "Ammunition, Light, Loud, Loading",
+//         abilitytodamage : true,
+//         ammo : "storm rounds",
+//         artHandcannon : true
+//     },{
+//         regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
+//         name : "Kinetic Hammer",
+//         source : ["KT:AA", 22],
+//         list : "alternate artificer",
+//         ability : 1,
+//         type : "Artificer Weapon",
+//         damage : [1, 10, "bludgeoning"],
+//         range : "Melee",
+//         weight : 10,
+//         description : "Two-Handed, Heavy, Loud, Charged",
+//         abilitytodamage : true,
+//         artKineticHammer : true
+//     },{
+//         regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
+//         name : "Charged Blade",
+//         source : ["KT:AA", 22],
+//         list : "alternate artificer",
+//         ability : 1,
+//         type : "Artificer Weapon",
+//         damage : [1, 8, "slashing"],
+//         range : "Melee",
+//         weight : 3,
+//         description : "Finesse, Loud, Charged",
+//         abilitytodamage : true,
+//         artChargedBlade : true
+//     }],
+//     calcChanges : {
+//         atkAdd : [
+//             function (fields, v) {
+//                 if (v.theWea.artThundercannon) fields.Proficiency = true;
+//                 if (v.theWea.artHandcannon) fields.Proficiency = true;
+//                 if (v.theWea.artKineticHammer) fields.Proficiency = true;
+//                 if (v.theWea.artChargedBlade) fields.Proficiency = true;
+//             },
+//             ""
+//         ]
+//     },
+//     spellcastingBonus : [],
+//     spellFirstColTitle : "Ch",
+//     spellChanges : {}
+// };
 
-AmmoList["storm rounds"] = {
-    name : "Storm Rounds",
-    source : ["KT:AA", 5],
-    weight : 0.2, // based on the weight of renaissance bullets from the DMG
-    icon : "Bullets",
-    checks : [".Bullet"],
-    display : 50,
-    invName : "Storm Rounds",
-    alternatives : [/^((?=.*storm)|(?=.*rounds?)).*$/i]
-};
+// AmmoList["storm rounds"] = {
+//     name : "Storm Rounds",
+//     source : ["KT:AA", 5],
+//     weight : 0.2, // based on the weight of renaissance bullets from the DMG
+//     icon : "Bullets",
+//     checks : [".Bullet"],
+//     display : 50,
+//     invName : "Storm Rounds",
+//     alternatives : [/^((?=.*storm)|(?=.*rounds?)).*$/i]
+// };
 
 //*****************************************************\\
 //*                   -Gadgetsmith-                   *\\
