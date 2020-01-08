@@ -320,7 +320,7 @@ ClassList["alternate artificer"] = {
             "stormforged weapon" : {
                 name : "Stormforged Weapon",
                 description : desc([
-                    "I get a weapon from the Thundersmith subclass, I get prof and how to make the ammo"
+                    "I get a Thundersmith's Stormforged Weapon, I get prof and how to make the ammo"
                 ]),
                 source : ["KT:AA", 4]
                 //TODO: Add automation
@@ -328,7 +328,7 @@ ClassList["alternate artificer"] = {
             "infused armament" : {
                 name : "Infused Armament",
                 description : desc([
-                    "I get the Infused Armament feature from the Infusionsmith subclass"
+                    "I get an Infusionsmith's Animated Weapon, Blasting Rod, or infused weapon"
                 ]),
                 source : ["KT:AA", 4]
                 //TODO: Add automation
@@ -336,7 +336,7 @@ ClassList["alternate artificer"] = {
             "alchemical reagents pouch" : {
                 name : "Alchemical Reagents Pouch",
                 description : desc([
-                    "I get an Alchemical Reagents Pouch, and Alchemical Fire or Acid from the Potionsmith subclass"
+                    "I get a Potionsmith's Alchemical Reagents Pouch and Alchemical Fire or Acid"
                 ]),
                 source : ["KT:AA", 4]
                 //TODO: Add automation
@@ -344,7 +344,7 @@ ClassList["alternate artificer"] = {
             "gadgetsmith upgrade" : {
                 name : "Gadgetsmith Upgrade",
                 description : desc([
-                    "I get an unrestricted Upgrade from the Gadgetsmith subclass"
+                    "I get an unrestricted Gadgetsmith Upgrade"
                 ]),
                 source : ["KT:AA", 4]
                 //TODO: Add automation
@@ -406,8 +406,7 @@ ClassList["alternate artificer"] = {
 };
 
 //***************************************************-Subclasses-*****************************************************\\
-//#region
-/*
+
 ClassSubList["alternate artificer-thundersmith"] = {
     regExpSearch : /thundersmith/i,
     subname : "Thundersmith",
@@ -876,7 +875,8 @@ ClassSubList["alternate artificer-thundersmith"] = {
         }
     }
 };
-
+//#region
+/*
 ClassSubList["alternate artificer-gadgetsmith"] = {
 
     regExpSearch : /gadgetsmith/i,
@@ -2616,137 +2616,151 @@ SpellsList["vorpal weapon"] = {
 };
 
 
-// /**
-//  * changeSpellsOnMagicItem
-//  * @param {boolean} AddRemove true to add, false to remove
-//  * @param {String} item the name of the item to add/remove from
-//  * @param {String} upgrade the name of the upgrade that adds the spells
-//  * @param {String[]} spells the names of the spells to add
-//  * @param {String[]} fCol the String you want in the first colum of each spell
-//  * @param {Object[]} changes the Object of what you want changed for each spell if any
-//  */
-// changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, changes) {
-//     var theItemBonus = MagicItemsList[item].spellcastingBonus;
-//     var theItemChanges = MagicItemsList[item].spellChanges;
-//     for (var i = 0; i < spells.length; i++) {
-//         var theSpellObj = {
-//             name : upgrade,
-//             spells : [spells[i]],
-//             selection : [spells[i]],
-//             firstCol : fCol[i]
-//         };
-//         if (AddRemove && theItemBonus.indexOf(theSpellObj) === -1) {
-//             theItemBonus.push(theSpellObj);
-//             if (changes) {theItemChanges[spells[i]] = changes[i];}
-//         } else {
-//             theItemBonus.splice(theItemBonus.indexOf(theSpellObj), 1);
-//             delete theItemChanges[spells[i]];
-//         }
-//     }
-//     //Force apply updates to the magic Item(need to get the spellChanges to work)
-//     RemoveMagicItem(item);
-//     AddMagicItem(item);
-// };
+/**
+ * changeSpellsOnMagicItem
+ * @param {boolean} AddRemove true to add, false to remove
+ * @param {String} item the name of the item to add/remove from
+ * @param {String} upgrade the name of the upgrade that adds the spells
+ * @param {String[]} spells the names of the spells to add
+ * @param {String[]} fCol the String you want in the first colum of each spell
+ * @param {Object[]} changes the Object of what you want changed for each spell if any
+ */
+changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, changes) {
+    var theItemBonus = MagicItemsList[item].spellcastingBonus;
+    var theItemChanges = MagicItemsList[item].spellChanges;
+    for (var i = 0; i < spells.length; i++) {
+        var theSpellObj = {
+            name : upgrade,
+            spells : [spells[i]],
+            selection : [spells[i]],
+            firstCol : fCol[i]
+        };
+        if (AddRemove && theItemBonus.indexOf(theSpellObj) === -1) {
+            theItemBonus.push(theSpellObj);
+            if (changes) {theItemChanges[spells[i]] = changes[i];}
+        } else {
+            theItemBonus.splice(theItemBonus.indexOf(theSpellObj), 1);
+            delete theItemChanges[spells[i]];
+        }
+    }
+    //Force apply updates to the magic Item(need to get the spellChanges to work)
+    RemoveMagicItem(item);
+    AddMagicItem(item);
+};
 
 //*****************************************************\\
 //*                  -Thundersmith-                   *\\
 //*****************************************************\\
 
-// MagicItemsList["stormforged weapon"] = {
-//     name : "Stormforged Weapon",
-//     source : ["KT:AA", 22],
-//     type : "wondrous item",
-//     rarity : "very rare",
-//     extraTooltip : "Attunement (creator only)",
-//     attunement : true,
-//     prerequisite : "Only for a Thundersmith Artificer",
-//     prereqeval : function(v) {
-//         return classes.known["alternate artificer"].subclass == "alternate artificer-thundersmith";
-//     },
-//     allowDuplicates : true,
-//     description : "A two-handed firearm that you are proficient with and does 2d6 piercing damage. It has a range of 60/180 ft. This weapon can be upgraded with several upgrades down the line. If broken, It can be remade over 3 days of work (8h each). Spending 200 gp worth of metal and other raw materials.",
-//     descriptionFull : "You are proficient with the Thunder Cannon. The firearm is a two-handed ranged weapon that deals 2d6 piercing damage. Its normal range is 60 feet, and its maximum range is 180 feet. " + "\n   " + "Loud. Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack." + "\n   " + "Reload(1). Once fired, it must be reloaded as a bonus action." + "\n   " + "If you lose your Thunder Cannon, you can create a new one over the course of three days of work (eight hours each day) by expending 200 gp worth of metal and other raw materials.",
-//     weaponOptions : [{
-//         regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
-//         name : "Thunder Cannon",
-//         source : ["KT:AA", 22],
-//         list : "alternate artificer",
-//         ability : 2,
-//         type : "Artificer Weapon",
-//         damage : [1, 12, "piercing"],
-//         range : "60/180 ft",
-//         weight : 15,
-//         description : "Ammunition, Two-handed, Loud, Loading",
-//         abilitytodamage : true,
-//         ammo : "storm rounds",
-//         artThundercannon : true
-//     },{
-//         regExpSearch : /^(?=.*Hand)(?=.*cannon).*$/i,
-//         name : "Hand Cannon",
-//         source : ["KT:AA", 22],
-//         list : "alternate artificer",
-//         ability : 2,
-//         type : "Artificer Weapon",
-//         damage : [1, 8, "piercing"],
-//         range : "30/90 ft",
-//         weight : 5,
-//         description : "Ammunition, Light, Loud, Loading",
-//         abilitytodamage : true,
-//         ammo : "storm rounds",
-//         artHandcannon : true
-//     },{
-//         regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
-//         name : "Kinetic Hammer",
-//         source : ["KT:AA", 22],
-//         list : "alternate artificer",
-//         ability : 1,
-//         type : "Artificer Weapon",
-//         damage : [1, 10, "bludgeoning"],
-//         range : "Melee",
-//         weight : 10,
-//         description : "Two-Handed, Heavy, Loud, Charged",
-//         abilitytodamage : true,
-//         artKineticHammer : true
-//     },{
-//         regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
-//         name : "Charged Blade",
-//         source : ["KT:AA", 22],
-//         list : "alternate artificer",
-//         ability : 1,
-//         type : "Artificer Weapon",
-//         damage : [1, 8, "slashing"],
-//         range : "Melee",
-//         weight : 3,
-//         description : "Finesse, Loud, Charged",
-//         abilitytodamage : true,
-//         artChargedBlade : true
-//     }],
-//     calcChanges : {
-//         atkAdd : [
-//             function (fields, v) {
-//                 if (v.theWea.artThundercannon) fields.Proficiency = true;
-//                 if (v.theWea.artHandcannon) fields.Proficiency = true;
-//                 if (v.theWea.artKineticHammer) fields.Proficiency = true;
-//                 if (v.theWea.artChargedBlade) fields.Proficiency = true;
-//             },
-//             ""
-//         ]
-//     },
-//     spellcastingBonus : [],
-//     spellFirstColTitle : "Ch",
-//     spellChanges : {}
-// };
+MagicItemsList["stormforged weapon"] = {
+    name : "Stormforged Weapon",
+    source : ["KT:AA", 22],
+    type : "wondrous item",
+    rarity : "very rare",
+    extraTooltip : "Attunement (creator only)",
+    attunement : true,
+    prerequisite : "Only for a Thundersmith Artificer",
+    prereqeval : function(v) {
+        return classes.known["alternate artificer"].subclass == "alternate artificer-thundersmith";
+    },
+    allowDuplicates : true,
+    description : "A two-handed firearm that you are proficient with and does 2d6 piercing damage. It has a range of 60/180 ft. This weapon can be upgraded with several upgrades down the line. If broken, It can be remade over 3 days of work (8h each). Spending 200 gp worth of metal and other raw materials.",
+    descriptionFull : "You are proficient with the Thunder Cannon. The firearm is a two-handed ranged weapon that deals 2d6 piercing damage. Its normal range is 60 feet, and its maximum range is 180 feet. " + "\n   " + "Loud. Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack." + "\n   " + "Reload(1). Once fired, it must be reloaded as a bonus action." + "\n   " + "If you lose your Thunder Cannon, you can create a new one over the course of three days of work (eight hours each day) by expending 200 gp worth of metal and other raw materials.",
+    weaponOptions : [{
+        regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
+        name : "Thunder Cannon",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 2,
+        type : "Artificer Weapon",
+        damage : [1, 12, "piercing"],
+        range : "60/180 ft",
+        weight : 15,
+        description : "Ammunition, Two-handed, Loud, Stormcharged",
+        abilitytodamage : true,
+        ammo : "storm rounds",
+        artThundercannon : true
+    },{
+        regExpSearch : /^(?=.*Hand)(?=.*cannon).*$/i,
+        name : "Hand Cannon",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 2,
+        type : "Artificer Weapon",
+        damage : [1, 10, "piercing"],
+        range : "30/90 ft",
+        weight : 5,
+        description : "Ammunition, Light, Loud, Stormcharged",
+        abilitytodamage : true,
+        ammo : "storm rounds",
+        artHandcannon : true
+    },{
+        regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
+        name : "Kinetic Hammer",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 1,
+        type : "Artificer Weapon",
+        damage : [1, 10, "bludgeoning"],
+        range : "Melee",
+        weight : 10,
+        description : "+1d4 Thunder Dmg, Two-Handed, Heavy, Loud",
+        abilitytodamage : true,
+        artKineticHammer : true
+    },{
+        regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
+        name : "Charged Blade",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 1,
+        type : "Artificer Weapon",
+        damage : [1, 6, "slashing"],
+        range : "Melee",
+        weight : 3,
+        description : "+1d4 Lightning Dmg, Finesse, Loud",
+        abilitytodamage : true,
+        artChargedBlade : true
+    },{
+        regExpSearch : /^(?=.*lightning)(?=.*pike).*$/i,
+        name : "Lightning Pike",
+        source : ["KT:AA", 22],
+        list : "alternate artificer",
+        ability : 1,
+        type : "Artificer Weapon",
+        damage : [1, 8, "piercing"],
+        range : "Melee",
+        weight : 10,
+        description : "+1d4 Lightning Dmg, Reach, Two-Handed, Loud",
+        abilitytodamage : true,
+        artLightningPike : true
+    }],
+    calcChanges : {
+        atkAdd : [
+            function (fields, v) {
+                if (v.theWea.artThundercannon) fields.Proficiency = true;
+                if (v.theWea.artHandcannon) fields.Proficiency = true;
+                if (v.theWea.artKineticHammer) fields.Proficiency = true;
+                if (v.theWea.artChargedBlade) fields.Proficiency = true;
+                if (v.theWea.artLightningPike) fields.Proficiency = true;
+            },
+            ""
+        ]
+    },
+    spellcastingBonus : [],
+    spellFirstColTitle : "Ch",
+    spellChanges : {}
+};
 
-// AmmoList["storm rounds"] = {
-//     name : "Storm Rounds",
-//     source : ["KT:AA", 5],
-//     weight : 0.2, // based on the weight of renaissance bullets from the DMG
-//     icon : "Bullets",
-//     checks : [".Bullet"],
-//     display : 50,
-//     invName : "Storm Rounds",
-//     alternatives : [/^((?=.*storm)|(?=.*rounds?)).*$/i]
-// };
+AmmoList["storm rounds"] = {
+    name : "Storm Rounds",
+    source : ["KT:AA", 5],
+    weight : 0.2, // based on the weight of renaissance bullets from the DMG
+    icon : "Bullets",
+    checks : [".Bullet"],
+    display : 50,
+    invName : "Storm Rounds",
+    alternatives : [/^((?=.*storm)|(?=.*rounds?)).*$/i]
+};
 
 //*****************************************************\\
 //*                   -Gadgetsmith-                   *\\
