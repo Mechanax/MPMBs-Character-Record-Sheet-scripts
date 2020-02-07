@@ -14,12 +14,12 @@
 
                 This class has been made by /u/KibblesTasty on the subreddit r/UnearthedArcana
                 It can be found here: http://redd.it/e8rbvz
-                This code is based on v2.0.2 of /u/KibblesTasty's work (2019-04-11)
+                This code is based on v2.0.2 of /u/KibblesTasty's work (2019-12-10)
 
                 This script was based upon most of MPMB's scripts.
 
-    Code by:    Apocalypsa, TacitusZephyr, LividLindy, Redmecha
-    Date:       2019-06-17 (sheet v13)
+    Code by:    Mechana
+    Date:       2020-02-07 (sheet v13)
 */
 
 /*  
@@ -52,7 +52,7 @@
  * | Write the code for Wandsmith
  */
 
-var iFileName = "Kibbles Alternate Artificer v2.0.2 [KibblesTasty's work, transcribed by Redmecha].js";
+var iFileName = "Kibbles Alternate Artificer v2.0.2 [KibblesTasty's work, transcribed by Mechana].js";
 RequiredSheetVersion(13);
 
 SourceList["KT:AA"] = {
@@ -60,7 +60,7 @@ SourceList["KT:AA"] = {
     abbreviation : "KT:AA",
     group : "Reddit/r/UnearthedArcana",
     url : "http://redd.it/e8rbvz",
-    date : "2019/05/08"
+    date : "2019/12/10"
 };
 
 //first make the sheet know which spells are artificer spells
@@ -169,7 +169,7 @@ SourceList["KT:AA"] = {
 
 ClassList["alternate artificer"] = {
     regExpSearch : /^(?=.*artificer)(?!.*wizard).*$/i,
-    name : "Artificer",
+    name : "Alternate Artificer",
     source : ["KT:AA", 1],
     primaryAbility : "\n \u2022 Artificer: Thunder/Gadget: Dexterity\n\t Golem/Infusion/Potion: Intelligence\n\t War/Flesh: Strength",
     abilitySave : 4,
@@ -197,7 +197,7 @@ ClassList["alternate artificer"] = {
         "\n \u2022 Thieves' tools and a dungeoneer's pack." + 
         "\n\nAlternatively, choose 5d4 \xD7 10 gp worth of starting equipment instead of both the class' and the background's starting equipment.",
     subclasses : ["Artificer Specialization", [
-        ////"alternate artificer-thundersmith",
+        "alternate artificer-thundersmith",
         ////"alternate artificer-gadgetsmith",
         ////"alternate artificer-golemsmith",
         ////"alternate artificer-infusionsmith",
@@ -248,9 +248,7 @@ ClassList["alternate artificer"] = {
             name : "Tool Expertise",
             source : ["KT:AA", 3],
             minlevel : 2,
-            description : desc([
-                "I get double proficiency with any tool proficiencies I gain from the artificer class"
-            ]),
+            description : " [Double proficiency with any tools from this class]",
             skillstxt : "I get double proficiency with any tool proficiencies I gain from the artificer class."
         },
         "spellcasting" : {
@@ -265,41 +263,13 @@ ClassList["alternate artificer"] = {
                 return n < 2 ? "" : [0, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12][idx] + " spells known";
             })
         },
-        "specialization upgrade" : {
-            name : "Specialization Upgrade",
-            source : ["KT:AA", 4],
-            minlevel : 3,
-            description : desc([
-                "Use the \"Choose Features\" button to add a Specialization Upgrade to the third page",
-                "(Make sure to read the rules on upgrades on the notes page)"
-            ]),
-            additional : levels.map(function (n, idx) {
-                    return n < 3 ? "" : [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9][idx] + " upgrades";
-            }),
-            toNotesPage : [{
-                name : "Specialization Upgrade",
-                note : [
-                    "You select an additional Upgrade at 5th, 7th, 9th, 11th, 13th, 15th, 17th, and 19th level.",
-                    "You cannot select an Upgrade more than once, unless the Upgrade's description says otherwise.",
-                    "Whenever you level up, you can exchange one of your existing upgrades for",
-                    "another upgrade of the same level requirement as the replaced upgrade.",
-                    "   In any case that a specialization allows an Upgrade to be swapped out,",
-                    "Upgrades must always be selected as if the Artificer is",
-                    "the level they were when they got that Upgrade slot. For example,",
-                    "if you replace your Stormforged Weapon and reselect all of your upgrades as a 5th level Artificer,",
-                    "you could select one 3rd level upgrade and one 5th level upgrade, or two 3rd level upgrades,",
-                    "but you would not be able to select two 5th level upgrades."
-                ],
-                source : ["KT:AA", 4]
-            }]
-        },
         "arcane reconstruction" : {
             name : "Arcane Reconstruction",
             source : ["KT:AA", 4],
             minlevel : 6,
             description : desc([
                 "I learn Mending and Cure Wounds (which can also heal constructs) as artificer spells",
-                "If I know Cure Wounds I can take another spell from the Artificer list"
+                "If I already know Cure Wounds I can take another spell from the Artificer list"
             ]),
             spellcastingBonus : [{
                 name : "Arcane Reconstruction",
@@ -315,7 +285,9 @@ ClassList["alternate artificer"] = {
             name : "Cross Disciplinary Knowledge",
             source : ["KT:AA", 4],
             minlevel : 6,
-            description : "Use the \"Choose Features\" button to add a feature from another subclass",
+            description : desc([
+                "Use the \"Choose Features\" button to add a feature from another subclass"
+            ]),
             choices: ["Stormforged Weapon", "Infused Armament", "Alchemical Reagents Pouch", "Gadgetsmith Upgrade"],
             "stormforged weapon" : {
                 name : "Stormforged Weapon",
@@ -373,15 +345,14 @@ ClassList["alternate artificer"] = {
             minlevel : 10,
             description : desc([
                 "I can refill a magic item's charges needed to use it once, if they are used to cast spells",
-                "I spend 1 min and a spell slot >= level of the spell the item casts"
+                "I spend 1 min and a spell slot grater then or equal to the level of the spell the item casts"
             ])
         },
         "study of magic" : {
             name : "Study of Magic",
             source : ["KT:AA", 4],
             minlevel : 11,
-            description : desc([
-                "I can cast Detect Magic and Identify at will",
+            description : " [Detect Magic and Identify at will]" + desc([
                 "I have adv on all Int(Arcana) checks about magical traps, effects, or runes"
             ]),
             skillstxt : "adv on Int(Arcana) checks about magical traps, effects, or runes"
@@ -407,18 +378,21 @@ ClassList["alternate artificer"] = {
 
 //***************************************************-Subclasses-*****************************************************\\
 
+upgradeAdditionalMaker = function(n) {
+    return !n ? "" : n + " upgrade" + (n > 1 ? "s" : "") + " known";
+}
+
 ClassSubList["alternate artificer-thundersmith"] = {
     regExpSearch : /thundersmith/i,
     subname : "Thundersmith",
     source : ["KT:AA", 22],
     features : {
         "subclassfeature1" : {
-            name : "Thundersmith's Proficiency",
+            name : "Bonus Proficiency",
             source : ["KT:AA", 22],
             minlevel : 1,
-            description : desc([
-                "I gain proficiency with tinker's tools and smith's tools",
-                "I can create up to 50 rounds during a LR (1gp per 10 rounds)"
+            description : " [tinker's tools, smith's tools]" + desc([
+                "I can create up to 50 rounds of ammunition during a LR (1gp per 10 rounds)"
             ]),
             toolProfs : ["Smith's Tools", "Tinker's Tools"]
         },
@@ -426,9 +400,8 @@ ClassSubList["alternate artificer-thundersmith"] = {
             name : "Stormforged Weapon",
             source : ["KT:AA", 22],
             minlevel : 1,
-            description : desc([
-                "I forge a Thunder Powered Weapon-",
-                "I can make a new one over 3 days(8h each) with 200gp of metal and other materials"
+            description : " [create more: 3 days + 200 gp]" + desc([
+                "I forge a Stormforged Weapon, a wondrous weapon that only I can attune to",
             ]),
             eval : function(lvl, chc) {
                 AddMagicItem("Stormforged Weapon");
@@ -449,42 +422,99 @@ ClassSubList["alternate artificer-thundersmith"] = {
                 return n < 3 ? "" : [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9][idx] + "d6"; 
             }),//TODO: Automate this Nd6 with it's own function
             usages : 1,
-            recovery : "turn",
-            // These are here so I don't have to take up more space in the Class Features section
-            extraname : "Cannonsmith Upgrades",
-            extrachoices : [
-                // //Unrestricted Upgrades
-                // "Echoing Boom (prereq: incompatible with Silencer)",
-                // "Extended Barrel",
-                // "Extended Barrel Lv2 (prereq: Extended Barrel)",
-                // "Lightning Burst",
-                // "Lightning Charged Bayonet",
-                // "Silencer (prereq: incompatible with Echoing Boom)",
-                // "Shock Absorber",
-                // //5th Level Upgrades
-                // "Autoloading Magazine (prereq: level 5 Artificer)",
-                // "Cannon Improvement (prereq: level 5 Artificer)",
-                // "Cannon Improvement Lv2 (prereq: Cannon Improvement)",
-                // "Cannon Improvement Lv3 (prereq: Cannon Improvement Lv2)",
-                // "Divination Scope (prereq: level 5 Artificer)",
-                // "Harpoon Reel (prereq: level 5 Artificer)",
-                // "Terrifying Thunder (prereq: Echoing Boom)",
-                // "Storm Blast (prereq: level 5 Artificer)",
-                // // 9th Level Upgrades
-                // "Shock Harpoon (prereq: level 9 Artificer, Harpoon Reel)",
-                // "Synaptic Feedback (prereq: level 9 Artificer)",
-                // "Thunder Jump (prereq: level 9 Artificer)",
-                // // 11th Level Upgrades
-                // "Blast Radius (prereq: level 11 Artificer)",
-                // "Stabilization (prereq: level 11 Artificer)",
-                // // 15th Level Upgrades
-                // "Mortar Shells (prereq: level 15 Artificer)"
-            ],
-            extraTimes : levels.map(function (n) {
-                return n < 3 ? 0 : n < 5 ? 1 : n < 7 ? 2 : n < 9 ? 3 : n < 11 ? 4 : n < 13 ? 5 : n < 15 ? 6 : n < 17 ? 7 : n < 19 ? 8 : 9;
-            }),
-
-            //Unrestricted Upgrades
+            recovery : "turn"
+        },
+        "subclassfeature3.1" : {
+            name : "Upgrades, Basic",
+            source : ["KT:AA", 4],
+            minlevel : 3,
+            description : desc([
+                "Use the \"Choose Features\" button to add Upgrades to the third page (See notes page)"
+            ]),
+            additional : [0,0,1,1].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,1,1],
+            extraname : "Unrestricted Upgrade",
+            extrachoices : [],
+            toNotesPage : [{
+                name : "Specialization Upgrade",
+                note : [
+                    "You select an additional Upgrade at ",
+                    "5th, 7th, 9th, 11th, 13th, 15th, 17th, and 19th level.",
+                    "You cannot select an Upgrade more than once,",
+                    "unless the Upgrade's description says otherwise.",
+                    "Whenever you level up, you can exchange one of your existing upgrades for",
+                    "another upgrade of the same level requirement as the replaced upgrade.",
+                    "   In any case that a specialization allows an Upgrade to be swapped out,",
+                    "Upgrades must always be selected as if the Artificer is",
+                    "the level they were when they got that Upgrade slot. For example,",
+                    "if you replace your Stormforged Weapon and",
+                    "reselect all of your upgrades as a 5th level Artificer,",
+                    "you could select one 3rd level upgrade and one 5th level upgrade,",
+                    "or two 3rd level upgrades, but you would not be able to select two 5th level upgrades."
+                ],
+                source : ["KT:AA", 4]
+            }]
+        },
+        "subclassfeature5" : {
+            name : "Devastating Blasts",
+            source : ["KT:AA", 23],
+            minlevel : 5,
+            description : desc([
+                "When I miss an attack, I can still apply Thundermonger damage, but it only deals half"
+            ])
+        },
+        "subclassfeature5.1" : {
+            name : "Upgrades, Level 5",
+            source : ["KT:AA", 4],
+            minlevel : 5,
+            description : "",
+            additional : [0,0,0,0,1,1,2,2].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,0,0,1,1,2,2],
+            extraname : "Level 5 Upgrade",
+            extrachoices : []
+        },
+        "subclassfeature9" : {
+            name : "Upgrades, Level 9",
+            source : ["KT:AA", 4],
+            minlevel : 9,
+            description : "",
+            additional : [0,0,0,0,0,0,0,0,1,1].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,0,0,0,0,0,0,1,1],
+            extraname : "Level 9 Upgrade",
+            extrachoices : []
+        },
+        "subclassfeature11" : {
+            name : "Upgrades, Level 11",
+            source : ["KT:AA", 4],
+            minlevel : 11,
+            description : "",
+            additional : [0,0,0,0,0,0,0,0,0,0,1,1,2,2].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,0,0,0,0,0,0,0,0,1,1,2,2],
+            extraname : "Level 11 Upgrade",
+            extrachoices : []
+        },
+        "subclassfeature14" : {
+            name : "Unleashed Power",
+            source : ["KT:AA", 23],
+            minlevel : 14,
+            description : desc([
+                "When rolling dmg for Thundermonger, I can use a spell slot to reroll up to my Int mod",
+                "worth of dice and maximize a number equal to to the level of the spell slot used"
+            ])
+        },
+        "subclassfeature15" : {
+			name : "Upgrades, Level 15",
+			source : ["KT:AA", 4],
+			minlevel : 15,
+			description : "",
+			additional : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,3,3].map(upgradeAdditionalMaker),
+			extraTimes : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,3,3],
+			extraname : "Level 15 Upgrade",
+			extrachoices : []
+		}
+    }
+};
+//Unrestricted Upgrades
 
             // "echoing boom (prereq: incompatible with silencer)" : {
             //     name : "Echoing Boom",
@@ -855,26 +885,28 @@ ClassSubList["alternate artificer-thundersmith"] = {
             //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 15;},
             //     action : ["action", ""]
             // }
-        },
-        "subclassfeature5" : {
-            name : "Devastating Blasts",
-            source : ["KT:AA", 6],
-            minlevel : 5,
-            description : desc([
-                "When I miss a shot, I can still apply Thundermonger damage, but it only deals half"
-            ])
-        },
-        "subclassfeature14" : {
-            name : "Elemental Swapping",
-            source : ["KT:AA", 6],
-            minlevel : 14,
-            description : desc([
-                "I can cause Thundermonger to deal Fire/Cold/Acid/Lightning damage instead of Thunder",
-                "I can also use a Vial of Holy Water to cause it to deal Radiant damage"
-            ])
-        }
-    }
-};
+// [{}].forEach(function (aObj) {
+//     var upgName = aObj.listname ? aObj.listname : aObj.name;
+//     var upgNameLC = upgName.toLowerCase();
+//     var upgLevel = aObj.listlevel ? aObj.listlevel : 1;
+//     if (!aObj.prereqeval && upgLevel === 3) {
+//         aObj.prereqeval = function () {
+//             return classes.known["artificer-ua3"].level >= 3 && ClassList["artificer-ua3"].chosenUpgrades().indexOf(upgNameLC) == -1;
+//         }
+//         upgLevel = 1; // so that it's still added to the first list of upgrades
+//     } else if (!aObj.prereqeval && upgLevel < 15) {
+//         aObj.prereqeval = function () {
+//             return ClassList["artificer-ua3"].chosenUpgrades().indexOf(upgNameLC) == -1;
+//         }
+//     }
+//     for (var aFea in ClassSubList[warsmithSubname].features) {
+//         var feaObj = ClassSubList[warsmithSubname].features[aFea];
+//         if (!(/upgrade/i).test(feaObj.name) || !feaObj.extrachoices || feaObj.minlevel < upgLevel) continue;
+//         feaObj.extrachoices.push(upgName);
+//         feaObj[upgNameLC] = aObj;
+//     }
+// });
+
 //#region
 /*
 ClassSubList["alternate artificer-gadgetsmith"] = {
@@ -2616,37 +2648,37 @@ SpellsList["vorpal weapon"] = {
 };
 
 
-/**
- * changeSpellsOnMagicItem
- * @param {boolean} AddRemove true to add, false to remove
- * @param {String} item the name of the item to add/remove from
- * @param {String} upgrade the name of the upgrade that adds the spells
- * @param {String[]} spells the names of the spells to add
- * @param {String[]} fCol the String you want in the first colum of each spell
- * @param {Object[]} changes the Object of what you want changed for each spell if any
- */
-changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, changes) {
-    var theItemBonus = MagicItemsList[item].spellcastingBonus;
-    var theItemChanges = MagicItemsList[item].spellChanges;
-    for (var i = 0; i < spells.length; i++) {
-        var theSpellObj = {
-            name : upgrade,
-            spells : [spells[i]],
-            selection : [spells[i]],
-            firstCol : fCol[i]
-        };
-        if (AddRemove && theItemBonus.indexOf(theSpellObj) === -1) {
-            theItemBonus.push(theSpellObj);
-            if (changes) {theItemChanges[spells[i]] = changes[i];}
-        } else {
-            theItemBonus.splice(theItemBonus.indexOf(theSpellObj), 1);
-            delete theItemChanges[spells[i]];
-        }
-    }
-    //Force apply updates to the magic Item(need to get the spellChanges to work)
-    RemoveMagicItem(item);
-    AddMagicItem(item);
-};
+// /**
+//  * changeSpellsOnMagicItem
+//  * @param {boolean} AddRemove true to add, false to remove
+//  * @param {String} item the name of the item to add/remove from
+//  * @param {String} upgrade the name of the upgrade that adds the spells
+//  * @param {String[]} spells the names of the spells to add
+//  * @param {String[]} fCol the String you want in the first colum of each spell
+//  * @param {Object[]} changes the Object of what you want changed for each spell if any
+//  */
+// changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, changes) {
+//     var theItemBonus = MagicItemsList[item].spellcastingBonus;
+//     var theItemChanges = MagicItemsList[item].spellChanges;
+//     for (var i = 0; i < spells.length; i++) {
+//         var theSpellObj = {
+//             name : upgrade,
+//             spells : [spells[i]],
+//             selection : [spells[i]],
+//             firstCol : fCol[i]
+//         };
+//         if (AddRemove && theItemBonus.indexOf(theSpellObj) === -1) {
+//             theItemBonus.push(theSpellObj);
+//             if (changes) {theItemChanges[spells[i]] = changes[i];}
+//         } else {
+//             theItemBonus.splice(theItemBonus.indexOf(theSpellObj), 1);
+//             delete theItemChanges[spells[i]];
+//         }
+//     }
+//     //Force apply updates to the magic Item(need to get the spellChanges to work)
+//     RemoveMagicItem(item);
+//     AddMagicItem(item);
+// };
 
 //*****************************************************\\
 //*                  -Thundersmith-                   *\\
@@ -2659,32 +2691,44 @@ MagicItemsList["stormforged weapon"] = {
     rarity : "very rare",
     extraTooltip : "Attunement (creator only)",
     attunement : true,
-    prerequisite : "Only for a Thundersmith Artificer",
+    prerequisite : "Only for a Thundersmith Artificer or if you take the Stormforged Weapon as a Cross Disciplinary Knowledge feature as an Artificer",
     prereqeval : function(v) {
-        return classes.known["alternate artificer"].subclass == "alternate artificer-thundersmith";
+        return classes.known["alternate artificer"].subclass == "alternate artificer-thundersmith" || GetFeatureChoice("class", "alternate artificer", "cross disciplinary knowledge", true).indexOf("stormforged weapon") != -1;
     },
     allowDuplicates : true,
     description : "A two-handed firearm that you are proficient with and does 2d6 piercing damage. It has a range of 60/180 ft. This weapon can be upgraded with several upgrades down the line. If broken, It can be remade over 3 days of work (8h each). Spending 200 gp worth of metal and other raw materials.",
-    descriptionFull : "You are proficient with the Thunder Cannon. The firearm is a two-handed ranged weapon that deals 2d6 piercing damage. Its normal range is 60 feet, and its maximum range is 180 feet. " + "\n   " + "Loud. Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack." + "\n   " + "Reload(1). Once fired, it must be reloaded as a bonus action." + "\n   " + "If you lose your Thunder Cannon, you can create a new one over the course of three days of work (eight hours each day) by expending 200 gp worth of metal and other raw materials.",
-    weaponOptions : [{
-        regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
+    descriptionFull : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Stormcharged. When you use an action, bonus action, or reaction to attack with a Stormcharged Weapon, you can make only one Attack regardless of the number of attacks you can normally make. If you could otherwise make additional attacks with that action, the weapon deals an additional 3d6 lightning or thunder damage per attack that was foregone." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
+    choices : ["Thunder Cannon", "Hand Cannon", "Kinetic Hammer", "Charged Blade", "Lightning Pike"],
+    "thunder cannon" : {
         name : "Thunder Cannon",
         source : ["KT:AA", 22],
-        list : "alternate artificer",
-        ability : 2,
-        type : "Artificer Weapon",
-        damage : [1, 12, "piercing"],
-        range : "60/180 ft",
-        weight : 15,
-        description : "Ammunition, Two-handed, Loud, Stormcharged",
-        abilitytodamage : true,
-        ammo : "storm rounds",
-        artThundercannon : true
-    },{
+        description : "",
+		descriptionLong : "",
+		weight : 15,
+        weaponAdd : "Thunder Cannon",
+        weaponOptions : {
+            regExpSearch : /^(?=.*thunder)(?=.*cannon).*$/i,
+            name : "Thunder Cannon",
+            source : ["KT:AA", 22],
+            ability : 2,
+            type : "Artificer Weapon",
+            damage : [1, 12, "piercing"],
+            range : "60/180 ft",
+            weight : 15,
+            description : "Ammunition, Two-handed, Loud, Stormcharged",
+            abilitytodamage : true,
+            ammo : "storm rounds",
+            artThundercannon : true
+        }
+    },
+    "hand cannon" : {},
+    "kinetic hammer" : {},
+    "charged blade" : {},
+    "lightning pike" : {},
+    weaponOptions : [{
         regExpSearch : /^(?=.*Hand)(?=.*cannon).*$/i,
         name : "Hand Cannon",
         source : ["KT:AA", 22],
-        list : "alternate artificer",
         ability : 2,
         type : "Artificer Weapon",
         damage : [1, 10, "piercing"],
@@ -2698,7 +2742,6 @@ MagicItemsList["stormforged weapon"] = {
         regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
         name : "Kinetic Hammer",
         source : ["KT:AA", 22],
-        list : "alternate artificer",
         ability : 1,
         type : "Artificer Weapon",
         damage : [1, 10, "bludgeoning"],
@@ -2711,7 +2754,6 @@ MagicItemsList["stormforged weapon"] = {
         regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
         name : "Charged Blade",
         source : ["KT:AA", 22],
-        list : "alternate artificer",
         ability : 1,
         type : "Artificer Weapon",
         damage : [1, 6, "slashing"],
@@ -2724,7 +2766,6 @@ MagicItemsList["stormforged weapon"] = {
         regExpSearch : /^(?=.*lightning)(?=.*pike).*$/i,
         name : "Lightning Pike",
         source : ["KT:AA", 22],
-        list : "alternate artificer",
         ability : 1,
         type : "Artificer Weapon",
         damage : [1, 8, "piercing"],
@@ -2745,10 +2786,7 @@ MagicItemsList["stormforged weapon"] = {
             },
             ""
         ]
-    },
-    spellcastingBonus : [],
-    spellFirstColTitle : "Ch",
-    spellChanges : {}
+    }
 };
 
 AmmoList["storm rounds"] = {
