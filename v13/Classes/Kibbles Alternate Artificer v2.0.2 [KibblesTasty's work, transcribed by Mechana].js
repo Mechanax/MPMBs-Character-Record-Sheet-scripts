@@ -514,6 +514,20 @@ ClassSubList["alternate artificer-thundersmith"] = {
 		}
     }
 };
+
+// Add a function to see if the upgrade isn't already selected in another feature
+ClassList["alternate artificer"].chosenUpgrades = function() {
+    var aClass = "alternate artificer";
+    if (!CurrentClasses[aClass]) return true;
+    var theRe = [];
+    for (var aFea in CurrentClasses[aClass].features) {
+        var feaObj = CurrentClasses[aClass].features[aFea];
+        if ((/^subclassfeature/).test(aFea) && feaObj.extrachoices && (/upgrade/i).test(feaObj.name)) {
+            theRe = theRe.concat(GetFeatureChoice("class", aClass, aFea, true));
+        }
+    }
+    return theRe;
+};
 //Unrestricted Upgrades
 
             // "echoing boom (prereq: incompatible with silencer)" : {
@@ -885,27 +899,52 @@ ClassSubList["alternate artificer-thundersmith"] = {
             //     prereqeval : function(v) {return classes.known["alternate artificer"].level >= 15;},
             //     action : ["action", ""]
             // }
-// [{}].forEach(function (aObj) {
-//     var upgName = aObj.listname ? aObj.listname : aObj.name;
-//     var upgNameLC = upgName.toLowerCase();
-//     var upgLevel = aObj.listlevel ? aObj.listlevel : 1;
-//     if (!aObj.prereqeval && upgLevel === 3) {
-//         aObj.prereqeval = function () {
-//             return classes.known["artificer-ua3"].level >= 3 && ClassList["artificer-ua3"].chosenUpgrades().indexOf(upgNameLC) == -1;
-//         }
-//         upgLevel = 1; // so that it's still added to the first list of upgrades
-//     } else if (!aObj.prereqeval && upgLevel < 15) {
-//         aObj.prereqeval = function () {
-//             return ClassList["artificer-ua3"].chosenUpgrades().indexOf(upgNameLC) == -1;
-//         }
-//     }
-//     for (var aFea in ClassSubList[warsmithSubname].features) {
-//         var feaObj = ClassSubList[warsmithSubname].features[aFea];
-//         if (!(/upgrade/i).test(feaObj.name) || !feaObj.extrachoices || feaObj.minlevel < upgLevel) continue;
-//         feaObj.extrachoices.push(upgName);
-//         feaObj[upgNameLC] = aObj;
-//     }
-// });
+[{
+    name : "Adaptable Weapon",
+    listlevel : 3,
+    source : ["KT:AA", 23],
+    description : desc([
+        "If my weapon has the ammunition property I can add a Charged Blade as a second atk",
+        "If it doesn't I can add a Hand Cannon as a second atk"
+    ])
+}, {
+    name : "Arcane Lightning",
+		listlevel : 3,
+		source : ["KT:AA", 27],
+		description : desc([
+			"I add Thunderwave, Shatter, Lightning Bolt, and Storm Sphere to my artificer spell list"
+		]),
+		calcChanges : {
+			spellList : [
+				function(spList, spName, spType) {
+					if (spName == "alternate artificer" && spType.indexOf("bonus") == -1) {
+						spList.extraspells = spList.extraspells.concat(["thunderwave", "shatter", "lightning bolt", "storm sphere"]);
+					}
+				},
+				"I have extra spells added to my artificer spell list: Thunderwave, Shatter, Lightning Bolt, and Storm Sphere."
+			]
+		}
+}].forEach(function (aObj) {
+    var upgName = aObj.listname ? aObj.listname : aObj.name;
+    var upgNameLC = upgName.toLowerCase();
+    var upgLevel = aObj.listlevel ? aObj.listlevel : 1;
+    if (!aObj.prereqeval && upgLevel === 3) {
+        aObj.prereqeval = function () {
+            return classes.known["alternate artificer"].level >= 3 && ClassList["alternate artificer"].chosenUpgrades().indexOf(upgNameLC) == -1;
+        }
+        upgLevel = 1; // so that it's still added to the first list of upgrades
+    } else if (!aObj.prereqeval && upgLevel < 15) {
+        aObj.prereqeval = function () {
+            return ClassList["alternate artificer"].chosenUpgrades().indexOf(upgNameLC) == -1;
+        }
+    }
+    for (var aFea in ClassSubList[warsmithSubname].features) {
+        var feaObj = ClassSubList[warsmithSubname].features[aFea];
+        if (!(/upgrade/i).test(feaObj.name) || !feaObj.extrachoices || feaObj.minlevel < upgLevel) continue;
+        feaObj.extrachoices.push(upgName);
+        feaObj[upgNameLC] = aObj;
+    }
+});
 
 //#region
 /*
@@ -2697,13 +2736,13 @@ MagicItemsList["stormforged weapon"] = {
     },
     allowDuplicates : true,
     description : "While attuned to this weapon you have proficiency with it, You can only be attuned to one of these weapons at a time, which can be changed over a long rest,if lost it can be remade over 3 days (8h each) + 200 gp. It can be augmented with Thundersmith upgrades, each one can have different or the same upgrades.",
-    descriptionFull : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades.",
+    descriptionFull : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Stormcharged: When you use an action, bonus action, or reaction to attack with a Stormcharged Weapon, you can make only one Attack regardless of the number of attacks you can normally make. If you could otherwise make additional attacks with that action, the weapon deals an additional 3d6 lightning or thunder damage per attack that was foregone." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
     choices : ["Thunder Cannon", "Hand Cannon", "Kinetic Hammer", "Charged Blade", "Lightning Pike"],
     "thunder cannon" : {
         name : "Thunder Cannon",
         source : ["KT:AA", 22],
-        description : "This powerful two-handed cannon does 1d12 piercing damage, has a range of 60/180 ft, requires attunement for proficiency, it can be augmented with Thundersmith upgrades, and has the Loud and Stormcharged properties.",
-		descriptionLong : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Stormcharged. When you use an action, bonus action, or reaction to attack with a Stormcharged Weapon, you can make only one Attack regardless of the number of attacks you can normally make. If you could otherwise make additional attacks with that action, the weapon deals an additional 3d6 lightning or thunder damage per attack that was foregone." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
+        description : "This powerful two-handed cannon does d12 piercing damage, has a range of 60/180 ft, requires attunement for proficiency, it can be augmented with Thundersmith upgrades, and has the Loud and Stormcharged properties.",
+		descriptionLong : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Stormcharged: When you use an action, bonus action, or reaction to attack with a Stormcharged Weapon, you can make only one Attack regardless of the number of attacks you can normally make. If you could otherwise make additional attacks with that action, the weapon deals an additional 3d6 lightning or thunder damage per attack that was foregone." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
 		weight : 15,
         weaponAdd : "Thunder Cannon",
         weaponOptions : {
@@ -2724,8 +2763,8 @@ MagicItemsList["stormforged weapon"] = {
     "hand cannon" : {
         name : "Hand Cannon",
         source : ["KT:AA", 22],
-        description : "This powerful but light cannon does 1d10 piercing damage, has a range of 30/90 ft, requires attunement for proficiency, it can be augmented with Thundersmith upgrades, and has the Loud and Stormcharged properties.",
-		descriptionLong : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Stormcharged. When you use an action, bonus action, or reaction to attack with a Stormcharged Weapon, you can make only one Attack regardless of the number of attacks you can normally make. If you could otherwise make additional attacks with that action, the weapon deals an additional 3d6 lightning or thunder damage per attack that was foregone." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
+        description : "This powerful but light cannon does d10 piercing damage, has a range of 30/90 ft, requires attunement for proficiency, it can be augmented with Thundersmith upgrades, and has the Loud and Stormcharged properties.",
+		descriptionLong : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Stormcharged: When you use an action, bonus action, or reaction to attack with a Stormcharged Weapon, you can make only one Attack regardless of the number of attacks you can normally make. If you could otherwise make additional attacks with that action, the weapon deals an additional 3d6 lightning or thunder damage per attack that was foregone." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
 		weight : 5,
         weaponAdd : "Hand Cannon",
         weaponOptions : {
@@ -2743,70 +2782,68 @@ MagicItemsList["stormforged weapon"] = {
             artHandcannon : true
         }
     },
-    "kinetic hammer" : {},
-    "charged blade" : {},
-    "lightning pike" : {},
-    weaponOptions : [{
-        regExpSearch : /^(?=.*Hand)(?=.*cannon).*$/i,
-        name : "Hand Cannon",
-        source : ["KT:AA", 22],
-        ability : 2,
-        type : "Artificer Weapon",
-        damage : [1, 10, "piercing"],
-        range : "30/90 ft",
-        weight : 5,
-        description : "Ammunition, Light, Loud, Stormcharged",
-        abilitytodamage : true,
-        ammo : "storm rounds",
-        artHandcannon : true
-    },{
-        regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
+    "kinetic hammer" : {
         name : "Kinetic Hammer",
         source : ["KT:AA", 22],
-        ability : 1,
-        type : "Artificer Weapon",
-        damage : [1, 10, "bludgeoning"],
-        range : "Melee",
-        weight : 10,
-        description : "+1d4 Thunder Dmg, Two-Handed, Heavy, Loud",
-        abilitytodamage : true,
-        artKineticHammer : true
-    },{
-        regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
+        description : "This powerful melee weapon does d10 bludgeoning damage plus an extra d4 Thunder damage, requires attunement for proficiency, it can be augmented with Thundersmith upgrades, and has the Loud property.",
+		descriptionLong : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
+		weight : 10,
+        weaponAdd : "Kinetic Hammer",
+        weaponOptions : {
+            regExpSearch : /^(?=.*kinetic)(?=.*hammer).*$/i,
+            name : "Kinetic Hammer",
+            source : ["KT:AA", 22],
+            ability : 1,
+            type : "Artificer Weapon",
+            damage : [1, 10, "bludgeoning"],
+            range : "Melee",
+            weight : 10,
+            description : "+1d4 Thunder Dmg, Two-Handed, Heavy, Loud",
+            abilitytodamage : true,
+            artKineticHammer : true
+        }
+    },
+    "charged blade" : {
         name : "Charged Blade",
         source : ["KT:AA", 22],
-        ability : 1,
-        type : "Artificer Weapon",
-        damage : [1, 6, "slashing"],
-        range : "Melee",
-        weight : 3,
-        description : "+1d4 Lightning Dmg, Finesse, Loud",
-        abilitytodamage : true,
-        artChargedBlade : true
-    },{
-        regExpSearch : /^(?=.*lightning)(?=.*pike).*$/i,
+        description : "This powerful but light melee weapon does d10 slashing damage plus an extra d4 lightning damage, requires attunement for proficiency, it can be augmented with Thundersmith upgrades, and has the Loud property.",
+		descriptionLong : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
+		weight : 3,
+        weaponAdd : "Charged Blade",
+        weaponOptions : {
+            regExpSearch : /^(?=.*charged)(?=.*blade).*$/i,
+            name : "Charged Blade",
+            source : ["KT:AA", 22],
+            ability : 1,
+            type : "Artificer Weapon",
+            damage : [1, 6, "slashing"],
+            range : "Melee",
+            weight : 3,
+            description : "+1d4 Lightning Dmg, Finesse, Loud",
+            abilitytodamage : true,
+            artChargedBlade : true
+        }
+    },
+    "lightning pike" : {
         name : "Lightning Pike",
         source : ["KT:AA", 22],
-        ability : 1,
-        type : "Artificer Weapon",
-        damage : [1, 8, "piercing"],
-        range : "Melee",
-        weight : 10,
-        description : "+1d4 Lightning Dmg, Reach, Two-Handed, Loud",
-        abilitytodamage : true,
-        artLightningPike : true
-    }],
-    calcChanges : {
-        atkAdd : [
-            function (fields, v) {
-                if (v.theWea.artThundercannon) fields.Proficiency = true;
-                if (v.theWea.artHandcannon) fields.Proficiency = true;
-                if (v.theWea.artKineticHammer) fields.Proficiency = true;
-                if (v.theWea.artChargedBlade) fields.Proficiency = true;
-                if (v.theWea.artLightningPike) fields.Proficiency = true;
-            },
-            ""
-        ]
+        description : "This long and powerful melee weapon does d8 piercing damage plus an extra d4 lightning damage, requires attunement for proficiency, it can be augmented with Thundersmith upgrades, and has the Loud property.",
+		descriptionLong : "This weapon requires attunement and you proficient with it while attuned. and you can only be attuned to one Stormforged Weapon at a time. If you have multiple Stormforged Weapons, you can change which one you are attuned to during a long rest." + "\n   " + "If you lose your Stormforged Weapon or wish to create additional ones, you can do so over the course of three days (eight hours each day) by expending 200 gold pieces worth of metal and other raw materials. When you make a new Stormforged Weapon, you can make the same or different type, and select the same or different upgrades." + "\n   " + "Loud: Your weapon rings with thunder that is audible within 300 feet of you whenever it makes an attack.",
+		weight : 10,
+        weaponAdd : "Lightning Pike",
+        weaponOptions : {
+            regExpSearch : /^(?=.*lightning)(?=.*pike).*$/i,
+            name : "Lightning Pike",
+            source : ["KT:AA", 22],
+            ability : 1,
+            type : "Artificer Weapon",
+            damage : [1, 8, "piercing"],
+            range : "Melee",
+            weight : 10,
+            description : "+1d4 Lightning Dmg, Reach, Two-Handed, Loud",
+            abilitytodamage : true,
+            artLightningPike : true
+        }
     }
 };
 
