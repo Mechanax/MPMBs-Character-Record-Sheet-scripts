@@ -17,13 +17,14 @@
 	Please support the creator of this content (Marshall Miller) and download his material from the DMs Guild website: https://www.dmsguild.com/browse.php?author=Marshall%20Miller
 */
 
-var iFileName = "Ashin [transcribed by Mechana].js";
+var iFileName = "Ashin [Transcribed by Mechana].js";
 RequiredSheetVersion(13);
 
 RaceList["male ashin"] = {
-	regExpSearch : /male ashin/i,
-	name : "Ashin, Male",
-	source : ["HB", 0],
+	regExpSearch : /^(?=.*male)(?=.*ashin).*$/i,
+	name : "Male Ashin",
+	sortname : "Ashin, Male",
+	source : [["HB", 0]],
 	plural : "Male Ashin",
 	size : 3,
 	speed : {
@@ -31,20 +32,22 @@ RaceList["male ashin"] = {
 	},
 	languageProfs : ["Common", "Arcane"],
 	skills : ["Athletics"],
-	age : "Male Ashin reach adulthood in their late teens and live around 120 years",
-	height : "Male Ashin range from 7 to 8 feet tall",
-	weight : "Male Ashin weigh over 300 lb.",
+	age : " reach adulthood in their late teens and live around 120 years",
+	height : " range from 7 to 8 feet tall",
+	weight : " weigh over 300 lb.",
+	scorestxt : "+2 Strength and +1 to one other ability score of my choice",
 	scores : [2, 0, 0, 0, 0, 0],
 	trait : "Male Ashin (+2 Strength and +1 to one ability scores of my choice)\nPowerful Build: I count as one size larger when determining my carrying capacity and the weight I can push, drag, or lift.\nBrutal Strength: When I score a critical hit with a melee weapon attack, I can add an additional weapon damage die to the damage of the critical hit.",
 	toolProfs : [
 		["Artisan's Tools", 1]
 	],
 	carryingCapacity : 2
-};
+}
 
 RaceList["female ashin"] = {
-	regExpSearch : /female ashin/i,
-	name : "Ashin, Female",
+	regExpSearch : /^(?=.*female)(?=.*ashin).*$/i,
+	name : "Female Ashin",
+	sortname : "Ashin, Female",
 	source : ["HB", 0],
 	plural : "Female Ashin",
 	size : 3,
@@ -53,11 +56,12 @@ RaceList["female ashin"] = {
 	},
 	languageProfs : ["Common", "Arcane"],
 	skills : ["Arcana"],
-	age : "Female Ashin reach adulthood in their late teens and live around 120 years",
-	height : "Female Ashin range from 4 to 5 feet tall",
-	weight : "Female Ashin weigh between 70 and 110 lb.",
+	age : " reach adulthood in their late teens and live around 120 years",
+	height : " range from 4 to 5 feet tall",
+	weight : " weigh between 70 and 110 lb.",
+	scorestxt : "+2 Intelligence and +1 to one other ability score of my choice",
 	scores : [0, 0, 0, 2, 0, 0],
-	trait : "Male Ashin (+2 Intelligence and +1 to one ability scores of my choice)\nInnate Magic: I learn two cantrips from the wizard spell list. Int is my ability for them.",
+	trait : "Female Ashin (+2 Intelligence and +1 to one ability scores of my choice)\nInnate Magic: I learn two cantrips from the wizard spell list. Int is my ability for them.",
 	spellcastingAbility : 4,
 	spellcastingBonus : {
 		name : "Innate Magic",
@@ -68,4 +72,4 @@ RaceList["female ashin"] = {
 	toolProfs : [
 		"Alchemist's supplies"
 	]
-};
+}
