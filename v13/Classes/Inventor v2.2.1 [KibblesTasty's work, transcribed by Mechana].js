@@ -48,7 +48,7 @@
  */
 
 var iFileName = "Inventor v2.2.1 [KibblesTasty's work, transcribed by Mechana].js";
-RequiredSheetVersion(13);
+RequiredSheetVersion("13.0.8");
 
 SourceList["KT:I"] = {
     name : "KibblesTasty: Inventor (v2.2.1)",
@@ -163,7 +163,7 @@ SourceList["KT:I"] = {
 //*****************************************************-Class-********************************************************\\
 
 ClassList["inventor"] = {
-    regExpSearch : /^(?=.*artificer)(?!.*wizard).*$/i,
+    regExpSearch : /inventor/i,
     name : "Inventor",
     source : ["KT:I", 1],
     primaryAbility : "\n \u2022 Inventor: Thunder/Gadget/Curse/Relic: Dexterity\n\t Golem/Infusion/Potion/Rune: Intelligence\n\t War/Flesh: Strength",
@@ -2048,16 +2048,16 @@ ClassSubList["inventor-warsmith"] = {
 [{
     name : "Adaptable Armor",
     listlevel : 3,
-    source : ["KT:I", 27],
+    source : ["KT:I", 28],
     description : desc([
-        "While wearing my warsmith's armor, all my movement speeds increase with +10 ft",
-        "In addition, my warsmith's armor weighs 15 lb less (not incorporated into automation)"
+        "While wearing my armor, I get a climbing and swim speed equal to my walking speed",
+        "I can also move across vertical surfaces and ceilings while leaving my hands free"
     ]),
-    speed : { allModes : "+10" }
+    speed : { climb : { spd : "walk", enc : 0 }, swim: { spd : "walk", enc : 0 },}
 },{
     name : "Accelerated Movement",
     listlevel : 3,
-    source : ["KT:I", 27],
+    source : ["KT:I", 28],
     description : desc([
         "While wearing my warsmith's armor, all my movement speeds increase with +10 ft",
         "In addition, my warsmith's armor weighs 15 lb less (not incorporated into automation)"
@@ -2070,13 +2070,13 @@ ClassSubList["inventor-warsmith"] = {
         return classes.known["inventor"].level >= 3 && upgKn.indexOf("accelerated movement, 2nd (prereq: accelerated movement)") == -1 && upgKn.indexOf("accelerated movement") != -1;
     },
     name : "Accelerated Movement, 2nd",
-    source : ["KT:I", 27],
+    source : ["KT:I", 28],
     description : " [another +10 ft, -15 lb]",
     speed : { allModes : "+10" }
 }, {
-    name : "Arcane Visor",
+    name : "Arcane Visor, Darkvision",
     listlevel : 3,
-    source : ["KT:I", 27],
+    source : ["KT:I", 28],
     description : desc([
         "I gain 60 ft darkvision, or add 60 ft to darkvision if I already had it",
         "In addition, I have advantage on saving throws against being blinded"
@@ -2084,72 +2084,127 @@ ClassSubList["inventor-warsmith"] = {
     vision : [["Darkvision", "fixed 60"], ["Darkvision", "+60"]],
     savetxt : { adv_vs : ["blinded"] }
 }, {
-    name : "Faraday Helmet",
+    name : "Arcane Visor, Sunlight Sensitivity",
     listlevel : 3,
-    source : ["KT:I", 27],
+    source : ["KT:I", 28],
     description : desc([
-        "While wearing my armor, I can replace a save die roll with the number of upgrades I have",
-        "But only if saving against being magically charmed, mind controlled, stunned, or confused"
+        "I can ignore Sunlight Sensitivity",
+        "In addition, I have advantage on saving throws against being blinded"
     ]),
-    savetxt : { text : ["Use number of upgrades instead of die roll for saves vs. magically being charmed, mind controller, stunned, or confused"] }
+    vision : [["Ignore Sunlight Sensitivity", 0]],
+    savetxt : { adv_vs : ["blinded"] }
+}, {
+    name : "Arcane Visor, Divination",
+    listlevel : 3,
+    source : ["KT:I", 28],
+    description : desc([
+        "Divination spells don't require my Concentration to maintain, only one spell at a time",
+        "In addition, I have advantage on saving throws against being blinded"
+    ]),
+    calcChanges : {
+        spellAdd : [
+            function (spellKey, spellObj, spName) {
+                if (spName == "inventor" && spellObj.school == "Div" && (/conc,/i).test(spellObj.duration)) {
+                    spellObj.duration = spellObj.duration.replace(/conc, ?/i, "");
+                    return true;
+                }
+            },
+            "Any divination Inventor spells that I know no longer require concentration to maintain them."
+        ]
+    },
+    savetxt : { adv_vs : ["blinded"] }
+}, {
+    listname : "Collapsible (incompatible with Integrated Armor)",
+    listlevel : 3,
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return CurrentMagicItems.choices.indexOf("integrated armor (medium)") == -1 && upgKn.indexOf("collapsible (incompatible with integrated armor)") == -1;
+    },
+    name : "Collapsible",
+    source : ["KT:I", 28],
+    description : desc([
+        "As an action, I can don or doff my warsuit or warplate as it can collapse into a case",
+        "This case weighs 1/3 of the armor's full weight (not included in the automation)"
+    ]),
+    action : [["action", " (don/doff)"]]
+}, {
+    listname : "construct constitution (prereq: integrated armor)",
+    listlevel : 3,
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return CurrentMagicItems.choices.indexOf("integrated armor (medium)") != -1 && upgKn.indexOf("construct constitution (prereq: integrated armor)") == -1;
+    },
+    name : "Construct Constitution",
+    source : ["KT:I", 28],
+    description : desc([
+        "I gain resistance to poison damage and immunity to the poisoned condition",
+        "Also, I have adv on saves against diseases and spell effects that need a humanoid target"
+    ]),
+    dmgres : ["Poison"],
+    savetxt : { adv_vs : ["diseases", "humanoid target spells"], immune : ["poison"], }
 }, {
     name : "Flame Projector",
     listlevel : 3,
-    source : ["KT:I", 27],
+    source : ["KT:I", 28],
     description : desc([
         "While wearing my warplate gauntlet, I can use the Fire Bolt cantrip",
-        "Also, I add Burning Hands, Scorching Ray, Fireball, and Wall of Fire to my Inventor spell list"
+        "Also, I can cast Burning Hands, Scorching Ray, Fireball, Wall of Fire, and Immolation"
     ]),
     spellcastingBonus : {
         name : "Flame Projector",
-        spells : ["fire bolt"],
-        selection : ["fire bolt"]
-    },
-    calcChanges : {
-        spellList : [
-            function(spList, spName, spType) {
-                if (spName == "inventor" && spType.indexOf("bonus") == -1) {
-                    spList.extraspells = spList.extraspells.concat(["burning hands", "scorching ray", "fireball", "wall of fire"]);
-                }
-            },
-            "While wearing my warplate gauntlet, I have extra spells added to my Inventor spell list: Burning Hands, Scorching Ray, Fireball, and Wall of Fire."
-        ]
+        spells : ["fire bolt", "burning hands", "scorching ray", "fireball", "wall of fire", "immolation"],
+        times : 6,
+        selection : ["fire bolt", "burning hands", "scorching ray", "fireball", "wall of fire", "immolation"]
     }
 }, {
     name : "Force Blast",
-    source : ["KT:I", 27],
+    source : ["KT:I", 28],
     description : desc([
-        "I can make a 30 ft ranged spell attack to deal 1d8 + my Intelligence mod in force damage",
+        "I can make a 60 ft ranged spell attack to deal 1d8 + my Intelligence mod in force damage",
         "When I take the Attack action, I can do this instead of making one attack"
     ]),
-    additional : levels.map(function (n) {
-        return n < 5 ? 0 : "+" + (n < 14 ? 1 : 2) + " to hit/damage";
-    }),
     weaponsAdd : ["Force Blast"],
     weaponOptions : {
         regExpSearch : /^(?=.*force)(?=.*blast).*$/i,
         name : "Force Blast",
-        source : ["KT:I", 27],
+        source : ["KT:I", 28],
         ability : 4,
         type : "Spell",
         damage : [1, 8, "force"],
-        range : "30 ft",
+        range : "60 ft",
         description : "Can be used instead of one attack during an Attack action",
         abilitytodamage : true,
         isWarsmithForceBlast : true
-    },
-    calcChanges : {
-        atkCalc : [
-            function (fields, v, output) {
-                if (v.theWea.isWarsmithForceBlast && classes.known['inventor'] && classes.known['inventor'].level >= 5) {
-                    var extraBonus = classes.known['inventor'].level < 14 ? 1 : 2;
-                    output.extraDmg += extraBonus;
-                    output.extraHit += extraBonus;
-                };
-            },
-            "I add a +1 bonus on my attack and damage roll for Force Blast once I reach 5th level, and again when I reach 14th level Inventor."
-        ]
     }
+}, {
+    listname : "fortified brace (prereq: warplate)",
+    listlevel : 3,
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return CurrentMagicItems.choices.indexOf("warplate (heavy)") != -1 && upgKn.indexOf("fortified brace (prereq: warplate)") == -1;
+    },
+    name : "Fortified Brace",
+    source : ["KT:I", 28],
+    description : desc([
+        "As a reaction to taking damage I have resistance to all damage until next turn", 
+        "Also, any subsequent attacks against me have disadvantage",
+        "On my next turn I have half my movement speed and cannot take an action"
+    ]),
+    action : [ "reaction", " (Taking Damage)"]
+}, {
+    listname : "iron fortitude (prereq: integrated armor)",
+    listlevel : 3,
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return CurrentMagicItems.choices.indexOf("integrated armor (medium)") != -1 && upgKn.indexOf("iron fortitude (prereq: integrated armor)") == -1;
+    },
+    name : "Iron Fortitude",
+    source : ["KT:I", 28],
+    description : desc([
+        "As a reaction to taking damage I have resistance to all damage until next turn", 
+        "Also, any subsequent attacks against me have disadvantage",
+        "On my next turn I have half my movement speed and cannot take an action"
+    ])
 }, {
     name : "Grappling Reel",
     listlevel : 3,
@@ -2334,42 +2389,6 @@ ClassSubList["inventor-warsmith"] = {
         "Thus, I can hide in plain sight and others have disadv. on Perception checks to see me"
     ]),
     action : [["action", " (start/stop)"]]
-}, {
-    listname : "Collapsible (incompatible with Integrated Armor or Piloted Golem)",
-    listlevel : 5,
-    prereqeval : function () {
-        var upgKn = ClassList["inventor"].chosenUpgrades();
-        return CurrentMagicItems.choices.indexOf("integrated armor (medium)") == -1 && upgKn.indexOf("collapsible (incompatible with integrated armor or piloted golem)") == -1 && upgKn.indexOf("piloted golem (prereq: warplate, incompatible with collapsible)") == -1;
-    },
-    name : "Collapsible",
-    source : ["KT:I", 28],
-    description : desc([
-        "As an action, I can don or doff my warsuit or warplate as it can collapse into a case",
-        "This case weighs 1/3 of the armor's full weight (not included in the automation)"
-    ]),
-    action : [["action", " (don/doff)"]]
-}, {
-    listname : "Divination Visor (prereq: Arcane Visor)",
-    listlevel : 5,
-    prereqeval : function () {
-        var upgKn = ClassList["inventor"].chosenUpgrades();
-        return upgKn.indexOf("divination visor (prereq: arcane visor)") == -1 && upgKn.indexOf("arcane visor") != -1;
-    },
-    name : "Divination Visor",
-    source : ["KT:I", 28],
-    description : "\n   I can cast my divination Inventor spells as a bonus action and they no longer require conc.",
-    calcChanges : {
-        spellAdd : [
-            function (spellKey, spellObj, spName) {
-                if (spName == "inventor" && spellObj.school == "Div" && (spellObj.time != "1 bns" || (/conc,/i).test(spellObj.duration))) {
-                    spellObj.time = "1 bns";
-                    spellObj.duration = spellObj.duration.replace(/conc, ?/i, "");
-                    return true;
-                }
-            },
-            "I can cast divination Inventor spells that I know as a bonus action, and if they require concentration, I also no longer require concentration to maintain them."
-        ]
-    }
 }, {
     listname : "Emergency Protocol (prereq: Sentient Armor)",
     listlevel : 5,
@@ -3026,39 +3045,6 @@ SpellsList["vorpal weapon"] = {
 	description : "Ignore slashing dmg resistance, double dmg to obj, +3 to atk & dmg if less; crit kills if less then 50 hp",
 	descriptionFull : "Until the spell ends, a weapon touch becomes indescribably sharp, ignoring resistance to slashing damage, and gains the Siege property, dealing double damage to inanimate objects such as structures. The weapon has a modifier of less than +3 to attack and damage rolls, its modifier becomes +3 to attack and damage rolls for the duration of the spell." + "\n   " + "Additionally, if a critical strike of this weapon would leave a creature with less than 50 hit points, the target creature is killed."
 };
-
-
-// /**
-//  * changeSpellsOnMagicItem
-//  * @param {boolean} AddRemove true to add, false to remove
-//  * @param {String} item the name of the item to add/remove from
-//  * @param {String} upgrade the name of the upgrade that adds the spells
-//  * @param {String[]} spells the names of the spells to add
-//  * @param {String[]} fCol the String you want in the first colum of each spell
-//  * @param {Object[]} changes the Object of what you want changed for each spell if any
-//  */
-// changeSpellsOnMagicItem = function(AddRemove, item, upgrade, spells, fCol, changes) {
-//     var theItemBonus = MagicItemsList[item].spellcastingBonus;
-//     var theItemChanges = MagicItemsList[item].spellChanges;
-//     for (var i = 0; i < spells.length; i++) {
-//         var theSpellObj = {
-//             name : upgrade,
-//             spells : [spells[i]],
-//             selection : [spells[i]],
-//             firstCol : fCol[i]
-//         };
-//         if (AddRemove && theItemBonus.indexOf(theSpellObj) === -1) {
-//             theItemBonus.push(theSpellObj);
-//             if (changes) {theItemChanges[spells[i]] = changes[i];}
-//         } else {
-//             theItemBonus.splice(theItemBonus.indexOf(theSpellObj), 1);
-//             delete theItemChanges[spells[i]];
-//         }
-//     }
-//     //Force apply updates to the magic Item(need to get the spellChanges to work)
-//     RemoveMagicItem(item);
-//     AddMagicItem(item);
-// };
 
 //*****************************************************\\
 //*                  -Thundersmith-                   *\\
