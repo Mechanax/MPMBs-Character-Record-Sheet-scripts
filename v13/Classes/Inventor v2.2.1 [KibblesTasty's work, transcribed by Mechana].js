@@ -2114,7 +2114,7 @@ ClassSubList["inventor-warsmith"] = {
     },
     savetxt : { adv_vs : ["blinded"] }
 }, {
-    listname : "Collapsible (incompatible with Integrated Armor)",
+    listname : "Collapsible (Incompatible with Integrated Armor)",
     listlevel : 3,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
@@ -2128,7 +2128,7 @@ ClassSubList["inventor-warsmith"] = {
     ]),
     action : [["action", " (don/doff)"]]
 }, {
-    listname : "construct constitution (prereq: integrated armor)",
+    listname : "Construct Constitution (prereq: Integrated Armor)",
     listlevel : 3,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
@@ -2177,7 +2177,7 @@ ClassSubList["inventor-warsmith"] = {
         isWarsmithForceBlast : true
     }
 }, {
-    listname : "fortified brace (prereq: warplate)",
+    listname : "Fortified Brace (prereq: Warplate)",
     listlevel : 3,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
@@ -2192,7 +2192,7 @@ ClassSubList["inventor-warsmith"] = {
     ]),
     action : [ "reaction", " (Taking Damage)"]
 }, {
-    listname : "iron fortitude (prereq: integrated armor)",
+    listname : "Iron Fortitude (prereq: Integrated Armor)",
     listlevel : 3,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
@@ -2201,14 +2201,18 @@ ClassSubList["inventor-warsmith"] = {
     name : "Iron Fortitude",
     source : ["KT:I", 28],
     description : desc([
-        "As a reaction to taking damage I have resistance to all damage until next turn", 
-        "Also, any subsequent attacks against me have disadvantage",
-        "On my next turn I have half my movement speed and cannot take an action"
+        "When damage reduces me to 0 hp I make a DC 5 +damage taken Constitution save", 
+        "Unless the damage is a critical hit I drop to 1 hp instead"
     ])
 }, {
-    name : "Grappling Reel",
+    listname : "Grappling Reel (prereq: Warplate or Integrated Armor)",
     listlevel : 3,
-    source : ["KT:I", 27],
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return (CurrentMagicItems.choices.indexOf("integrated armor (medium)") == -1 || CurrentMagicItems.choices.indexOf("warplate (heavy)") == -1) && upgKn.indexOf("grappling reel (prereq: warplate or integrated armor)") == -1;
+    },
+    name : "Grappling Reel",
+    source : ["KT:I", 28],
     description : desc([
         "As an action or one attack, I can use my warsmith's armor integrated grappling reel",
         "I target a surface, object, or creature within 30 ft; If it is Large or more, I move towards it",
@@ -2216,9 +2220,24 @@ ClassSubList["inventor-warsmith"] = {
     ]),
     action : [["action", ""]]
 }, {
+    listname : "Grappling Hook (prereq: Warsuit)",
+    listlevel : 3,
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return CurrentMagicItems.choices.indexOf("warsuit (medium)") != -1 && upgKn.indexOf("grappling hook (prereq: warsuit)") == -1;
+    },
+    name : "Grappling Hook",
+    source : ["KT:I", 28],
+    description : desc([
+        "As an action or one attack, I can use my warsmith's armor integrated grappling reel",
+        "I target a surface, object, or creature within 20 ft; If it is Medium or more, I move towards it",
+        "If it is Small or smaller, I can make a grapple check to pull it towards me and grapple it"
+    ]),
+    action : [["action", ""]]
+}, {
     name : "Lightning Channel",
     listlevel : 3,
-    source : ["KT:I", 27],
+    source : ["KT:I", 29],
     description : desc([
         "I can cast Lightning Charged as a bonus action without using a spell slot once per short rest",
         "Additionally, my Force Blast upgrade deals +1d6 lightning damage"
@@ -2250,34 +2269,25 @@ ClassSubList["inventor-warsmith"] = {
 }, {
     name : "Lightning Projector",
     listlevel : 3,
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : desc([
-        "While wearing my gauntlet, I can use Shocking Grasp and add to my Inventor spell list:",
-        "Thunderwave, Lightning Charged, Lightning Bolt, and Storm Sphere"
+        "While wearing my gauntlet, I can use Shocking Grasp. I can also cast",
+        "Lightning Tendril, Lightning Charged, Lightning Bolt, Jumping Jolt, and Sky Burst"
     ]),
     spellcastingBonus : {
         name : "Lightning Projector",
-        spells : ["shocking grasp"],
-        selection : ["shocking grasp"]
-    },
-    calcChanges : {
-        spellList : [
-            function(spList, spName, spType) {
-                if (spName == "inventor" && spType.indexOf("bonus") == -1) {
-                    spList.extraspells = spList.extraspells.concat(["thunderwave", "lightning charged", "lightning bolt", "storm sphere"]);
-                }
-            },
-            "While wearing my warplate gauntlet, I have extra spells added to my Inventor spell list: Thunderwave, Lightning Charged, Lightning Bolt, and Storm Sphere."
-        ]
+        spells : ["shocking grasp", "lightning tendril", "lightning charged", "lightning bolt", "jumping jolt", "sky burst"],
+        times : 6,
+        selection : ["shocking grasp", "lightning tendril", "lightning charged", "lightning bolt", "jumping jolt", "sky burst"]
     }
 }, {
     name : "Martial Grip",
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : "\n   I have proficiency with martial weapons while wearing my warplate gauntlet",
     weaponProfs : [false, true]
 }, {
     name : "Power Fist",
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : desc([
         "I can use my warplate gauntlet as a magic weapon that deals 1d8 bludgeoning damage",
         "I have proficiency with this weapon and it has the light property",
@@ -2290,7 +2300,7 @@ ClassSubList["inventor-warsmith"] = {
     weaponOptions : {
         regExpSearch : /^(?=.*power)(?=.*fist).*$/i,
         name : "Power Fist",
-        source : ["KT:I", 28],
+        source : ["KT:I", 29],
         ability : 1,
         type : "Natural",
         damage : [1, 8, "bludgeoning"],
@@ -2318,13 +2328,13 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("power fist, 2nd hand (prereq: power fist)") == -1 && upgKn.indexOf("power fist") != -1;
     },
     name : "Power Fist, 2nd hand",
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : "\n   With a Power Fist on both hands, I can use it for two-weapon fighting",
     weaponsAdd : ["Power Fist (off-hand)"]
 }, {
     name : "Reinforced Armor",
     listlevel : 3,
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : " [+1 AC to warsmith's armor]",
     extraAC : [{
         mod : 1,
@@ -2338,7 +2348,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("reinforced armor, 2nd (prereq: reinforced armor)") == -1 && upgKn.indexOf("reinforced armor") != -1;
     },
     name : "Reinforced Armor, 2nd",
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : " [+1 AC to warsmith's armor]",
     extraAC : [{
         mod : 1,
@@ -2352,7 +2362,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("reinforced armor, 3rd (prereq: reinforced armor)") == -1 && upgKn.indexOf("reinforced armor, 2nd (prereq: reinforced armor)") != -1 && upgKn.indexOf("reinforced armor") != -1;
     },
     name : "Reinforced Armor, 3rd",
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : " [+1 AC to warsmith's armor]",
     extraAC : [{
         mod : 1,
@@ -2362,28 +2372,40 @@ ClassSubList["inventor-warsmith"] = {
 }, {
     name : "Sentient Armor",
     listlevel : 3,
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : "\n   While wearing my warsmith's armor, I add +2 to my Intelligence score, up to 22",
     scores : [0, 0, 0, 2, 0, 0],
     scoresMaximum : [0, 0, 0, 22, 0, 0],
 }, {
-    listname : "Arcaneware (prereq: Sentient Armor)",
+    listname : "Wire Acrobatics (prereq: Grappling Hook)",
+    listlevel : 3,
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return upgKn.indexOf("wire acrobatics (prereq: grappling hook)") == -1 && upgKn.indexOf("grappling hook (prereq: warsuit)") != -1;
+    },
+    name : "Wire Acrobatics",
+    source : ["KT:I", 29],
+    description : desc([
+        "I can use my grappling hook to move instead of using it as an attack/action",
+        "The first time I use it to move on a turn It don't provoke attacks of opportunity"
+    ])
+}, {
+    listname : "Artificial Guidance (prereq: Sentient Armor)",
     listlevel : 5,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
-        return upgKn.indexOf("arcaneware (prereq: sentient armor)") == -1 && upgKn.indexOf("sentient armor") != -1;
+        return upgKn.indexOf("artificial guidance (prereq: sentient armor)") == -1 && upgKn.indexOf("sentient armor") != -1;
     },
-    name : "Arcaneware",
-    source : ["KT:I", 28],
+    name : "Artificial Guidance",
+    source : ["KT:I", 29],
     description : desc([
-        "While I'm able to communicate with my warsmith's armor, I have proficiency in a skill",
-        "This can be either Arcana, History, Investigation, Nature, or Religion"
-    ]),
-    skillstxt : "Choose one from Arcana, History, Investigation, Nature, or Religion"
+        "While I'm able to communicate with my warsmith's armor, I have the effect of guidance",
+        "When making an Intelligence or Wisdom ability check"
+    ])
 }, {
     listlevel : 5,
     name : "Active Camouflage",
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : desc([
         "As an action, I can cause my suit to blend into its surrounding, making me lightly obscured",
         "Thus, I can hide in plain sight and others have disadv. on Perception checks to see me"
@@ -2397,7 +2419,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("emergency protocol (prereq: sentient armor)") == -1 && upgKn.indexOf("sentient armor") != -1;
     },
     name : "Emergency Protocol",
-    source : ["KT:I", 28],
+    source : ["KT:I", 29],
     description : desc([
         "When I'm incapacitated or unconscious and can't take an action, my armor will act for me",
         "It will cast a spell using one of its upgrades or take the Dodge action"
@@ -2405,27 +2427,28 @@ ClassSubList["inventor-warsmith"] = {
     usages : 1,
     recovery : "short rest"
 }, {
-    listname : "Focal Reflectors (prereq: Force Blast)",
+    listname : "Force Accumulator (prereq: Force Blast)",
     listlevel : 5,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
-        return upgKn.indexOf("emergency protocol (prereq: force blast)") == -1 && upgKn.indexOf("force blast") != -1;
+        return upgKn.indexOf("force accumulator (prereq: force blast)") == -1 && upgKn.indexOf("force blast") != -1;
     },
-    name : "Focal Reflectors",
-    source : ["KT:I", 28],
-    description : "\n   I add +30 ft range to my Force Blast and a +2 bonus on all my ranged spell attack rolls",
+    name : "Force Accumulator",
+    source : ["KT:I", 29],
+    description : desc([
+        "Each time I use a spell slot of 1st or higher I get charges equal to the slot level",
+        "I can only have a max number of charges equal to half my Int mod rounded down",
+        "When I deal damage with my Force Blast I can expend them to deal 1d6 damage per charge",
+        "Or push them away 5 ft. per charge. Charges not spent after 1 minute are lost"
+    ]),
     calcChanges : {
         atkAdd : [
             function (fields, v) {
                 if (v.theWea.isWarsmithForceBlast) {
-                    var rangeFT = fields.Range.match(/(\d+) ?ft/);
-                    fields.Range = fields.Range.replace(rangeFT[0], Number(rangeFT[1]) + 30 + " ft");
-                }
-                if (v.isSpell && (/^(?!.*melee).*\d+.*$/i).test(fields.Range)) {
-                    output.extraHit += 2;
+                    fields.Description += '; Max of ' + Math.floor(What('Int Mod')*0.5) + ' Force Accumulator charges; +1d6/+5ft. push per charge';
                 }
             },
-            "The range of the ranged spell attacks I make with Force Blast increases with 30 ft.\n \u2022 I add +2 to my ranged spell attack rolls."
+            "The max number of charges granted by Force Accumulator and uses per charge"
         ]
     }
 }, {
@@ -2459,63 +2482,63 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("reactive plating (prereq: warplate)") == -1 && CurrentMagicItems.choices.indexOf("warplate (heavy)") != -1;
     },
     name : "Reactive Plating",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   As a reaction when hit by an attack, I can reduce the damage by my proficiency bonus",
     action : [["reaction", " (when hit)"]]
 }, {
     listname : "Resistance, Acid",
     listlevel : 5,
     name : "Acid Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to acid damage",
     dmgres : ["Acid"]
 }, {
     listname : "Resistance, Cold",
     listlevel : 5,
     name : "Cold Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to Cold damage",
     dmgres : ["Cold"]
 }, {
     listname : "Resistance, Fire",
     listlevel : 5,
     name : "Fire Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to fire damage",
     dmgres : ["Fire"]
 }, {
     listname : "Resistance, Force",
     listlevel : 5,
     name : "Force Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to force damage",
     dmgres : ["Force"]
 }, {
     listname : "Resistance, Lightning",
     listlevel : 5,
     name : "Lightning Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to lightning damage",
     dmgres : ["Lightning"]
 }, {
     listname : "Resistance, Necrotic",
     listlevel : 5,
     name : "Necrotic Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to necrotic damage",
     dmgres : ["Necrotic"]
 }, {
     listname : "Resistance, Radiant",
     listlevel : 5,
     name : "Radiant Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to radiant damage",
     dmgres : ["Radiant"]
 }, {
     listname : "Resistance, Thunder",
     listlevel : 5,
     name : "Thunder Resistance",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : "\n   While wearing my warsmith's armor, I have resistance to thunder damage",
     dmgres : ["Thunder"]
 }, {
@@ -2526,16 +2549,39 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("sealed suit (prereq: warplate)") == -1 && CurrentMagicItems.choices.indexOf("warplate (heavy)") != -1;
     },
     name : "Sealed Suit",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : desc([
         "As a bonus action, I can active an environment seal on my armor with 1 hour of air",
         "While active, I'm immune to poison and acclimated to high altitude and cold & hot climates"
     ]),
     action : [["bonus action", ""]]
 }, {
+    listname : "Assume Control (prereq: Emergency Protocol)",
+    listlevel : 9,
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return upgKn.indexOf("assume control (prereq: emergency protocol)") == -1 && upgKn.indexOf("emergency protocol (prereq: sentient armor)") != -1;
+    },
+    name : "Assume Control",
+    source : ["KT:I", 30],
+    description : desc([
+        "",
+        "",
+        "",
+        ""
+    ])
+}, {
+    name : "Brute Force Style",
+    listlevel : 9,
+    source : ["KT:I", 30],
+    description : desc([
+        "",
+        ""
+    ])
+}, {
     listlevel : 9,
     name : "Ether Reactor",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : " [6 charges \u0026 1\xD7 overdraw per long rest]" + desc([
         "I can use these charges to cast spells from other upgrades, without expending that upgrade",
         "This uses 1 charge per level of the spell; I can expend more to cast the spell at a higher level",
@@ -2552,12 +2598,20 @@ ClassSubList["inventor-warsmith"] = {
         recovery : "long rest"
     }],
 }, {
+    listname : "Heads Up Display (prereq: Arcane Visor and Sentient Armor)",
     listlevel : 9,
-    name : "Iron Muscle",
-    source : ["KT:I", 29],
-    description : "\n   While wearing my warsmith's armor, I add +2 to my Strength score, up to 24",
-    scores : [2, 0, 0, 0, 0, 0],
-    scoresMaximum : [24, 0, 0, 0, 0, 0]
+    prereqeval : function () {
+        var upgKn = ClassList["inventor"].chosenUpgrades();
+        return upgKn.indexOf("heads up display (prereq: arcane visor and sentient armor)") == -1 && upgKn.indexOf("emergency protocol (prereq: sentient armor)") != -1 && (upgKn.indexOf("arcane visor, darkvision") != -1 || upgKn.indexOf("arcane visor, sunlight sensitivity") != -1 || upgKn.indexOf("arcane visor, divination") != -1);
+    },
+    name : "Heads Up Display",
+    source : ["KT:I", 30],
+    description : desc([
+        "",
+        "",
+        "",
+        ""
+    ])
 }, {
     listname : "Phase Suit (prereq: Warsuit)",
     listlevel : 9,
@@ -2566,7 +2620,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("phase suit (prereq: warsuit)") == -1 && CurrentMagicItems.choices.indexOf("warsuit (medium)") != -1;
     },
     name : "Phase Suit",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : desc([
         "I know the Misty Step and Blink spells",
         "As an action, I become intangible, moving through creatures and objects until my turn ends",
@@ -2590,7 +2644,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("piloted golem (prereq: warplate, incompatible with collapsible)") == -1 && upgKn.indexOf("collapsible (incompatible with integrated armor or piloted golem)") == -1 && CurrentMagicItems.choices.indexOf("warplate (heavy)") != -1;
     },
     name : "Piloted Golem",
-    source : ["KT:I", 29],
+    source : ["KT:I", 30],
     description : desc([
         "While wearing my warplate, my size category increases by one step",
         "In addition, I gain adv. on Strength saves and adv. on Strength checks vs. smaller creatures"
@@ -2605,6 +2659,16 @@ ClassSubList["inventor-warsmith"] = {
         if (curSize != -1) PickDropdown("Size Category", curSize + 1);
     }
 }, {
+    listlevel : 9,
+    name : "Recall",
+    source : ["KT:I", 30],
+    description : desc([
+        "As a bonus action, I can remove and hide my warsmith's armor in a pocket dimension",
+        "As an action, I can don it again as I return it from this pocket dimension",
+        "While it remains in this pocket dimension, it can't be interacted with in any other way"
+    ]),
+    action : [["bonus action", " (doff and hide)"], ["action", " (return and don)"]]
+}, {//TODO: Merge this with Piloted Golem
     listname : "Ablative Armor (prereq: Piloted Golem)",
     listlevel : 11,
     prereqeval : function () {
@@ -2622,7 +2686,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("cloaking device (prereq: active camouflage)") == -1 && upgKn.indexOf("active camouflage") != -1;
     },
     name : "Cloaking Device",
-    source : ["KT:I", 29],
+    source : ["KT:I", 31],
     description : desc([
         "As a reaction on my turn where I don't move with active camouflage engaged, I can Hide",
         "I make an Int (Stealth) check, but at disadv. in 5 ft of a creature or if I attacked this turn",
@@ -2639,19 +2703,6 @@ ClassSubList["inventor-warsmith"] = {
         firstCol : "oncelr"
     }
 }, {
-    listlevel : 11,
-    name : "Distributed Force",
-    source : ["KT:I", 29],
-    description : "\n   I can add my ability modifier to the damage of my off-hand attacks",
-    calcChanges : {
-        atkCalc : [
-            function (fields, v, output) {
-                if (v.isOffHand) output.modToDmg = true;
-            },
-            "When engaging in two-weapon fighting, I can add my ability modifier to the damage of my off-hand attacks. If a melee weapon includes 'off-hand' or 'secondary' in its name or description, it is considered an off-hand attack."
-        ]
-    }
-}, {
     listname : "Lightning Rod (prereq: Lightning Channel)",
     listlevel : 11,
     prereqeval : function () {
@@ -2659,7 +2710,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("lightning rod (prereq: lightning channel)") == -1 && upgKn.indexOf("lightning channel") != -1;
     },
     name : "Lightning Rod",
-    source : ["KT:I", 29],
+    source : ["KT:I", 31],
     description : "\n   Whenever I cast Lightning Charged, I treat it as if I had used a spell slot of 1 level higher",
     spellChanges : {
         "lightning charged" : {
@@ -2675,7 +2726,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("flash freeze capacitor (incompatible with other capacitors)") == -1 && !(/capacitor[^s]/).test(upgKn);
     },
     name : "Flash Freeze Capacitor",
-    source : ["KT:I", 29],
+    source : ["KT:I", 31],
     description : desc([
         "Once per long rest, I can cast Cone of Cold using this upgrade without using a spell slot",
         "When doing so, the effected area is difficult terrain until the end of my next turn"
@@ -2702,7 +2753,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("flight (incompatible with piloted golem)") == -1 && upgKn.indexOf("piloted golem (prereq: warplate, incompatible with collapsible)") == -1;
     },
     name : "Flight",
-    source : ["KT:I", 30],
+    source : ["KT:I", 31],
     description : "\n   While wearing my warsmith's armor, I have a magical flying speed of 30 ft",
     speed : { fly : { spd : 30, enc : 30 } }
 }, {
@@ -2713,7 +2764,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("integrated attack (prereq: integrated armor or warplate)") == -1 && (CurrentMagicItems.choices.indexOf("integrated armor (medium)") == -1 || CurrentMagicItems.choices.indexOf("warplate (heavy)") == -1);
     },
     name : "Integrated Attack",
-    source : ["KT:I", 30],
+    source : ["KT:I", 31],
     description : " [can have multiple times]" + desc([
         "Upon selecting this upgrade, I incorporate a melee weapon I own into my warsmith's armor",
         "This weapon can't have the heavy property; As a bonus action, I can activate this weapon",
@@ -2722,6 +2773,13 @@ ClassSubList["inventor-warsmith"] = {
     ]),
     action : [["bonus action", " (active/attack)"]]
 }, {
+    listlevel : 11,
+    name : "Iron Muscle",
+    source : ["KT:I", 31],
+    description : "\n   While wearing my warsmith's armor, I add +2 to my Strength score, up to 24",
+    scores : [2, 0, 0, 0, 0, 0],
+    scoresMaximum : [24, 0, 0, 0, 0, 0]
+}, {
     listname : "Power Slam Capacitor (incompatible with other Capacitors)",
     listlevel : 11,
     prereqeval : function () {
@@ -2729,7 +2787,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("power slam capacitor (incompatible with other capacitors)") == -1 && !(/capacitor[^s]/).test(upgKn);
     },
     name : "Power Slam Capacitor",
-    source : ["KT:I", 30],
+    source : ["KT:I", 31],
     description : "\n   As an action, I jump up to my movement and cast Destructive Wave as I land (no spell slot)",
     usages : 1,
     recovery : "long rest",
@@ -2748,22 +2806,23 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("self-repair matrix (prereq: ablative armor)") == -1 && upgKn.indexOf("ablative armor (prereq: piloted golem)") != -1;
     },
     name : "Self-Repair Matrix",
-    source : ["KT:I", 30],
+    source : ["KT:I", 32],
     description : "\n   At the start of my turn when I have no temp HP, I gain my proficiency bonus in temp HP"
 }, {
-    listlevel : 11,
-    name : "Titan Grip",
-    source : ["KT:I", 30],
-    description : "\n   I can wield a two-handed weapon in the one hand with the gauntlet with this upgrade"
-}, {
-    listlevel : 11,
+    listname : "Iron Grip (prereq: Iron Muscle, incompatible with Integrated Attack)",
+    listlevel : 15,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
-        return upgKn.indexOf("titan grip, 2nd") == -1 && upgKn.indexOf("titan grip") != -1;
+        return upgKn.indexOf("heads up display (prereq: arcane visor and sentient armor)") == -1 && upgKn.indexOf("emergency protocol (prereq: sentient armor)") != -1 && upgKn.indexOf("emergency protocol (prereq: sentient armor)") == -1;
     },
-    name : "Titan Grip, 2nd",
-    source : ["KT:I", 30],
-    description : " [wield two-handed weapon in each hand]"
+    name : "Heads Up Display",
+    source : ["KT:I", 31],
+    description : desc([
+        "",
+        "",
+        "",
+        ""
+    ])
 }, {
     listname : "Phase Engine (prereq: Warsuit)",
     listlevel : 15,
@@ -2772,7 +2831,7 @@ ClassSubList["inventor-warsmith"] = {
         return CurrentMagicItems.choices.indexOf("warsuit (medium)") != -1;
     },
     name : "Phase Engine",
-    source : ["KT:I", 30],
+    source : ["KT:I", 31],
     description : desc([
         "As a reaction when attacked, I can become intangible causing the attack to miss",
         "If the attack is with a magical weapon, it has disadvantage instead",
@@ -2788,19 +2847,9 @@ ClassSubList["inventor-warsmith"] = {
         return CurrentMagicItems.choices.indexOf("warplate (heavy)") != -1;
     },
     name : "Heavy Plating",
-    source : ["KT:I", 30],
+    source : ["KT:I", 31],
     description : "\n   While wearing my warplate, I have resistance to nonmagical bludg./pierc./slash. damage",
     dmgres : [["Bludgeoning", "Bludg. (nonmagical)"], ["Piercing", "Pierc. (nonmagical)"], ["Slashing", "Slash. (nonmagical)"]]
-}, {
-    listlevel : 15,
-    name : "Recall",
-    source : ["KT:I", 30],
-    description : desc([
-        "As a bonus action, I can remove and hide my warsmith's armor in a pocket dimension",
-        "As an action, I can don it again as I return it from this pocket dimension",
-        "While it remains in this pocket dimension, it can't be interacted with in any other way"
-    ]),
-    action : [["bonus action", " (doff and hide)"], ["action", " (return and don)"]]
 }, {
     listname : "Shield Arm (prereq: Piloted Golem)",
     listlevel : 15,
@@ -2809,7 +2858,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("piloted golem (prereq: warplate, incompatible with collapsible)") != -1;
     },
     name : "Shield Arm",
-    source : ["KT:I", 30],
+    source : ["KT:I", 32],
     description : desc([
         "As a bonus action, I can deploy the shield that is integrated in my armor's arm",
         "I am proficiency with this shield and it requires the use of my arm"
@@ -2819,7 +2868,7 @@ ClassSubList["inventor-warsmith"] = {
 }, {
     listlevel : 15,
     name : "Sun Cannon",
-    source : ["KT:I", 30],
+    source : ["KT:I", 31],
     description : "\n   Once per long rest, I can cast Sunbeam using this upgrade without using a spell slot",
     usages : 1,
     recovery : "long rest",
@@ -2837,7 +2886,7 @@ ClassSubList["inventor-warsmith"] = {
         return upgKn.indexOf("sentient armor") != -1;
     },
     name : "Virtual Interface",
-    source : ["KT:I", 30],
+    source : ["KT:I", 31],
     description : desc([
         "When I use artificial strength to raise my Strength, my Intelligence no longer lowers",
         "However, this only applies to my natural Int score (not counting upgrades or magic items)"
