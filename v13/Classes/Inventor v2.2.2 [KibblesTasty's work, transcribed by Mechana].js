@@ -14,12 +14,12 @@
 
                 This class has been made by KibblesTasty
                 It can be found here: https://www.kthomebrew.com/
-                This code is based on v2.2.1 of KibblesTasty's work (2021-10-30)
+                This code is based on v2.2.2 of KibblesTasty's work (2021-12-07)
 
                 This script was based upon most of MPMB's scripts.
 
     Code by:    Mechana
-    Date:       2021-10-30 (sheet v13.0.8)
+    Date:       2022-01-22 (sheet v13.1.0)
 */
 
 /*  
@@ -47,15 +47,15 @@
  * | Write the code for Wandsmith
  */
 
-var iFileName = "Inventor v2.2.1 [KibblesTasty's work, transcribed by Mechana].js";
-RequiredSheetVersion("13.0.8");
+var iFileName = "Inventor v2.2.2 [KibblesTasty's work, transcribed by Mechana].js";
+RequiredSheetVersion("13.1.0");
 
 SourceList["KT:I"] = {
-    name : "KibblesTasty: Inventor (v2.2.1)",
+    name : "KibblesTasty: Inventor (v2.2.2)",
     abbreviation : "KT:I",
     group : "kthomebrew",
     url : "https://www.kthomebrew.com/",
-    date : "2021/10/30"
+    date : "2021/12/07"
 };
 
 //first make the sheet know which spells are Inventor spells
@@ -64,6 +64,7 @@ SourceList["KT:I"] = {
     "alarm",
     "arcane ablation",
     "arcane weapon",
+    "awaken rope",
     "bond item",
     "catapult",
     "comprehend languages",
@@ -88,11 +89,10 @@ SourceList["KT:I"] = {
     // 2nd level
     "aid",
     "alter self",
+    "animate object",
     "arcane lock",
     "blur",
-    "cloud of daggers",
     "darkvision",
-    "earthbind",
     "enhance ability",
     "enlarge/reduce",
     "find traps",
@@ -114,19 +114,13 @@ SourceList["KT:I"] = {
     "dispel magic",
     "dispel construct",
     "elemental weapon",
-    "feign death",
-    "flame arrows",
     "fireburst mine",
     "gaseous form",
     "glyph of warding",
-    "life transference",
-    "lightning arrow",
     "magic circle",
     "nondetection",
     "protection from energy",
     "sending",
-    "tiny servant",
-    "wall of sand",
     "water breathing",
     "water walk",
     "wind wall",
@@ -142,7 +136,7 @@ SourceList["KT:I"] = {
     "repair",
     "stone shape",
     "stoneskin",
-    "sickening radiance",
+    "translocating shot",
     // 5th level
     "animate objects",
     "creation",
@@ -150,10 +144,8 @@ SourceList["KT:I"] = {
     "legend lore",
     "mislead",
     "passwall",
-    "skill empowerment",
     "telekinesis",
     "teleportation circle",
-    "transmute rock",
     "vorpal weapon",
     "wall of stone"
 ].forEach( function (s) {
@@ -2046,15 +2038,6 @@ ClassSubList["inventor-warsmith"] = {
 };
 
 [{
-    name : "Adaptable Armor",
-    listlevel : 3,
-    source : ["KT:I", 28],
-    description : desc([
-        "While wearing my armor, I get a climbing and swim speed equal to my walking speed",
-        "I can also move across vertical surfaces and ceilings while leaving my hands free"
-    ]),
-    speed : { climb : { spd : "walk", enc : 0 }, swim: { spd : "walk", enc : 0 },}
-},{
     name : "Accelerated Movement",
     listlevel : 3,
     source : ["KT:I", 28],
@@ -2073,6 +2056,15 @@ ClassSubList["inventor-warsmith"] = {
     source : ["KT:I", 28],
     description : " [another +10 ft, -15 lb]",
     speed : { allModes : "+10" }
+}, {
+    name : "Adaptable Armor",
+    listlevel : 3,
+    source : ["KT:I", 28],
+    description : desc([
+        "While wearing my armor, I get a climbing and swim speed equal to my walking speed",
+        "I can also move across vertical surfaces and ceilings while leaving my hands free"
+    ]),
+    speed : { climb : { spd : "walk", enc : 0 }, swim: { spd : "walk", enc : 0 },}
 }, {
     name : "Arcane Visor, Darkvision",
     listlevel : 3,
@@ -2209,7 +2201,7 @@ ClassSubList["inventor-warsmith"] = {
     listlevel : 3,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
-        return (CurrentMagicItems.choices.indexOf("integrated armor (medium)") == -1 || CurrentMagicItems.choices.indexOf("warplate (heavy)") == -1) && upgKn.indexOf("grappling reel (prereq: warplate or integrated armor)") == -1;
+        return (CurrentMagicItems.choices.indexOf("integrated armor (medium)") != -1 || CurrentMagicItems.choices.indexOf("warplate (heavy)") != -1) && upgKn.indexOf("grappling reel (prereq: warplate or integrated armor)") == -1;
     },
     name : "Grappling Reel",
     source : ["KT:I", 28],
@@ -2220,11 +2212,11 @@ ClassSubList["inventor-warsmith"] = {
     ]),
     action : [["action", ""]]
 }, {
-    listname : "Grappling Hook (prereq: Warsuit)",
+    listname : "Grappling Hook (prereq: Warsuit or Warskin)",
     listlevel : 3,
     prereqeval : function () {
         var upgKn = ClassList["inventor"].chosenUpgrades();
-        return CurrentMagicItems.choices.indexOf("warsuit (medium)") != -1 && upgKn.indexOf("grappling hook (prereq: warsuit)") == -1;
+        return (CurrentMagicItems.choices.indexOf("warsuit (medium)") != -1 || CurrentMagicItems.choices.indexOf("warskin (light)") != -1) && upgKn.indexOf("grappling hook (prereq: warsuit)") == -1;
     },
     name : "Grappling Hook",
     source : ["KT:I", 28],
@@ -2565,10 +2557,7 @@ ClassSubList["inventor-warsmith"] = {
     name : "Assume Control",
     source : ["KT:I", 30],
     description : desc([
-        "",
-        "",
-        "",
-        ""
+        "Read the f**king document. I can't be asked right now"
     ])
 }, {
     name : "Brute Force Style",
@@ -2913,12 +2902,114 @@ ClassSubList["inventor-warsmith"] = {
     }
 });
 
+ClassSubList["inventor-cursesmith"] = {
+    regExpSearch : /^(?=.*cursesmith)(?!.*wizard).*$/i,
+    subname : "Cursesmith",
+    fullname : "Cursesmith",
+    source : ["KT:I", 40],
+    attacks : [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+    features : {
+        "subclassfeature1" : {
+            name : "Cursesmith's Proficiency",
+            source : ["KT:I", 40],
+            minlevel : 1,
+            description : " [Artisan Tool, One Language]" + desc([
+                "I have advantage to determine the nature of a curse"
+            ]),
+            toolProfs : ["Artisan’s Tools", 1],
+            languageProfs : ["Infernal, Abyssal, Deepspeech, or Primordial.", 1],
+        },
+        "subclassfeature1.1" : {
+            name : "Warplate Gauntlet",
+            source : ["KT:I", 40],
+            minlevel : 1,
+            description : " [create more: long rest + 25 gp, or 2 days]" + desc([
+                "I gain a warplate gauntlet, a wondrous item that only I can attune to",
+                "When I create one, it has either the Power Fist, Force Blast, or Martial Grip upgrade"
+            ]),
+            eval : function () { AddMagicItem("Warplate Gauntlet"); },
+            removeeval : function () { RemoveMagicItem("Warplate Gauntlet"); }
+        },
+        "subclassfeature3" : {
+            name : "Warsmith's Armor",
+            source : ["KT:I", 27],
+            minlevel : 3,
+            description : " [create more: 8 hours + 2000 gp]\n   I gain a warsmith's armor that includes a warplate gauntlet, no separate attunement",
+            eval : function () { RemoveMagicItem("Warplate Gauntlet"); AddMagicItem("Warsmith's Armor"); },
+            removeeval : function () { RemoveMagicItem("Warsmith's Armor"); AddMagicItem("Warplate Gauntlet"); }
+        },
+        "subclassfeature3.1" : {
+            name : "Upgrades, Basic",
+            source : ["KT:I", 3],
+            minlevel : 3,
+            description : desc([
+                "I can select a number of upgrades that are applied to the armor/gauntlet I create",
+                "I can have multiple armors/gauntlets with different upgrades, but can attune to only one",
+                "Attuning to either requires a long rest; I can swap 1 upgrade when I gain a level",
+                "An upgrade can only be switched to another available at the same level",
+                'Use the "Choose Feature" button above to select the upgrades of the currently equipped',
+                "The above number includes the 'free' Power Fist, Force Blast, or Martial Grip upgrade"
+            ]),
+            additional : [0,0,1,1].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,1,1],
+            extraname : "Unrestricted Upgrade",
+            extrachoices : []
+        },
+        "subclassfeature5" : {
+            name : "Upgrades, Level 5",
+            source : ["KT:I", 3],
+            minlevel : 5,
+            description : "",
+            additional : [0,0,0,0,1,1,2,2].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,0,0,1,1,2,2],
+            extraname : "Level 5 Upgrade",
+            extrachoices : []
+        },
+        "subclassfeature9" : {
+            name : "Upgrades, Level 9",
+            source : ["KT:I", 3],
+            minlevel : 9,
+            description : "",
+            additional : [0,0,0,0,0,0,0,0,1,1].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,0,0,0,0,0,0,1,1],
+            extraname : "Level 9 Upgrade",
+            extrachoices : []
+        },
+        "subclassfeature11" : {
+            name : "Upgrades, Level 11",
+            source : ["KT:I", 3],
+            minlevel : 11,
+            description : "",
+            additional : [0,0,0,0,0,0,0,0,0,0,1,1,2].map(upgradeAdditionalMaker).concat(["3 upgrades known, includes level 14 bonus"]),
+            extraTimes : [0,0,0,0,0,0,0,0,0,0,1,1,2,3], // includes level 14 bonus upgrade
+            extraname : "Level 11 Upgrade",
+            extrachoices : []
+        },
+        "subclassfeature14" : {
+            name : "Fully Customized Gear",
+            source : ["KT:I", 28],
+            minlevel : 14,
+            description : "\n   During a long rest, I can swap out one upgrade for another if all prerequisites are met"
+        },
+        "subclassfeature15" : {
+            name : "Upgrades, Level 15",
+            source : ["KT:I", 3],
+            minlevel : 15,
+            description : "",
+            additional : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,3,3].map(upgradeAdditionalMaker),
+            extraTimes : [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,3,3],
+            extraname : "Level 15 Upgrade",
+            extrachoices : []
+        }
+    }
+};
+
 //***********************************************-Extra Class/Subclass Stuff-***********************************************\\
 
 //* 1st Level Spells
 SpellsList["arcane ablation"] = {
     name : "Arcane Ablation",
-	source : ["KT:I", 36],
+	source : ["KT:I", 59],
 	classes : ["inventor"],
     level : 1,
     school : "Trans",
@@ -2931,20 +3022,34 @@ SpellsList["arcane ablation"] = {
 };
 SpellsList["arcane weapon"] = {
     name : "Arcane Weapon",
-	source : ["KT:I", 36],
+	source : ["KT:I", 59],
+	classes : ["inventor"],
+    level : 1,
+    school : "Trans",
+	time : "1 bns",
+    range : "Touch",
+	components : "V,S",
+	duration : "1 h",
+	description : "Imbue weapon, counts as magical, deals Force dmg, no ammo consumption or reloading",
+	descriptionFull : "You touch a weapon and imbue it with magic. For the duration the weapon counts as a magical weapon and any damage dealt by it is Force damage. When casting this one a weapon with the ammunition property, it no longer consumes ammunition when fired, and does not need to be reloaded." + "\n   " + "At Higher Levels. When you cast this spell using a spell slot of 3rd or 4th level, the duration becomes 8 hours. When you use a spell slot of 5th level or higher, the duration becomes 24 hours."
+};
+SpellsList["awaken rope"] = {
+    name : "Awaken Rope",
+	source : ["KT:I", 60],
 	classes : ["inventor"],
     level : 1,
     school : "Trans",
 	time : "1 a",
     range : "Touch",
-	components : "V,S",
-	duration : "Conc, 1 h",
-	description : "Imbue weapon, counts as magical, deals Force dmg",
-	descriptionFull : "You touch a weapon and imbue it with magic. For the duration the weapon counts as a magical weapon, any damage dealt by it is Force damage."
+	components : "V,S,M",
+    compMaterial : "10 to 60 ft of cord or rope, worth at least 1 cp",
+	duration : "Instantaneous",
+	description : "Command rope to bind, fasten, or grab. Better stats at higher SL",
+	descriptionFull : "As an action, you can touch a rope 10 to 60 feet long and issue a single command to it, selecting from the following options: " + "\n\n   " + "Bind. The rope attempts to bind a creature of your choice within 20 feet of you. The creature must make a Dexterity saving throw or become restrained until it is freed. A creature can use its action to make a DC 10 Strength check, freeing itself or another creature within its reach on a success. Dealing 5 slashing damage to the rope (AC 10) also frees the creature without harming it, ending the effect and destroying the rope." + "\n   " + "Fasten. The rope flies up 60 feet and ties one end to an object or surface that a rope could be tied to, before becoming inanimate again, hanging from the object." + "\n   " + "Grab. The rope lashes out grabs one Small or smaller object that is not being worn by a creature within a range equal to the length of the rope and pulls that object back to your hand. If that object is being carried by a creature, it must make a Strength saving throw. On success, it retains the object, and on failure the object is pulled from the creature." + AtHigherLevels + "When you cast this spell using a spell slot of 2nd level or higher, you can target a chain instead of a rope. It has the same available actions, but it has a DC 15, an AC of 15, and resistance to slashing damage when taking the Bind action. When cast with a spell slot of 3rd level or higher targeting a rope, that rope is magically imbued for 1 minute, gaining an DC of 15, an AC 20, and 20 hit points."
 };
 SpellsList["bond item"] = {
     name : "Bond Item",
-	source : ["KT:I", 36],
+	source : ["KT:I", 61],
 	classes : ["inventor"],
     level : 1,
     school : "Conj",
@@ -2958,7 +3063,7 @@ SpellsList["bond item"] = {
 };
 SpellsList["fall"] = {
     name : "Fall",
-	source : ["KT:I", 36],
+	source : ["KT:I", 62],
 	classes : ["inventor","sorcerer","wizard"],
     level : 1,
     school : "Trans",
@@ -2969,10 +3074,23 @@ SpellsList["fall"] = {
 	description : "Change which way is down for you, fall up to 500 ft, all normal effects apply",
 	descriptionFull : "You alter gravity for yourself, causing you to reorient which way is down for you until the end of your turn. You can pick any direction to fall as if under the effect of gravity, falling up to 500 feet before the spell ends." + "\n   " + "If you collide with something during this time, you take falling damage as normal, but you can control your fall as you could under normal conditions by holding onto objects or move along a surface according to your new orientation as normal until your turn ends and gravity returns to normal."
 };
+SpellsList["returning weapon"] = {
+    name : "Returning Weapon",
+	source : ["KT:I", 65],
+	classes : ["inventor"],
+    level : 1,
+    school : "Trans",
+	time : "1 a",
+    range : "Self",
+	components : "V,S",
+    duration : "24 h",
+	description : "Grant thrown 20/60 property to weapon, returns to hand after thrown",
+	descriptionFull : "You touch a weapon granting it the thrown 20/60 property. If it already has the thrown property, it’s range increases by 20/60. It also gains the \"returning\" property. After being thrown it automatically reappears in the thrower’s hand."
+};
 SpellsList["seeking projectile"] = {
     name : "Seeking Projectile",
-	source : ["KT:I", 36],
-	classes : ["inventor"],
+	source : ["KT:I", 65],
+	classes : ["inventor", "ranger"],
     level : 1,
     school : "Trans",
 	time : "1 a",
@@ -2984,7 +3102,7 @@ SpellsList["seeking projectile"] = {
 };
 SpellsList["unburden"] = {
     name : "Unburden",
-	source : ["KT:I", 36],
+	source : ["KT:I", 67],
 	classes : ["inventor"],
     level : 1,
     school : "Trans",
@@ -2996,23 +3114,36 @@ SpellsList["unburden"] = {
 	descriptionFull : "A creature you touch no longer suffers the penalties to movement speed or to their Dexterity (Stealth) check while wearing heavy armor, and is no long encumbered from carry weight unless they are carrying more than twice the weight that would encumber them."
 };
 //* 2nd Level Spells
+SpellsList["animate object"] = {
+    name : "Animate Object",
+	source : ["KT:I", 59],
+	classes : ["bard", "inventor", "occultist", "sorcerer", "wizard"],
+    level : 2,
+    school : "Trans",
+	time : "1 a",
+    range : "60 ft",
+	components : "V,S",
+    duration : "Conc, 1 min",
+	description : "Bring a Tiny object to life, command with bns action within 60 ft",
+	descriptionFull : "You bring a Tiny object to life. Its Constitution is 10 and its Intelligence and Wisdom are 3, and its Charisma is 1. Its speed is 30 feet; if the object lacks legs or other appendages it can use for locomotion, it instead has a flying speed of 30 feet and can hover. The object has the following stats: HP: 20, AC: 18, Str: 4, Dex: 18. The object has an attack modifier equal to your spell attack modifier. If the object is not a weapon, it deals 1d4 + your Spellcasting modifier damage on hit. Select from bludgeoning, piercing, or slashing damage based on the nature of the item. If the object is a weapon, it deals the weapon’s damage dice + your Spellcasting modifier of the weapon’s damage type. The spell can only animate one-handed weapons without the special modifier this way." + "\n   " + "As a bonus action, you can mentally command the animated object as long as it is within 60 feet of you. You decide what action the creature will take and where it will move during its next turn, or you can issue a general command, such as to guard a particular chamber or corridor. If you issue no commands, the creature only defends itself against hostile creatures. Once given an order, the creature continues to follow it until its task is complete." + "\n   " + "If the object is securely attached to a surface or a larger object, such as a chain bolted to a wall, its speed is 0. It has blindsight with a radius of 30 feet and is blind beyond that distance. When the animated object drops to 0 hit points, it reverts to its original object form, and any remaining damage carries over to its original object form."
+};
 SpellsList["imbue luck"] = {
     name : "Imbue Luck",
-	source : ["KT:I", 36],
+	source : ["KT:I", 63],
 	classes : ["inventor"],
     level : 2,
     school : "Abjur",
 	time : "1 a",
     range : "Touch",
-	components : "V,S",
+	components : "V,S,M",
     duration : "1 h",
-	description : "1 weapon/armor, if weapon on atk extra d20, if armor on atk against",
+	description : "1 weapon/armor, if weapon on atk extra d20, if armor on atk against wearer",
 	descriptionFull : "You touch a weapon and worn item and imbue luck into it. If imbued on a weapon, for the duration, on an attack roll, the wielder can roll an additional d20 (they can choose to this after they roll, but before the outcome is determined). The creature can choose which of the d20s is used for the attack roll." + "\n   " + "If imbued into a worn item, they can roll a d20 when attacked, then choose whether the attack uses the attacker's roll or theirs." + "\n   " + "With either use, the spell immediately ends upon rolling the extra d20."
 };
 SpellsList["lightning charged"] = {
     name : "Lightning Charged",
     classes : ["wizard"],
-    source : ["KT:I", 38],
+    source : ["KT:I", 63],
     level : 2,
     school : "Evoc",
     time : "1 a",
@@ -3025,13 +3156,14 @@ SpellsList["lightning charged"] = {
 }
 SpellsList["thunderburst mine"] = {
     name : "Thunderburst Mine",
-	source : ["KT:I", 37],
+	source : ["KT:I", 66],
 	classes : ["inventor"],
     level : 2,
     school : "Abjur",
 	time : "1 min",
     range : "Touch",
     components : "V,S,M",
+    compMaterial : "Any tiny nonmagical item, which is destroyed by the activation of the spell",
     duration : "8 h",
     save : "Con",
 	description : "Set trap 5 ft/1 rea(1 or more mines), crea in 10 ft save 3d8 thunder dmg, half on success",
@@ -3040,7 +3172,7 @@ SpellsList["thunderburst mine"] = {
 //* 3rd Level Spells
 SpellsList["dispel construct"] = {
     name : "Dispel Construct",
-	source : ["KT:I", 37],
+	source : ["KT:I", 61],
 	classes : ["inventor"],
     level : 3,
     school : "Abjur",
@@ -3049,12 +3181,12 @@ SpellsList["dispel construct"] = {
     components : "V,S",
     duration : "Instantaneous",
     save : "Con",
-	description : "1 construct save or zero hp, if >100 hp Adv on save",
-	descriptionFull : "You can attempt to purge the magic animating a construct within range, rendering it inert. The target must succeed on a Constitution saving throw, or be reduced to zero hit points. If the target has more than 100 hit points remaining, it makes this roll with advantage."
+	description : "1 construct 4d10 force dmg, con save or stunned for 1 min, if <50 hp after fail reduce to 0",
+	descriptionFull : "You can attempt to purge the magic animating a construct within range, rendering it inert. The target takes 4d10 force damage and must succeed on a Constitution saving throw or become stunned for 1 minute. At the end of each of its turns, the target can make another Constitution saving throw. On a success, the spell ends on the target. If the target has less than 50 hit points remaining when it fails, it is reduced to zero hit points."
 };
 SpellsList["fireburst mine"] = {
     name : "Fireburst Mine",
-	source : ["KT:I", 37],
+	source : ["KT:I", 62],
 	classes : ["inventor"],
     level : 3,
     school : "Abjur",
@@ -3069,7 +3201,7 @@ SpellsList["fireburst mine"] = {
 //* 4th Level Spells
 SpellsList["repair"] = {
     name : "Repair",
-	source : ["KT:I", 37],
+	source : ["KT:I", 64],
 	classes : ["inventor"],
     level : 4,
     school : "Trans",
@@ -3078,12 +3210,12 @@ SpellsList["repair"] = {
     components : "V,S",
     duration : "Instantaneous",
 	description : "Restore 10d6+2d6/SL hp or years ago to an construct/obj",
-	descriptionFull : "You touch a construct or inanimate object, causing it regain 10d6 hit points. This causes any parts or material that has broken away from the construct or object to reattach, repairing it to the condition it when before losing those hit points." + "\n   " + "If the construct or object damaged state is the result of age, you can instead repair to the condition it was in 10d6 years ago, if it was previously in a better condition during that time (the condition can only improve or not change)." + "\n   " + "At Higher Levels: The hit points restored increases by 2d6 (or the years restored) for each slot above 4th."
+	descriptionFull : "You touch a construct or inanimate object, causing it regain 10d6 hit points. This causes any parts or material that has broken away from the construct or object to reattach, repairing it to the condition it when before losing those hit points." + "\n   " + "If the construct or object damaged state is the result of age, you can instead repair to the condition it was in 10d6 years ago, if it was previously in a better condition during that time (the condition can only improve or not change)" + AtHigherLevels + "The hit points restored increases by 2d6 (or the years restored) for each slot above 4th."
 };
 //* 5th Level Spells
 SpellsList["vorpal weapon"] = {
     name : "Vorpal Weapon",
-	source : ["KT:I", 37],
+	source : ["KT:I", 67],
 	classes : ["inventor"],
     level : 5,
     school : "Trans",
@@ -3093,6 +3225,20 @@ SpellsList["vorpal weapon"] = {
     duration : "Conc, 1 h",
 	description : "Ignore slashing dmg resistance, double dmg to obj, +3 to atk & dmg if less; crit kills if less then 50 hp",
 	descriptionFull : "Until the spell ends, a weapon touch becomes indescribably sharp, ignoring resistance to slashing damage, and gains the Siege property, dealing double damage to inanimate objects such as structures. The weapon has a modifier of less than +3 to attack and damage rolls, its modifier becomes +3 to attack and damage rolls for the duration of the spell." + "\n   " + "Additionally, if a critical strike of this weapon would leave a creature with less than 50 hit points, the target creature is killed."
+};
+SpellsList["translocating shot"] = {
+    name : "Translocating Shot",
+	source : ["KT:I", 66],
+	classes : ["inventor", "Ranger", "Wizard"],
+    level : 5,
+    school : "Trans",
+	time : "1 bns",
+    range : "5 ft",
+    components : "V,S,M",
+    compMaterial : "a piece of ammunition worth at least 1 cp",
+    duration : "Conc, 1 min",
+	description : "Bind willing to ammo, tele to target, Large=< 4 willing, 6th SL 9 willing to Huge",
+	descriptionFull : "You magically bind a willing creature within range into a piece of ammunition. When the piece of ammunition is fired, the creature bound to the piece of ammunition is teleported to the target destination. You can fire the ammunition at a creature, object, or point within the normal range of the weapon. When attacking a creature or object, the target is teleported to within 5 feet of the target hit or miss." + "\n   " + "When you cast this spell, if you cast it on a Large or larger piece of ammunition, you can bind up to 4 creatures to the piece of ammunition." + AtHigherLevels + "When you using 6th level slot or higher, you can cast it on a huge piece of ammunition, binding up to nine creatures to the piece of ammunition."
 };
 
 //*****************************************************\\
@@ -3233,7 +3379,7 @@ AmmoList["storm rounds"] = {
     invName : "Storm Rounds",
     alternatives : [/^((?=.*storm)|(?=.*rounds?)).*$/i]
 };
-
+//#region
 //*****************************************************\\
 //*                   -Gadgetsmith-                   *\\
 //*****************************************************\\
@@ -3524,7 +3670,7 @@ AmmoList["storm rounds"] = {
 // 	abilitytodamage : false,
 // 	dc : true
 // };
-
+//#endregion
 //*****************************************************\\
 //*                     -Warsmith-                    *\\
 //*****************************************************\\
@@ -3541,7 +3687,7 @@ MagicItemsList["warplate gauntlet"] = {
 }
 MagicItemsList["warsmith's armor"] = {
     name : "Warsmith's Armor",
-    source : ["KT:I", 26],
+    source : ["KT:I", 28],
     type : "armor",
     description : "This armor adds 2 to my Str (up to 22), makes me count as one size greater for the weight I can carry, can be augmented by my warsmith upgrades, and includes a warplate gauntlet. As an action, I can use its artificial strength feature to lower my Int and increase my Str with an equal amount up to my original Int.",
     attunement : true,
@@ -3550,7 +3696,7 @@ MagicItemsList["warsmith's armor"] = {
     action : [["action", "Artificial Strength"]],
     scores : [2, 0, 0, 0, 0, 0],
     scoresMaximum : [22, 0, 0, 0, 0, 0],
-    choices : ["Warplate (heavy)", "Warsuit (medium)", "Integrated Armor (medium)"],
+    choices : ["Warplate (heavy)", "Warsuit (medium)", "Integrated Armor (medium)", "Warskin (light)"],
     "warplate (heavy)" : {
         name : "Warsmith's Warplate",
         description : "This armor adds 2 to my Str (up to 22), makes me count as one size greater for the weight I can carry, can be augmented by my warsmith upgrades, and includes a warplate gauntlet. As an action, I can use its artificial strength feature to lower my Int and increase my Str with an equal amount up to my original Int.",
@@ -3561,7 +3707,7 @@ MagicItemsList["warsmith's armor"] = {
         armorOptions : [{
             regExpSearch : /warplate/i,
             name : "Warplate",
-            source : ["KT:I", 26],
+            source : ["KT:I", 28],
             type : "heavy",
             ac : 18,
             weight : 75,
@@ -3577,7 +3723,7 @@ MagicItemsList["warsmith's armor"] = {
         armorOptions : [{
             regExpSearch : /warsuit/i,
             name : "Warsuit",
-            source : ["KT:I", 26],
+            source : ["KT:I", 28],
             type : "medium",
             ac : 14,
             weight : 45,
@@ -3590,6 +3736,22 @@ MagicItemsList["warsmith's armor"] = {
             if (CurrentRace.size < 4) MagicItemsList["warsmith's armor"]["warsuit (medium)"].carryingCapacity = 2;
         }
     },
+    "warskin (light)" : {
+        name : "Warsmith's Warskin",
+        description : "This armor adds 2 to my Str (up to 22), It can be augmented by my warsmith upgrades, and includes a warplate gauntlet. As an action, I can use its artificial strength feature to lower my Int and increase my Str with an equal amount up to my original Int.",
+        descriptionLong : "This light armor includes a warplate gauntlet and gives me an AC of 14 + my Dexterity modifier (max 2) and increases my Strength score with 2, up to a maximum of 22. Also, it makes me count as one size category higher for determining the weight I can lift or carry. As an action, I can use the gauntlet's artificial strength feature to lower my Intelligence and increase my Strength with an equal amount, up to my original Intelligence score. I can stop this at any time and it stops automatically when I take the gauntlet off.",
+        weight : 13,
+        armorAdd : "Integrated",
+        armorOptions : [{
+            regExpSearch : /warskin/i,
+            name : "Integrated",
+            source : ["KT:I", 28],
+            type : "light",
+            ac : 12,
+            weight : 13,
+            isWarsmithArmour : true
+        }]
+    },
     "integrated armor (medium)" : {
         name : "Warsmith's Integrated Armor",
         description : "This armor adds 2 to my Str (up to 22), makes me count as one size greater for the weight I can carry, can be augmented by my warsmith upgrades, and includes a warplate gauntlet. As an action, I can use its artificial strength feature to lower my Int and increase my Str with an equal amount up to my original Int.",
@@ -3599,7 +3761,7 @@ MagicItemsList["warsmith's armor"] = {
         armorOptions : [{
             regExpSearch : /integrated/i,
             name : "Integrated",
-            source : ["KT:I", 26],
+            source : ["KT:I", 28],
             type : "medium",
             ac : 14,
             weight : 30,
