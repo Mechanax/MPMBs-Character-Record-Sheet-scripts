@@ -3074,6 +3074,19 @@ SpellsList["fall"] = {
 	description : "Change which way is down for you, fall up to 500 ft, all normal effects apply",
 	descriptionFull : "You alter gravity for yourself, causing you to reorient which way is down for you until the end of your turn. You can pick any direction to fall as if under the effect of gravity, falling up to 500 feet before the spell ends." + "\n   " + "If you collide with something during this time, you take falling damage as normal, but you can control your fall as you could under normal conditions by holding onto objects or move along a surface according to your new orientation as normal until your turn ends and gravity returns to normal."
 };
+SpellsList["lightning tendril"] = {
+    name : "Lightning Tendril",
+	source : ["KT:I", 63],
+	classes : ["druid","occultist","sorcerer","warlock","wizard"],
+    level : 1,
+    school : "Evoc",
+	time : "1 bns",
+    range : "S:20 ft",
+	components : "V,S,M",
+    duration : "Conc, 1 min",
+	description : "Deal 1d12 as action, 3/4SL; 2d12 at 30ft, 5/6SL; 3d12 at 60ft, 7SL; 4d12 at 120ft",
+	descriptionFull : "Crackling beams of blue energy leap from your hands. For the duration of the spell, as an action, you can direct them toward a creature within range, dealing 1d12 lightning damage to that creature." + AtHigherLevels + "When you cast this spell using a 3rd- or 4th-level spell slot, the damage increases to 2d12 and the range increases to 30 feet. When you cast it using a 5th- or 6th-level spell slot, the damage increases to 3d12 and the range increases to 60 feet. When you cast it using a spell slot of 7th level or higher, the damage increases to 4d12 and the range increases to 120 feet."
+};
 SpellsList["returning weapon"] = {
     name : "Returning Weapon",
 	source : ["KT:I", 65],
@@ -3142,7 +3155,7 @@ SpellsList["imbue luck"] = {
 };
 SpellsList["lightning charged"] = {
     name : "Lightning Charged",
-    classes : ["wizard"],
+    classes : ["inventor"],
     source : ["KT:I", 63],
     level : 2,
     school : "Evoc",
@@ -3199,6 +3212,19 @@ SpellsList["fireburst mine"] = {
 	descriptionFull : "You can set a magical trap by infusing explosive magic into an item. You can set this item to detonate when someone comes within 5 feet of it, or by a verbal command using your reaction (one or more mines can be detonated)." + "\n   " + "When the magic trap detonates, Each creature in a 20-foot-radius Sphere centered on item must make a Dexterity saving throw. A creature takes 5d8 fire damage on a failed save, or half as much damage on a successful one. If a creature is in the area of effect of more than one fireburst mine during a turn, they take half damage from any subsequent effects of the mines." + "\n   " + "A magical mine must be set 5 feet or more from another mine, and cannot be moved once placed; any attempt to move it results it in detonating unless the Inventor that set it disarms it with an action."
 };
 //* 4th Level Spells
+SpellsList["jumping jolt"] = {
+    name : "Jumping Jolt",
+	source : ["KT:I", 63],
+	classes : ["sorcerer","wizard"],
+    level : 4,
+    school : "Evoc",
+	time : "1 a",
+    range : "60 ft",
+    components : "V,S",
+    duration : "Instantaneous",
+	description : "Atk crea for 4d12+SLd12 lightning, extra atk on crea 20 ft area; repeat, half dmg on miss; no extra atk",
+	descriptionFull : "You release an arc of lighting at a creature within range. Make a ranged spell attack roll against the target. On hit, the target takes 4d12 lightning damage, and you can cause the spell to jump to another target within 20 feet of the first target making a new attack roll for each target. The spell cannot hit the same target twice, or jump to a target out of the spells range. The spell can jump a maximum of five times.\n    On a miss, the target takes half as much damage and the spell does not jump to a new target." + AtHigherLevels + "When you cast this spell using a spell slot of 5th level or higher, the starting damage increases by 1d12 for each slot level above 4th."
+};
 SpellsList["repair"] = {
     name : "Repair",
 	source : ["KT:I", 64],
@@ -3213,18 +3239,18 @@ SpellsList["repair"] = {
 	descriptionFull : "You touch a construct or inanimate object, causing it regain 10d6 hit points. This causes any parts or material that has broken away from the construct or object to reattach, repairing it to the condition it when before losing those hit points." + "\n   " + "If the construct or object damaged state is the result of age, you can instead repair to the condition it was in 10d6 years ago, if it was previously in a better condition during that time (the condition can only improve or not change)" + AtHigherLevels + "The hit points restored increases by 2d6 (or the years restored) for each slot above 4th."
 };
 //* 5th Level Spells
-SpellsList["vorpal weapon"] = {
-    name : "Vorpal Weapon",
-	source : ["KT:I", 67],
-	classes : ["inventor"],
+SpellsList["sky burst"] = {
+    name : "Sky Burst",
+	source : ["KT:I", 65],
+	classes : ["druid", "sorcerer", "Wizard"],
     level : 5,
-    school : "Trans",
+    school : "Evoc",
 	time : "1 a",
-    range : "Touch",
+    range : "120 ft",
     components : "V,S",
-    duration : "Conc, 1 h",
-	description : "Ignore slashing dmg resistance, double dmg to obj, +3 to atk & dmg if less; crit kills if less then 50 hp",
-	descriptionFull : "Until the spell ends, a weapon touch becomes indescribably sharp, ignoring resistance to slashing damage, and gains the Siege property, dealing double damage to inanimate objects such as structures. The weapon has a modifier of less than +3 to attack and damage rolls, its modifier becomes +3 to attack and damage rolls for the duration of the spell." + "\n   " + "Additionally, if a critical strike of this weapon would leave a creature with less than 50 hit points, the target creature is killed."
+    duration : "Instantaneous",
+	description : "5 points + 1 SL, crea in 5 ft area dex save or 4d12, half on save, crea only hit once",
+	descriptionFull : "Five bolts of lightning strike five points of your choice that you can see within range. Each creature within 5 feet of the chosen points must make a Dexterity saving throw. A creature takes 4d12 lightning damage on a failed save, or half as much on a successful one. A creature in the area of more than one lightning burst is affected only once." + AtHigherLevels + "When you cast this spell using a spell slot of 6th level or higher, you can call down an additional bolt of lightning targeting another point within range for each slot level above 5th."
 };
 SpellsList["translocating shot"] = {
     name : "Translocating Shot",
@@ -3240,6 +3266,20 @@ SpellsList["translocating shot"] = {
 	description : "Bind willing to ammo, tele to target, Large=< 4 willing, 6th SL 9 willing to Huge",
 	descriptionFull : "You magically bind a willing creature within range into a piece of ammunition. When the piece of ammunition is fired, the creature bound to the piece of ammunition is teleported to the target destination. You can fire the ammunition at a creature, object, or point within the normal range of the weapon. When attacking a creature or object, the target is teleported to within 5 feet of the target hit or miss." + "\n   " + "When you cast this spell, if you cast it on a Large or larger piece of ammunition, you can bind up to 4 creatures to the piece of ammunition." + AtHigherLevels + "When you using 6th level slot or higher, you can cast it on a huge piece of ammunition, binding up to nine creatures to the piece of ammunition."
 };
+SpellsList["vorpal weapon"] = {
+    name : "Vorpal Weapon",
+	source : ["KT:I", 67],
+	classes : ["inventor"],
+    level : 5,
+    school : "Trans",
+	time : "1 a",
+    range : "Touch",
+    components : "V,S",
+    duration : "Conc, 1 h",
+	description : "Ignore slashing dmg resistance, double dmg to obj, +3 to atk & dmg if less; crit kills if less then 50 hp",
+	descriptionFull : "Until the spell ends, a weapon touch becomes indescribably sharp, ignoring resistance to slashing damage, and gains the Siege property, dealing double damage to inanimate objects such as structures. The weapon has a modifier of less than +3 to attack and damage rolls, its modifier becomes +3 to attack and damage rolls for the duration of the spell." + "\n   " + "Additionally, if a critical strike of this weapon would leave a creature with less than 50 hit points, the target creature is killed."
+};
+
 
 //*****************************************************\\
 //*                  -Thundersmith-                   *\\
